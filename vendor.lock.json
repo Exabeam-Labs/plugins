@@ -1,0 +1,11 @@
+{
+  "socxen": {
+    "upstream": "https://github.com/open-agent-ai-security/socxen.git",
+    "path": "plugin",
+    "sha": "444ed356ac5b6a8fc5492b8bb49097f1356f677c",
+    "version": "0.8.5",
+    "release": "socxen 0.8.5 — socxen runs on OpenAI Codex (#138), 2026-08-30",
+    "vendored": "2026-09-02",
+    "blessed_by": "Steve Wilson"
+  }
+}

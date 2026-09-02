@@ -1,0 +1,47 @@
+# Copyright 2026 Exabeam, Inc.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Gates the catalog manifest — the install path for every Exabeam-blessed plugin build on both
+# Claude Code and OpenAI Codex. Two checks, both run with MAIN's copy of the validator so a PR
+# cannot relax the rules and repoint a source in the same change:
+#   1. structural — every source vendored-with-provenance or sha-pinned, allow-listed upstreams;
+#   2. --verify-upstream — each pinned commit exists upstream and is an ancestor of upstream's
+#      default branch (it completed the upstream release process), and each vendored tree is
+#      byte-identical to upstream at that commit.
+# The control that closes the "a PR can edit this workflow" gap is a required code-owner
+# review on /.github/, /scripts/, /.claude-plugin/, vendor.lock.json and every vendored dir.
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Validate the catalog with main's rules (structural + upstream)
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate"
+          if ! git show origin/main:scripts/validate_catalog.py > "$RUNNER_TEMP/gate/validate_catalog.py" 2>/dev/null; then
+            if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
+              echo "::notice::first push to main — validating with this commit's own copy"
+              cp scripts/validate_catalog.py "$RUNNER_TEMP/gate/validate_catalog.py"
+            else
+              echo "::error::could not read scripts/validate_catalog.py from origin/main — refusing to validate with the PR's own copy"
+              exit 1
+            fi
+          fi
+          CATALOG_ROOT="$GITHUB_WORKSPACE" python3 "$RUNNER_TEMP/gate/validate_catalog.py" --verify-upstream
+      - name: Re-run with this branch's validator (advisory only)
+        if: always()
+        continue-on-error: true
+        run: python3 scripts/validate_catalog.py --verify-upstream

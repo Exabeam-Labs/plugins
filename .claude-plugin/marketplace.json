@@ -1,0 +1,30 @@
+{
+  "name": "exabeam",
+  "owner": {
+    "name": "Exabeam",
+    "url": "https://www.exabeam.com/"
+  },
+  "metadata": {
+    "description": "Exabeam's plugin marketplace for AI coding agents — Claude Code and OpenAI Codex. Every entry is a pinned, blessed build: it does not move until Exabeam moves it."
+  },
+  "plugins": [
+    {
+      "name": "socxen",
+      "displayName": "Exabeam Analyst Skill",
+      "source": "./socxen",
+      "description": "Exabeam Analyst Skill (Preview) — an agentic SOC skill suite for Exabeam New-Scale, for Claude Code and OpenAI Codex. Investigates and triages alerts and cases end to end through the Exabeam MCP (evidence, entity pivots, competing hypotheses, verdict), sweeps the open queue, and finds noisy detection rules — with containment recommended for a human and dismiss/close held behind the host agent's approval gate. Pinned build of socxen 0.8.5 (2026-08-30); upstream: open-agent-ai-security/socxen.",
+      "license": "Apache-2.0",
+      "keywords": [
+        "exabeam",
+        "soc",
+        "soc-analyst",
+        "alert-triage",
+        "new-scale",
+        "mcp",
+        "claude-code",
+        "codex"
+      ],
+      "category": "security"
+    }
+  ]
+}
