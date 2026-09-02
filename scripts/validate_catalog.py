@@ -19,11 +19,14 @@ this catalog is the blessed-build channel, so nothing here may move on its own.
         Anthropic catalog does), but `sha` is what installs.
   - Upstream repositories must be https://github.com/<org>/<repo>.git for an allow-listed org,
     parsed and matched in full (never prefix-matched).
-  - An entry's name MUST equal its payload's plugin.json `name`. Claude Code tolerates a mismatch
-    (it installs under the entry name and namespaces under the payload name), but OpenAI Codex
-    refuses the install outright ("plugin.json name `socxen` does not match marketplace plugin
-    name `soc-analyst`" — verified 2026-09-02). The customer-facing label is `displayName`; the
-    key is the payload's. Entry names are still not required to match the upstream REPO name.
+  - An entry's name MUST equal the payload's `.codex-plugin/plugin.json` `name`: OpenAI Codex
+    refuses the install otherwise ("plugin.json name `socxen` does not match marketplace plugin
+    name `soc-analyst`" — verified 2026-09-02). Claude Code tolerates a mismatch and namespaces
+    by `.claude-plugin/plugin.json`'s name, which is what the permission gate matches on — so
+    that manifest is never renamed. The bridge between the two is a declared OVERLAY in
+    vendor.lock.json: a per-file field patch (today: the Codex manifest's name and display name)
+    that the vendor script applies after export and `--verify-upstream` re-applies to a fresh
+    upstream export before the byte-identity diff. Anything not declared there is drift.
   - No entry-level version metadata; the payload's plugin.json is the version authority, and
     vendor.lock.json must agree with it.
 
@@ -120,9 +123,16 @@ def check_vendored(label, src, name, lock, problems):
     version = pj.get("version") if isinstance(pj, dict) else None
     if not (isinstance(version, str) and version.strip()):
         problems.append(f"{label}: vendored plugin.json must declare a non-empty version"); return None
-    if name and pj.get("name") != name:
-        problems.append(f"{label}: vendored plugin.json name {pj.get('name')!r} != entry name {name!r} — "
-                        f"Codex refuses the install on a mismatch; re-label with displayName, not name")
+    codex = d / ".codex-plugin" / "plugin.json"
+    codex_name = None
+    if codex.exists():
+        try:
+            codex_name = json.loads(codex.read_text()).get("name")
+        except Exception:
+            pass
+    if name and (codex_name or pj.get("name")) != name:
+        problems.append(f"{label}: entry name {name!r} != payload's Codex manifest name {codex_name or pj.get('name')!r} — "
+                        f"Codex refuses the install on a mismatch; declare the rename as a vendor.lock overlay")
         return None
     codex = d / ".codex-plugin" / "plugin.json"
     if codex.exists():
@@ -145,6 +155,13 @@ def check_vendored(label, src, name, lock, problems):
         problems.append(f"{label}: vendor.lock sha must be a 40-hex commit, got {sha!r}"); return None
     if rec.get("version") != version:
         problems.append(f"{label}: vendor.lock version {rec.get('version')!r} != vendored plugin.json version {version!r}")
+    overlay = rec.get("overlay") or {}
+    if not isinstance(overlay, dict) or any(
+            not isinstance(v, dict) or not _clean_path(label, "overlay file", k, []) or ".claude-plugin/" in k
+            for k, v in overlay.items()):
+        problems.append(f"{label}: overlay must map payload-relative JSON files (never the Claude manifest) to "
+                        f"{{dotted.field: value}} patches, got {overlay!r}")
+        return None
     return {"dir": d, **rec}
 
 
@@ -180,7 +197,20 @@ def _git(*args, cwd=None):
     return r.stdout
 
 
-def verify_upstream(label, url, sha, vendored_dir, path, problems):
+def _apply_overlay(root, overlay):
+    for rel, patch in (overlay or {}).items():
+        f = root / rel
+        d = json.loads(f.read_text())
+        for dotted, val in patch.items():
+            cur = d
+            parts = dotted.split(".")
+            for k in parts[:-1]:
+                cur = cur.setdefault(k, {})
+            cur[parts[-1]] = val
+        f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
+
+
+def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None):
     """Prove: sha exists upstream, is an ancestor of upstream's default branch, and (if vendored)
     the vendored tree is byte-identical to upstream's `path` at sha. Fails closed on any error."""
     tmp = Path(tempfile.mkdtemp(prefix="catalog-verify-"))
@@ -206,6 +236,7 @@ def verify_upstream(label, url, sha, vendored_dir, path, problems):
         if tar.returncode != 0:
             problems.append(f"{label}: cannot export {path!r} at {sha[:12]}: {tar.stderr.decode(errors='replace')[:200]}"); return
         subprocess.run(["tar", "-x", "-C", str(export)], input=tar.stdout, check=True)
+        _apply_overlay(export, overlay)   # the declared identity patch; everything else must match exactly
         diff = subprocess.run(["diff", "-r", "--brief", str(export), str(vendored_dir)], capture_output=True, text=True)
         if diff.returncode != 0:
             lines = [ln for ln in diff.stdout.splitlines() if ln.strip()][:6]
@@ -269,11 +300,11 @@ def main(argv) -> int:
         if isinstance(src, str):
             rec = check_vendored(label, src, name, lock, problems)
             if rec:
-                to_verify.append((label, rec["upstream"], rec["sha"], rec["dir"], rec["path"]))
+                to_verify.append((label, rec["upstream"], rec["sha"], rec["dir"], rec["path"], rec.get("overlay")))
         elif isinstance(src, dict):
             rec = check_pinned(label, src, problems)
             if rec:
-                to_verify.append((label, rec["url"], rec["sha"], None, None))
+                to_verify.append((label, rec["url"], rec["sha"], None, None, None))
         else:
             problems.append(f"{label}: source must be a './<dir>' string (vendored) or an object (pinned), got {type(src).__name__}")
 
@@ -283,8 +314,8 @@ def main(argv) -> int:
                 problems.append(f"vendor.lock.json: record {k!r} has no catalog entry — stale lock")
 
     if verify and not problems:
-        for args in to_verify:
-            verify_upstream(*args, problems)
+        for label, url, sha, vdir, vpath, overlay in to_verify:
+            verify_upstream(label, url, sha, vdir, vpath, problems, overlay)
 
     if problems:
         print("catalog manifest problems:")
@@ -292,7 +323,7 @@ def main(argv) -> int:
             print(f"  - {p}")
         return 1
     print(f"catalog manifest OK — {len(plugins)} plugin(s), every source vendored-with-provenance or sha-pinned"
-          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical)"
+          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo declared overlays)"
              if verify else " (structural only; add --verify-upstream to check against upstream)"))
     return 0
 
