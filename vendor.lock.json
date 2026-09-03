@@ -1,11 +1,18 @@
 {
-  "socxen": {
+  "soc": {
     "upstream": "https://github.com/open-agent-ai-security/socxen.git",
     "path": "plugin",
     "sha": "444ed356ac5b6a8fc5492b8bb49097f1356f677c",
     "version": "0.8.5",
     "release": "socxen 0.8.5 — socxen runs on OpenAI Codex (#138), 2026-08-30",
     "vendored": "2026-09-02",
-    "blessed_by": "Steve Wilson"
+    "blessed_by": "Steve Wilson",
+    "overlay": {
+      ".codex-plugin/plugin.json": {
+        "name": "soc",
+        "interface.displayName": "Exabeam Agentic SOC plugin",
+        "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules."
+      }
+    }
   }
 }
