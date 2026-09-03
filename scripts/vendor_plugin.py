@@ -37,6 +37,24 @@ def git(*args, cwd=None, binary=False):
     return r.stdout
 
 
+def apply_overlay(root, overlay):
+    """A declared, reviewable identity patch on top of the byte-identical export — today only the
+    Codex manifest's `name` (Codex refuses an install whose entry name differs from it) and its
+    display name. The Claude manifest is never touched: its name governs the skill/MCP namespaces
+    the permission gate matches on. The validator re-applies the same overlay to a fresh upstream
+    export before diffing, so 'byte-identical modulo the declared overlay' is what CI proves."""
+    for rel, patch in (overlay or {}).items():
+        f = root / rel
+        d = json.loads(f.read_text())
+        for dotted, val in patch.items():
+            cur = d
+            parts = dotted.split(".")
+            for k in parts[:-1]:
+                cur = cur.setdefault(k, {})
+            cur[parts[-1]] = val
+        f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
+
+
 def export(upstream, sha, path, dest):
     tmp = Path(tempfile.mkdtemp(prefix="vendor-"))
     try:
@@ -74,13 +92,16 @@ def main():
     target = ROOT / a.entry
     stage = Path(tempfile.mkdtemp(prefix="vendor-stage-")) / a.entry
     subject, date = export(upstream, sha, path, stage)
+    overlay = rec.get("overlay") or {}
+    apply_overlay(stage, overlay)
     version = json.loads((stage / ".claude-plugin" / "plugin.json").read_text())["version"]
 
     if a.check:
         diff = subprocess.run(["diff", "-r", "--brief", str(stage), str(target)], capture_output=True, text=True)
         shutil.rmtree(stage.parent, ignore_errors=True)
         if diff.returncode == 0:
-            print(f"OK — ./{a.entry}/ is byte-identical to {upstream} {path}/ @ {sha[:12]} ({version})"); return 0
+            print(f"OK — ./{a.entry}/ is byte-identical to {upstream} {path}/ @ {sha[:12]} ({version})"
+                  + (f", modulo the declared overlay on {sorted(overlay)}" if overlay else "")); return 0
         print(f"DRIFT — ./{a.entry}/ differs from upstream @ {sha[:12]}:\n" + diff.stdout); return 1
 
     if target.exists():
@@ -92,6 +113,7 @@ def main():
         "release": f"{subject} ({date})",
         "vendored": datetime.date.today().isoformat(),
         "blessed_by": a.blessed_by or rec.get("blessed_by", ""),
+        **({"overlay": overlay} if overlay else {}),
     }
     LOCK.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n")
     print(f"vendored ./{a.entry}/ <- {upstream} {path}/ @ {sha[:12]} — version {version}\n"
