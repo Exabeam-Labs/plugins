@@ -12,7 +12,7 @@
       "name": "soc",
       "displayName": "Exabeam Agentic SOC plugin",
       "source": "./soc",
-      "description": "Exabeam Agentic SOC plugin (Preview) — the socxen SOC skill suite for Exabeam New-Scale, for Claude Code and OpenAI Codex. Three skills over one guarded Exabeam MCP bridge: soc-investigate (alert/case investigation to a written verdict), triage-cases (prioritise the open queue), rule-tuning (find noisy detection rules). Containment is recommended for a human; dismiss/close is held behind the host agent's approval gate. Pinned build of socxen 0.8.5 (2026-08-30); upstream: open-agent-ai-security/socxen.",
+      "description": "Exabeam Agentic SOC plugin (Preview) — Exabeam's agentic SOC skill suite for New-Scale, for Claude Code and OpenAI Codex. Three skills over one guarded Exabeam MCP bridge: soc-investigate takes an alert or case from first look to a written verdict; triage-cases prioritises the open queue; rule-tuning finds the detection rules wasting analyst attention. Containment is recommended for a human, never executed; dismiss/close is held behind the host agent's approval gate. Blessed build 0.8.5 (2026-08-30), pinned — it does not move until Exabeam moves it.",
       "license": "Apache-2.0",
       "keywords": [
         "exabeam",
