@@ -26,7 +26,7 @@ codex plugin add soc@exabeam
 
 | Plugin | Shown as | What it does | Build |
 |---|---|---|---|
-| **`soc`** | Exabeam Agentic SOC plugin | Agentic SOC skill suite for Exabeam New-Scale. Three skills over one guarded Exabeam MCP bridge: **soc-investigate** takes an alert or case from first look to a written verdict; **triage-cases** prioritises the open queue; **rule-tuning** finds the detection rules wasting analyst attention. Containment is recommended for a human, never executed; dismiss/close is held behind the host agent's approval gate. | **0.8.5** (2026-08-30) — pinned; see [`vendor.lock.json`](vendor.lock.json) |
+| **`soc`** | Exabeam Agentic SOC plugin | Agentic SOC skill suite for Exabeam New-Scale. Three skills over one guarded Exabeam MCP bridge: **soc-investigate** takes an alert or case from first look to a written verdict; **triage-cases** prioritises the open queue; **rule-tuning** finds the detection rules wasting analyst attention. Containment is recommended for a human, never executed; dismiss/close is held behind the host agent's approval gate. | **0.8.6** (2026-09-08) — pinned; see [`vendor.lock.json`](vendor.lock.json) |
 
 After installing, complete the plugin's own setup — one credentials file and, on Claude Code, one
 governance-gate merge: [`soc/docs/installation.md`](soc/docs/installation.md). On Codex the gate
