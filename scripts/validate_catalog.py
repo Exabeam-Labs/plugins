@@ -139,10 +139,11 @@ def check_vendored(label, src, name, lock, problems):
         # operator ends up with a different plugin than the catalog named (Exabeam/plugins#3 review).
         try:
             ident_name = json.loads((d / "identity.json").read_text()).get("name")
-        except Exception:
-            ident_name = None
-        names = {"catalog entry": name, ".claude-plugin/plugin.json": pj.get("name"),
-                 ".codex-plugin/plugin.json": codex_name, "identity.json": ident_name}
+        except Exception as e:
+            problems.append(f"{label}: the payload ships gen_identity.py but identity.json is unreadable ({e})"); return None
+        names = {"catalog entry": name, ".claude-plugin/plugin.json": pj.get("name"), "identity.json": ident_name}
+        if codex.exists():                       # a host manifest that is absent is not a name that disagrees
+            names[".codex-plugin/plugin.json"] = codex_name
         if len({v for v in names.values()}) != 1:
             problems.append(f"{label}: the plugin must have ONE name — " + ", ".join(f"{k}={v!r}" for k, v in names.items())
                             + " — re-key through identity.json + gen_identity.py, never by hand")
