@@ -69,12 +69,19 @@ declared overlay, updates `vendor.lock.json`, and does not commit.
 **The gate.** `scripts/validate_catalog.py` requires every source to be either vendored with a
 `vendor.lock.json` record or an object source carrying a 40-hex `sha`; a floating ref alone is
 rejected. Source repositories must be `https://github.com/<allow-listed org>/<repo>.git`, parsed
-in full. An entry's name must equal the payload's Codex manifest name (Codex enforces it; Claude
-Code merely tolerates a mismatch); a rename is declared as a lock **overlay** — a per-file field
-patch that the vendor script applies after export and the validator re-applies before its
-byte-identity diff — and is never applied to the Claude manifest, whose name governs the skill
-and MCP namespaces the permission gate matches on. Both vendored and sha-pinned sources were
-verified to install on both hosts (2026-09-02).
+in full. **The plugin has one name.** For a payload that ships its own identity generator
+(socxen ≥ 0.8.6, `gen_identity.py`), the catalog entry, both host manifests and `identity.json` must
+agree, and the payload's own `gen_identity.py --check` must pass — a rename is declared as a lock
+**overlay** on `identity.json` only, which the vendor script applies after export and then runs the
+generator, so both manifests, the permission snippet's `mcp__plugin_<name>_<server>__` prefix and
+`identity.sh` (what the payload's installer and preflight read) all follow from that one file. The
+validator re-applies the same overlay and regeneration to a fresh upstream export before its
+byte-identity diff. A hand-edited re-key — one manifest patched, the rest left upstream — shipped a
+payload named `soc` on Codex and `socxen` on Claude Code whose own installer would have installed the
+community plugin (#3 review); the generator path is what upstream built to make that impossible. A
+payload without a generator (socxen 0.8.5) may carry only the legacy Codex-manifest patch, never one
+on the Claude manifest. Both vendored and sha-pinned sources were verified to install on both hosts
+(2026-09-02).
 
 **Controls on `main`.** Changes land by PR with a required approval; CI validates with *main's*
 copy of the validator, so a PR cannot change the rules and the payload together;
