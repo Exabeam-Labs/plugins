@@ -38,11 +38,16 @@ def git(*args, cwd=None, binary=False):
 
 
 def apply_overlay(root, overlay):
-    """A declared, reviewable identity patch on top of the byte-identical export — today only the
-    Codex manifest's `name` (Codex refuses an install whose entry name differs from it) and its
-    display name. The Claude manifest is never touched: its name governs the skill/MCP namespaces
-    the permission gate matches on. The validator re-applies the same overlay to a fresh upstream
-    export before diffing, so 'byte-identical modulo the declared overlay' is what CI proves."""
+    """A declared, reviewable identity patch on top of the byte-identical export.
+
+    A payload that ships `gen_identity.py` (socxen >= 0.8.6) is re-keyed the way its upstream built
+    for: the overlay patches `identity.json` only, and `regenerate()` runs the payload's own generator
+    so BOTH manifests, the permission snippet's `mcp__plugin_<name>_<server>__` prefix and `identity.sh`
+    (which install.sh / preflight.sh read) all follow from that one file. Nothing else is hand-edited —
+    a hand-edited re-key is exactly what shipped a payload named `soc` on Codex and `socxen` on Claude
+    Code (Exabeam/plugins#3 review). The validator re-applies the same overlay and regeneration to a
+    fresh upstream export before diffing, so 'byte-identical modulo the declared identity' is what CI
+    proves. A payload without a generator may carry only the legacy Codex-manifest patch."""
     for rel, patch in (overlay or {}).items():
         f = root / rel
         d = json.loads(f.read_text())
@@ -53,6 +58,17 @@ def apply_overlay(root, overlay):
                 cur = cur.setdefault(k, {})
             cur[parts[-1]] = val
         f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
+
+
+def regenerate(root):
+    """Run the payload's own identity generator after the overlay (no-op for a payload without one)."""
+    gen = root / "gen_identity.py"
+    if gen.is_file():
+        r = subprocess.run([sys.executable, "gen_identity.py"], cwd=root, capture_output=True, text=True)
+        if r.returncode != 0:
+            sys.exit(f"error: the payload's gen_identity.py failed after the overlay: {(r.stderr or r.stdout).strip()[:300]}")
+        return True
+    return False
 
 
 def export(upstream, sha, path, dest):
@@ -94,6 +110,7 @@ def main():
     subject, date = export(upstream, sha, path, stage)
     overlay = rec.get("overlay") or {}
     apply_overlay(stage, overlay)
+    regenerated = regenerate(stage)
     version = json.loads((stage / ".claude-plugin" / "plugin.json").read_text())["version"]
 
     if a.check:
@@ -101,7 +118,7 @@ def main():
         shutil.rmtree(stage.parent, ignore_errors=True)
         if diff.returncode == 0:
             print(f"OK — ./{a.entry}/ is byte-identical to {upstream} {path}/ @ {sha[:12]} ({version})"
-                  + (f", modulo the declared overlay on {sorted(overlay)}" if overlay else "")); return 0
+                  + (f", modulo the declared overlay on {sorted(overlay)}" + (" + gen_identity.py" if regenerated else "") if overlay else "")); return 0
         print(f"DRIFT — ./{a.entry}/ differs from upstream @ {sha[:12]}:\n" + diff.stdout); return 1
 
     if target.exists():
@@ -116,7 +133,8 @@ def main():
         **({"overlay": overlay} if overlay else {}),
     }
     LOCK.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n")
-    print(f"vendored ./{a.entry}/ <- {upstream} {path}/ @ {sha[:12]} — version {version}\n"
+    print(f"vendored ./{a.entry}/ <- {upstream} {path}/ @ {sha[:12]} — version {version}"
+          + (f"\n  identity: overlay on {sorted(overlay)}" + (" applied and the payload's gen_identity.py re-run" if regenerated else " applied") if overlay else "") + "\n"
           f"  release: {subject} ({date})\n"
           f"  next: review `git diff` (that diff is the release review), then open a PR.")
     return 0

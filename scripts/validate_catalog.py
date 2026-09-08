@@ -130,7 +130,29 @@ def check_vendored(label, src, name, lock, problems):
             codex_name = json.loads(codex.read_text()).get("name")
         except Exception:
             pass
-    if name and (codex_name or pj.get("name")) != name:
+    generator = (d / "gen_identity.py").is_file()
+    if generator:
+        # A self-regenerating payload (socxen >= 0.8.6): ONE name everywhere. Claude Code namespaces the
+        # skills and the bundled MCP by the Claude manifest's name (which the permission gate matches on),
+        # Codex refuses an install whose entry name differs from its manifest, and identity.sh is what the
+        # payload's own installer reads — so entry, both manifests and identity.json must agree, or the
+        # operator ends up with a different plugin than the catalog named (Exabeam/plugins#3 review).
+        try:
+            ident_name = json.loads((d / "identity.json").read_text()).get("name")
+        except Exception as e:
+            problems.append(f"{label}: the payload ships gen_identity.py but identity.json is unreadable ({e})"); return None
+        names = {"catalog entry": name, ".claude-plugin/plugin.json": pj.get("name"), "identity.json": ident_name}
+        if codex.exists():                       # a host manifest that is absent is not a name that disagrees
+            names[".codex-plugin/plugin.json"] = codex_name
+        if len({v for v in names.values()}) != 1:
+            problems.append(f"{label}: the plugin must have ONE name — " + ", ".join(f"{k}={v!r}" for k, v in names.items())
+                            + " — re-key through identity.json + gen_identity.py, never by hand")
+            return None
+        r = subprocess.run([sys.executable, "gen_identity.py", "--check"], cwd=d, capture_output=True, text=True)
+        if r.returncode != 0:
+            problems.append(f"{label}: the payload's own gen_identity.py --check fails: {(r.stdout or r.stderr).strip()[:200]}")
+            return None
+    elif name and (codex_name or pj.get("name")) != name:
         problems.append(f"{label}: entry name {name!r} != payload's Codex manifest name {codex_name or pj.get('name')!r} — "
                         f"Codex refuses the install on a mismatch; declare the rename as a vendor.lock overlay")
         return None
@@ -156,11 +178,17 @@ def check_vendored(label, src, name, lock, problems):
     if rec.get("version") != version:
         problems.append(f"{label}: vendor.lock version {rec.get('version')!r} != vendored plugin.json version {version!r}")
     overlay = rec.get("overlay") or {}
-    if not isinstance(overlay, dict) or any(
-            not isinstance(v, dict) or not _clean_path(label, "overlay file", k, []) or ".claude-plugin/" in k
-            for k, v in overlay.items()):
-        problems.append(f"{label}: overlay must map payload-relative JSON files (never the Claude manifest) to "
-                        f"{{dotted.field: value}} patches, got {overlay!r}")
+    if not isinstance(overlay, dict) or any(not isinstance(v, dict) or not _clean_path(label, "overlay file", k, [])
+                                            for k, v in overlay.items()):
+        problems.append(f"{label}: overlay must map payload-relative JSON files to {{dotted.field: value}} patches, got {overlay!r}")
+        return None
+    if generator and set(overlay) - {"identity.json"}:
+        problems.append(f"{label}: this payload regenerates its identity — the overlay may patch identity.json only "
+                        f"(the manifests, the permission snippet and identity.sh are derived from it), got {sorted(overlay)}")
+        return None
+    if not generator and any(".claude-plugin/" in k for k in overlay):
+        problems.append(f"{label}: overlay must never patch the Claude manifest (its name governs the namespaces the "
+                        f"permission gate matches on), got {sorted(overlay)}")
         return None
     return {"dir": d, **rec}
 
@@ -237,6 +265,10 @@ def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None)
             problems.append(f"{label}: cannot export {path!r} at {sha[:12]}: {tar.stderr.decode(errors='replace')[:200]}"); return
         subprocess.run(["tar", "-x", "-C", str(export)], input=tar.stdout, check=True)
         _apply_overlay(export, overlay)   # the declared identity patch; everything else must match exactly
+        if (export / "gen_identity.py").is_file():          # ...after the payload's own generator has run on it
+            r = subprocess.run([sys.executable, "gen_identity.py"], cwd=export, capture_output=True, text=True)
+            if r.returncode != 0:
+                problems.append(f"{label}: gen_identity.py failed on the upstream export after the overlay: {(r.stderr or r.stdout).strip()[:200]}"); return
         diff = subprocess.run(["diff", "-r", "--brief", str(export), str(vendored_dir)], capture_output=True, text=True)
         if diff.returncode != 0:
             lines = [ln for ln in diff.stdout.splitlines() if ln.strip()][:6]
@@ -323,7 +355,7 @@ def main(argv) -> int:
             print(f"  - {p}")
         return 1
     print(f"catalog manifest OK — {len(plugins)} plugin(s), every source vendored-with-provenance or sha-pinned"
-          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo declared overlays)"
+          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo the declared identity overlay + the payload's own regeneration)"
              if verify else " (structural only; add --verify-upstream to check against upstream)"))
     return 0
 
