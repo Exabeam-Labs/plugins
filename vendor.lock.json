@@ -2,10 +2,10 @@
   "soc": {
     "upstream": "https://github.com/open-agent-ai-security/socxen.git",
     "path": "plugin",
-    "sha": "444ed356ac5b6a8fc5492b8bb49097f1356f677c",
-    "version": "0.8.5",
-    "release": "socxen 0.8.5 — socxen runs on OpenAI Codex (#138), 2026-08-30",
-    "vendored": "2026-09-02",
+    "sha": "4cc6a1c1bb648b21444eda8fef4e08ca0ca671ca",
+    "version": "0.8.6",
+    "release": "socxen 0.8.6 — security, performance, robustness: the human-in-the-loop gate ships ON, the bridge is the enforcement point (#166), 2026-09-08",
+    "vendored": "2026-09-08",
     "blessed_by": "Steve Wilson",
     "overlay": {
       ".codex-plugin/plugin.json": {

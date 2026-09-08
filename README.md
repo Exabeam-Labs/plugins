@@ -26,7 +26,7 @@ codex plugin add soc@exabeam
 
 | Plugin | Shown as | What it does | Build |
 |---|---|---|---|
-| **`soc`** | Exabeam Agentic SOC plugin | Agentic SOC skill suite for Exabeam New-Scale. Three skills over one guarded Exabeam MCP bridge: **soc-investigate** takes an alert or case from first look to a written verdict; **triage-cases** prioritises the open queue; **rule-tuning** finds the detection rules wasting analyst attention. Containment is recommended for a human, never executed; dismiss/close is held behind the host agent's approval gate. | **0.8.5** (2026-08-30) — pinned; see [`vendor.lock.json`](vendor.lock.json) |
+| **`soc`** | Exabeam Agentic SOC plugin | Agentic SOC skill suite for Exabeam New-Scale. Three skills over one guarded Exabeam MCP bridge: **soc-investigate** takes an alert or case from first look to a written verdict; **triage-cases** prioritises the open queue; **rule-tuning** finds the detection rules wasting analyst attention. Containment is recommended for a human, never executed; dismiss/close is held behind the host agent's approval gate. | **0.8.6** (2026-08-30) — pinned; see [`vendor.lock.json`](vendor.lock.json) |
 
 After installing, complete the plugin's own setup — one credentials file and, on Claude Code, one
 governance-gate merge: [`soc/docs/installation.md`](soc/docs/installation.md). On Codex the gate
@@ -35,6 +35,9 @@ ships inside the package, so there is no merge step.
 > The plugin's in-package documentation names its open-source distribution key in some install
 > commands. On this channel the commands above are authoritative; the setup steps themselves
 > (credentials, the Claude Code gate merge) apply unchanged.
+
+**Preflight under this catalog.** The payload's `preflight.sh` looks the installed plugin up by the community id (`socxen@open-agent-ai-security`). Under `soc@exabeam`, run it as
+`SOCXEN_PLUGIN=soc SOCXEN_MARKETPLACE=exabeam bash <install path>/preflight.sh` — otherwise its Claude Code gate check reports the plugin as not installed while the bundled hook is installed and active (the hook keys on the Claude manifest name `socxen`, which this catalog never changes). Codex is unaffected. A self-locating preflight is queued upstream.
 
 ## What "blessed build" means
 
