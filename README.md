@@ -36,9 +36,6 @@ ships inside the package, so there is no merge step.
 > commands. On this channel the commands above are authoritative; the setup steps themselves
 > (credentials, the Claude Code gate merge) apply unchanged.
 
-**Preflight under this catalog.** The payload's `preflight.sh` looks the installed plugin up by the community id (`socxen@open-agent-ai-security`). Under `soc@exabeam`, run it as
-`SOCXEN_PLUGIN=soc SOCXEN_MARKETPLACE=exabeam bash <install path>/preflight.sh` — otherwise its Claude Code gate check reports the plugin as not installed while the bundled hook is installed and active (the hook keys on the Claude manifest name `socxen`, which this catalog never changes). Codex is unaffected. A self-locating preflight is queued upstream.
-
 ## What "blessed build" means
 
 - **It does not move.** Two analysts installing a month apart get identical bytes. Nothing changes

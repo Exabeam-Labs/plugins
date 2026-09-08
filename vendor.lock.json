@@ -8,10 +8,12 @@
     "vendored": "2026-09-08",
     "blessed_by": "Steve Wilson",
     "overlay": {
-      ".codex-plugin/plugin.json": {
+      "identity.json": {
         "name": "soc",
-        "interface.displayName": "Exabeam Agentic SOC plugin",
-        "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules."
+        "displayName": "Exabeam Agentic SOC plugin",
+        "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
+        "marketplace.repo": "Exabeam/plugins",
+        "marketplace.name": "exabeam"
       }
     }
   }
