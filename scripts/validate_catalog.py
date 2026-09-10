@@ -196,13 +196,18 @@ def check_vendored(label, src, name, lock, problems):
     if not isinstance(files, dict) or any(not isinstance(v, str) for v in files.values()):
         problems.append(f"{label}: overlay_files must map a payload file name to a catalog-relative source path, got {files!r}")
         return None
+    home = (ROOT / "overlays" / name).resolve()
     for rel, src in files.items():
         if rel not in FILE_OVERLAY_ALLOWED:
             problems.append(f"{label}: overlay_files may replace only {FILE_OVERLAY_ALLOWED}, got {rel!r}"); return None
-        if not _clean_path(label, "overlay_files source", src, problems) or not src.startswith(f"overlays/{name}/"):
+        if not _clean_path(label, "overlay_files source", src, problems):
+            return None                                        # _clean_path already said why
+        if not src.startswith(f"overlays/{name}/"):
             problems.append(f"{label}: overlay_files source must live under overlays/{name}/, got {src!r}"); return None
-        if not (ROOT / src).is_file():
-            problems.append(f"{label}: overlay_files source {src!r} does not exist"); return None
+        p = ROOT / src
+        if not p.is_file() or p.is_symlink() or not p.resolve().is_relative_to(home):
+            problems.append(f"{label}: overlay_files source {src!r} must be a regular file under overlays/{name}/ "
+                            f"(missing, a symlink, or resolving outside it)"); return None
     return {"dir": d, **rec}
 
 
