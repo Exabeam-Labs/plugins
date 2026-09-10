@@ -3,6 +3,8 @@
 Exabeam's plugin channel for AI coding agents — [Claude Code](https://claude.com/claude-code) and
 [OpenAI Codex](https://openai.com/codex/).
 
+Everything here is governed by the [Exabeam Enterprise Agreement](https://www.exabeam.com/legal/enterprise-agreement/) unless specified otherwise — see [License](#license).
+
 One plugin today: **an agentic SOC assistant for Exabeam New-Scale.** It works your alerts and cases
 through the Exabeam MCP — gathering evidence, reaching a verdict, and writing it up — with the
 consequential actions held behind your explicit approval.
@@ -117,6 +119,12 @@ and what protects `main`.
 
 ## License
 
-The catalog is [Apache-2.0](LICENSE). The plugin is built on Apache-2.0 licensed open-source
-software and carries its own license and attribution notices in its directory
-([`soc/LICENSE`](soc/LICENSE), [`soc/NOTICE`](soc/NOTICE)).
+The plugins distributed here are **commercially licensed** under the
+[Exabeam Enterprise Agreement](https://www.exabeam.com/legal/enterprise-agreement/) and are subject to
+the same terms of use as the Exabeam products they work with. This repository is governed by the same
+agreement unless a file or directory specifies otherwise — see [`LICENSE`](LICENSE). Each plugin carries
+its own `LICENSE` and `NOTICE` in its directory.
+
+Some plugins are built on open-source projects whose source is also available under open-source terms
+through the [Open Agent and AI Security community](https://open-agent-ai-security.github.io/). Those
+distributions are governed by their own licenses, not by this one.
