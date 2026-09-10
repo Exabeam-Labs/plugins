@@ -77,8 +77,10 @@ def apply_file_overlays(root, files):
         if rel not in FILE_OVERLAY_ALLOWED:
             sys.exit(f"error: file overlay may replace only {FILE_OVERLAY_ALLOWED}, got {rel!r}")
         s = ROOT / src
-        if not s.is_file():
-            sys.exit(f"error: file overlay source {src!r} does not exist in this repository")
+        home = (ROOT / "overlays" / root.name).resolve()      # the stage is named after the entry
+        if not s.is_file() or s.is_symlink() or not s.resolve().is_relative_to(home):
+            sys.exit(f"error: file overlay source {src!r} must be a regular file under overlays/{root.name}/ "
+                     f"in this repository (no symlinks, nothing outside it) — the validator enforces the same")
         (root / rel).write_bytes(s.read_bytes())
 
 
