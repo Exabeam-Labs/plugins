@@ -144,7 +144,6 @@ h2{font-size:26px;margin:44px 0 16px;font-weight:800;letter-spacing:-.01em}
 .card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .card h3{font-size:24px;margin:0 0 4px;font-weight:800}
 .card .short{font-size:17px;color:#2b3138;margin:0 0 12px}
-.card .build{font-size:14px;color:var(--mut)}
 .card .desc{margin:12px 0 18px}
 .skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:8px 0 18px}
 .skill{background:var(--soft);border-radius:10px;padding:14px 16px}
@@ -156,7 +155,6 @@ h2{font-size:26px;margin:44px 0 16px;font-weight:800;letter-spacing:-.01em}
 .install h4{margin:0 0 8px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
 .links{margin-top:16px;font-size:15px}
 .links a{margin-right:18px}
-.note{border-left:4px solid var(--green);background:#f0fbf0;padding:12px 16px;border-radius:6px;margin:18px 0}
 .card.soon{border:2px dashed #c9d0d8;background:var(--soft);text-align:center;padding:30px 28px}
 .card.soon h3{font-size:20px;margin:0 0 6px}.card.soon p{margin:0 auto;max-width:620px;color:#2b3138}
 .terms{background:var(--soft);border-radius:12px;padding:22px 26px;margin-top:8px}
@@ -196,7 +194,6 @@ def render(catalog, entries):
   <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam/plugins</pre></div>
   <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam/plugins</pre></div>
 </div>
-<div class="note"><b>Use the install commands shown here.</b> A plugin's in-package guides may show the commands for a different distribution of the same plugin, under a different marketplace and key. On this marketplace the keys are the ones above. Everything else in those guides — credentials, the safety gate, troubleshooting — applies unchanged.</div>
 
 <h2 id="plugins">Plugins</h2>
 <div class="grid">""")
@@ -206,7 +203,6 @@ def render(catalog, entries):
         for s in e["skills"]:
             ask = " · ".join(f"“{h(a)}”" for a in s["ask"])
             skills += f'<div class="skill"><b><code>{h(s["name"])}</code></b>' + (f'<div class="ask">{ask}</div>' if ask else "") + f'<p>{h(s["summary"])}</p></div>'
-        build = f'Build <b>{h(e["version"])}</b>' + (f' · pinned at <code>{h(e["sha"])}</code>' if e["sha"] else "") + (f' · blessed {h(e["blessed"])}' if e["blessed"] else "")
         links = []
         if e["docs"]: links.append(f'<a href="{REPO_URL}/blob/main/{h(e["docs"])}">Documentation</a>')
         if e["setup"]: links.append(f'<a href="{REPO_URL}/blob/main/{h(e["setup"])}">Setup guide</a>')
@@ -217,7 +213,6 @@ def render(catalog, entries):
     <div><h3>{h(e['display'])}</h3><p class="short">{h(e['short'] or e['description'])}</p></div>
     <div class="hosts">{hosts}<span class="pill b">{h(e['category'].title() if e['category'] else 'Plugin')}</span></div>
   </div>
-  <div class="build">{build}</div>
   <p class="desc">{h(e['description'])}</p>
   <div class="skills">{skills}</div>
   <div class="two">
