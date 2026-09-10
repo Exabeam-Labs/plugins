@@ -7,12 +7,6 @@ One plugin today: **an agentic SOC assistant for Exabeam New-Scale.** It works y
 through the Exabeam MCP — gathering evidence, reaching a verdict, and writing it up — with the
 consequential actions held behind your explicit approval.
 
-> ⚠️ **Preview — evaluate it, don't depend on it yet.** Entries here are real, reviewed and pinned,
-> but the underlying project ships its own pre-release notice: expect breaking changes between
-> versions, and have a human review every action rather than pointing it at alerts whose disposition
-> matters unattended. See the payload's own
-> [status notice](soc/README.md). The tier will be raised as a deliberate, dated act.
-
 ## The three skills
 
 | Skill | Whose work it is | What it does |
@@ -39,11 +33,16 @@ codex plugin marketplace add Exabeam/plugins
 codex plugin add soc@exabeam
 ```
 
-> **Use the commands above, not the ones in the plugin's own docs.** The payload is the upstream
-> open-source project, and its in-package guides name *its* distribution key
-> (`socxen@open-agent-ai-security`) in install, update and uninstall commands. On this channel the
-> key is `soc@exabeam`. Everything else in those guides — credentials, the gate, troubleshooting —
-> applies unchanged.
+> **Use the commands above, not the ones in the plugin's in-package guides.** Those guides carry the
+> install, update and uninstall commands for the plugin's upstream distribution, under a different
+> marketplace and a different plugin key. On this channel the key is `soc@exabeam`. Everything else
+> in those guides — credentials, the gate, troubleshooting — applies unchanged.
+
+> **Already have this plugin from another marketplace?** Uninstall it first. The two carry different
+> plugin keys, so installing this one does not replace it — you would get two enabled plugins, two
+> copies of all three skills, and two Exabeam MCP servers each minting its own token against the
+> same tenant. Nothing breaks, but your tool surface doubles and every permission rule has to be
+> written twice.
 
 ## Then set it up
 
@@ -90,50 +89,33 @@ find noisy rules
 
 - **A host agent** — the `claude` or `codex` CLI.
 - **A supported model.** On Claude Code, **Sonnet 4.6+ or Opus**; smaller models such as Haiku are
-  **not supported** for this skill. On Codex the red-team gate has run on GPT-5.6 Terra at medium
-  reasoning effort — treat that path as packaged rather than proven. Details and the full tier table
-  are in the [prerequisites](soc/docs/installation.md#prerequisites).
+  **not supported** for this skill, which reasons over attacker-influenced log data. The full tier
+  table is in the [prerequisites](soc/docs/installation.md#prerequisites).
 - **An Exabeam New-Scale API key + secret** (OAuth client-credentials). The MCP inherits the key's
   access level, so scope it to what you want the agent to reach.
 - **[`uv`](https://docs.astral.sh/uv/)** — runs the connector; it installs its own Python
   dependencies, so there is nothing to `pip install`.
 
-## Which catalog to install from
-
-This plugin is also published by its open-source community at
-`socxen@open-agent-ai-security`, following that project's `main`. This channel serves the same code
-at a pinned, reviewed commit under Exabeam's name.
-
-**Pick one and install it alone.** The two entries carry different plugin keys — `soc` here,
-`socxen` there — so they do not collide into one: install both and you get two enabled plugins, two
-copies of all three skills (`soc:soc-investigate` *and* `socxen:soc-investigate`, and so on) and two
-Exabeam MCP servers, each minting its own token against the same tenant. Nothing breaks, but your
-tool surface doubles and every permission rule has to be written twice.
-
-Install from here if you want a build that does not move under you. Install from the community
-catalog if you want upstream's latest as it lands.
+> **On Codex,** the skills' routing and adversarial-input evaluations have been run against the
+> Claude Code path; the equivalent runs on an OpenAI model have not landed yet. The safety gate
+> itself ships and is enforced on both hosts. Prefer Claude Code where you have the choice.
 
 ## Provenance
 
 Every entry is a **blessed build**: a payload Exabeam has reviewed and pinned to an exact commit.
 Two analysts installing a month apart get identical bytes, and nothing changes under them until
 Exabeam moves it — which happens as a reviewed pull request here, not a ref moving elsewhere. CI
-proves on every change that the vendored tree is byte-identical to its upstream source at the pinned
+proves on every change that the vendored tree is byte-identical to its reviewed source at the pinned
 commit.
 
-[`vendor.lock.json`](vendor.lock.json) names the source repository, subdirectory, commit, version, release date and who
-blessed it. Current build: **socxen 0.8.6**, pinned at `4cc6a1c`, blessed 2026-09-08.
+[`vendor.lock.json`](vendor.lock.json) names the source repository, subdirectory, commit, version,
+release date and who blessed it. Current build: **0.8.6**, pinned at `4cc6a1c`, blessed 2026-09-08.
 
 Maintainers: see **[MAINTAINERS.md](MAINTAINERS.md)** for how builds get blessed, the rev policy,
 and what protects `main`.
 
-## Open source
-
-The `soc` payload is the Apache-2.0 open-source project **socxen**
-([open-agent-ai-security/socxen](https://github.com/open-agent-ai-security/socxen)) — Fedora and
-RHEL, for the agent era.
-
 ## License
 
-The catalog is [Apache-2.0](LICENSE). Each vendored plugin carries its own license in its
-directory (`soc/LICENSE`, Apache-2.0).
+The catalog is [Apache-2.0](LICENSE). The plugin is built on Apache-2.0 licensed open-source
+software and carries its own license and attribution notices in its directory
+([`soc/LICENSE`](soc/LICENSE), [`soc/NOTICE`](soc/NOTICE)).
