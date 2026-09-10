@@ -67,6 +67,22 @@ community plugin (#3 review); the generator path is what upstream built to make 
 payload without a generator (socxen 0.8.5) may carry only the legacy Codex-manifest patch, never one
 on the Claude manifest.
 
+## The license overlay
+
+The community distribution of a payload is Apache-2.0. This catalog vends the same code under
+Exabeam's commercial terms, so the copy served here has to say so *inside the tree* — an installed
+plugin whose `LICENSE` file contradicts its manifest is worse than either alone. Two declared overlays
+carry that, both re-applied by the validator before its byte-identity diff:
+
+- **`license` in the identity overlay** — one more field patched into `identity.json`; the payload's
+  generator writes it into both host manifests.
+- **`overlay_files`** in the lock record — whole-file replacement of `LICENSE` and/or `NOTICE` (nothing
+  else is accepted) from files kept under `overlays/<entry>/`. The replacement `LICENSE` is a short
+  pointer to the agreement by URL, never a copy of its text.
+
+Everything else in the tree stays byte-identical to upstream: the gate now proves *identical modulo the
+declared identity and license*. `vendor_plugin.py` applies both on bless and on `--check`.
+
 ## Controls on `main`
 
 Changes land by PR with a required approval; CI validates with *main's* copy of the validator, so a

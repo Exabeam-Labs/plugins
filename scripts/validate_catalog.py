@@ -190,6 +190,19 @@ def check_vendored(label, src, name, lock, problems):
         problems.append(f"{label}: overlay must never patch the Claude manifest (its name governs the namespaces the "
                         f"permission gate matches on), got {sorted(overlay)}")
         return None
+    # The license overlay: whole-file replacements, LICENSE / NOTICE only, sourced from this repository.
+    # The community distribution stays Apache-2.0; the copy served here carries Exabeam's terms in-tree.
+    files = rec.get("overlay_files") or {}
+    if not isinstance(files, dict) or any(not isinstance(v, str) for v in files.values()):
+        problems.append(f"{label}: overlay_files must map a payload file name to a catalog-relative source path, got {files!r}")
+        return None
+    for rel, src in files.items():
+        if rel not in FILE_OVERLAY_ALLOWED:
+            problems.append(f"{label}: overlay_files may replace only {FILE_OVERLAY_ALLOWED}, got {rel!r}"); return None
+        if not _clean_path(label, "overlay_files source", src, problems) or not src.startswith(f"overlays/{name}/"):
+            problems.append(f"{label}: overlay_files source must live under overlays/{name}/, got {src!r}"); return None
+        if not (ROOT / src).is_file():
+            problems.append(f"{label}: overlay_files source {src!r} does not exist"); return None
     return {"dir": d, **rec}
 
 
@@ -225,6 +238,14 @@ def _git(*args, cwd=None):
     return r.stdout
 
 
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE.md", "NOTICE.md")
+
+
+def _apply_file_overlays(root, files):
+    for rel, src in (files or {}).items():
+        (root / rel).write_bytes((ROOT / src).read_bytes())
+
+
 def _apply_overlay(root, overlay):
     for rel, patch in (overlay or {}).items():
         f = root / rel
@@ -238,7 +259,7 @@ def _apply_overlay(root, overlay):
         f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
 
 
-def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None):
+def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None, overlay_files=None):
     """Prove: sha exists upstream, is an ancestor of upstream's default branch, and (if vendored)
     the vendored tree is byte-identical to upstream's `path` at sha. Fails closed on any error."""
     tmp = Path(tempfile.mkdtemp(prefix="catalog-verify-"))
@@ -269,6 +290,7 @@ def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None)
             r = subprocess.run([sys.executable, "gen_identity.py"], cwd=export, capture_output=True, text=True)
             if r.returncode != 0:
                 problems.append(f"{label}: gen_identity.py failed on the upstream export after the overlay: {(r.stderr or r.stdout).strip()[:200]}"); return
+        _apply_file_overlays(export, overlay_files)   # the declared license files, last
         diff = subprocess.run(["diff", "-r", "--brief", str(export), str(vendored_dir)], capture_output=True, text=True)
         if diff.returncode != 0:
             lines = [ln for ln in diff.stdout.splitlines() if ln.strip()][:6]
@@ -332,11 +354,11 @@ def main(argv) -> int:
         if isinstance(src, str):
             rec = check_vendored(label, src, name, lock, problems)
             if rec:
-                to_verify.append((label, rec["upstream"], rec["sha"], rec["dir"], rec["path"], rec.get("overlay")))
+                to_verify.append((label, rec["upstream"], rec["sha"], rec["dir"], rec["path"], rec.get("overlay"), rec.get("overlay_files")))
         elif isinstance(src, dict):
             rec = check_pinned(label, src, problems)
             if rec:
-                to_verify.append((label, rec["url"], rec["sha"], None, None, None))
+                to_verify.append((label, rec["url"], rec["sha"], None, None, None, None))
         else:
             problems.append(f"{label}: source must be a './<dir>' string (vendored) or an object (pinned), got {type(src).__name__}")
 
@@ -346,8 +368,8 @@ def main(argv) -> int:
                 problems.append(f"vendor.lock.json: record {k!r} has no catalog entry — stale lock")
 
     if verify and not problems:
-        for label, url, sha, vdir, vpath, overlay in to_verify:
-            verify_upstream(label, url, sha, vdir, vpath, problems, overlay)
+        for label, url, sha, vdir, vpath, overlay, overlay_files in to_verify:
+            verify_upstream(label, url, sha, vdir, vpath, problems, overlay, overlay_files)
 
     if problems:
         print("catalog manifest problems:")
@@ -355,7 +377,7 @@ def main(argv) -> int:
             print(f"  - {p}")
         return 1
     print(f"catalog manifest OK — {len(plugins)} plugin(s), every source vendored-with-provenance or sha-pinned"
-          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo the declared identity overlay + the payload's own regeneration)"
+          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo the declared identity overlay + the payload's own regeneration + the declared license files)"
              if verify else " (structural only; add --verify-upstream to check against upstream)"))
     return 0
 
