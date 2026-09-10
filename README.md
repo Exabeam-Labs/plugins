@@ -1,13 +1,15 @@
-# Exabeam Plugin Marketplace
+# Exabeam Plug-in Forge
 
-Exabeam's plugin channel for AI coding agents — [Claude Code](https://claude.com/claude-code) and
+Exabeam plugins for AI agents. Add Exabeam's knowledge and capabilities to the AI agent of your
+choice, on your terms — bring your own AI, with your choice of model, agent harness and data
+sovereignty. Today's plugins run in [Claude Code](https://claude.com/claude-code) and
 [OpenAI Codex](https://openai.com/codex/).
 
 Everything here is governed by the [Exabeam Enterprise Agreement](https://www.exabeam.com/legal/enterprise-agreement/) unless specified otherwise — see [License](#license).
 
-A marketplace of Exabeam plugins — each a reviewed build pinned to an exact release, each carrying
-its own skills. The front door, with every plugin and its skills, is the generated
-[`index.html`](index.html) (served as the GitHub Pages site once this repository is public).
+The Forge vends stable, reviewed Exabeam plugins, each carrying its own skills. The front door,
+with every plugin and its skills, is the generated [`index.html`](index.html), served as this
+repository's GitHub Pages site.
 
 | Plugin | Install as | What it is | Skills |
 |---|---|---|---|

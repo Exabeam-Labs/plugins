@@ -89,6 +89,12 @@ Changes land by PR with a required approval; CI validates with *main's* copy of 
 PR cannot change the rules and the payload together; `.github/CODEOWNERS` covers the manifest, the
 payloads, the lock, the validator and the workflow, and "Require review from Code Owners" is on.
 
+While the repository is private and no customer has installed from it, the maintainer may merge
+with admin privilege to move quickly — every such merge is still a PR with green checks, and the
+rules-then-payload ordering above still applies. That allowance ends at the public flip or the first
+customer install, whichever comes first; from then on every PR takes a human approval and the
+required checks, with no admin bypass.
+
 ## Fixing something in the payload
 
 You can't fix it here. The vendored tree under `soc/` must stay byte-identical to upstream at the
