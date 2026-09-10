@@ -184,7 +184,7 @@ def render(catalog, entries):
   <div class="kicker">Exabeam Plug-in Forge</div>
   <h1>Exabeam plugins for AI agents.</h1>
   <p class="lead">Add Exabeam's knowledge and capabilities to the AI agent of your choice, on your terms. Bring your own AI — your choice of model, agent harness and data sovereignty — and put Exabeam's products to work inside it.</p>
-  <div class="hosts"><span class="pill g">Pinned, reviewed builds</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
+  <div class="hosts"><span class="pill g">Stable, reviewed plug-ins</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
 </div></section>
 
 <main class="wrap">
@@ -226,7 +226,7 @@ codex plugin add {h(e['name'])}@{h(catalog['name'])}</pre></div>
     parts.append(f"""
 <article class="card soon" id="coming-soon">
   <h3>More plugins coming soon</h3>
-  <p>The Agentic SOC plugin is the first of a family. More Exabeam plugins for third-party agent frameworks will land here as pinned, reviewed builds under the same terms — <a href="{REPO_URL}">watch the repository</a> to see them arrive.</p>
+  <p>The Agentic SOC plugin is the first of a family. More Exabeam plugins for third-party agent frameworks will land here as stable, reviewed plug-ins under the same terms — <a href="{REPO_URL}">watch the repository</a> to see them arrive.</p>
 </article>
 </div>
 
@@ -237,7 +237,7 @@ codex plugin add {h(e['name'])}@{h(catalog['name'])}</pre></div>
 </div>
 </main>
 
-<footer><div class="wrap">© 2026 Exabeam, Inc. · <a href="{REPO_URL}">Exabeam/plugins on GitHub</a> · Every entry is a pinned, reviewed build with provenance in <a href="{REPO_URL}/blob/main/vendor.lock.json">vendor.lock.json</a>. Generated from the catalog by <code>scripts/build_site.py</code>.</div></footer>
+<footer><div class="wrap">© 2026 Exabeam, Inc. · <a href="{REPO_URL}">Exabeam/plugins on GitHub</a> · Every entry is a stable, reviewed build with provenance in <a href="{REPO_URL}/blob/main/vendor.lock.json">vendor.lock.json</a>. Generated from the catalog by <code>scripts/build_site.py</code>.</div></footer>
 </body>
 </html>
 """)
