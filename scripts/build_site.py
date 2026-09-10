@@ -183,7 +183,7 @@ def render(catalog, entries):
 <section class="hero"><div class="wrap">
   <div class="kicker">Exabeam Plug-in Forge</div>
   <h1>Exabeam plugins for AI agents.</h1>
-  <p class="lead">Plugins that put Exabeam's products to work inside third-party agent frameworks — each one a reviewed build, pinned to an exact release, that does not change until Exabeam changes it. Which frameworks each plugin supports is on its card.</p>
+  <p class="lead">Add Exabeam's knowledge and capabilities to the AI agent of your choice, on your terms. Bring your own AI — your choice of model, agent harness and data sovereignty — and put Exabeam's products to work inside it.</p>
   <div class="hosts"><span class="pill g">Pinned, reviewed builds</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
 </div></section>
 
