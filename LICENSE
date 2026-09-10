@@ -15,7 +15,11 @@ Specified otherwise:
   - Each vendored plugin carries its own LICENSE and NOTICE files in its
     directory (for example, soc/LICENSE and soc/NOTICE), which govern that
     plugin as distributed here.
-  - Files in this repository that carry an SPDX-License-Identifier header (the
-    catalog tooling under scripts/) are licensed as their header states.
+  - The catalog tooling under scripts/ carries SPDX-License-Identifier headers
+    and is licensed as those headers state.
+  - An SPDX-License-Identifier header on a file inside a vendored plugin's
+    directory is inherited from that plugin's upstream source and does not
+    specify otherwise: the plugin's own LICENSE and NOTICE govern every file in
+    its directory as distributed here.
 
 Copyright 2026 Exabeam, Inc. All rights reserved.
