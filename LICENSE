@@ -15,10 +15,6 @@ Specified otherwise:
   - Each vendored plugin carries its own LICENSE and NOTICE files in its
     directory (for example, soc/LICENSE and soc/NOTICE), which govern that
     plugin as distributed here.
-  - Some plugins are built on open-source projects whose source is also
-    available under open-source terms through the Open Agent and AI Security
-    community (https://open-agent-ai-security.github.io/). Those distributions
-    are governed by their own licenses, not by this one.
   - Files in this repository that carry an SPDX-License-Identifier header (the
     catalog tooling under scripts/) are licensed as their header states.
 
