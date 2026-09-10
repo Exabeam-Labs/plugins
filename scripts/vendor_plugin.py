@@ -60,6 +60,28 @@ def apply_overlay(root, overlay):
         f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
 
 
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE.md", "NOTICE.md")
+
+
+def apply_file_overlays(root, files):
+    """Replace whole files in the export with files kept in this repository — the license overlay.
+
+    The community distribution of a payload is Apache-2.0; this catalog vends the same code under
+    Exabeam's commercial terms, so the copy served here must carry those terms *inside the tree*
+    (an installed plugin whose LICENSE file contradicts its manifest is worse than either alone).
+    `files` maps a payload-relative name (LICENSE / NOTICE only) to a catalog-relative source file,
+    e.g. {"LICENSE": "overlays/soc/LICENSE"}. Applied after the identity overlay and regeneration; the
+    validator re-applies the same files before its byte-identity diff, so the gate still proves
+    'identical to upstream modulo the declared identity and license'."""
+    for rel, src in (files or {}).items():
+        if rel not in FILE_OVERLAY_ALLOWED:
+            sys.exit(f"error: file overlay may replace only {FILE_OVERLAY_ALLOWED}, got {rel!r}")
+        s = ROOT / src
+        if not s.is_file():
+            sys.exit(f"error: file overlay source {src!r} does not exist in this repository")
+        (root / rel).write_bytes(s.read_bytes())
+
+
 def regenerate(root):
     """Run the payload's own identity generator after the overlay (no-op for a payload without one)."""
     gen = root / "gen_identity.py"
@@ -111,6 +133,8 @@ def main():
     overlay = rec.get("overlay") or {}
     apply_overlay(stage, overlay)
     regenerated = regenerate(stage)
+    overlay_files = rec.get("overlay_files") or {}
+    apply_file_overlays(stage, overlay_files)
     version = json.loads((stage / ".claude-plugin" / "plugin.json").read_text())["version"]
 
     if a.check:
@@ -118,7 +142,8 @@ def main():
         shutil.rmtree(stage.parent, ignore_errors=True)
         if diff.returncode == 0:
             print(f"OK — ./{a.entry}/ is byte-identical to {upstream} {path}/ @ {sha[:12]} ({version})"
-                  + (f", modulo the declared overlay on {sorted(overlay)}" + (" + gen_identity.py" if regenerated else "") if overlay else "")); return 0
+                  + (f", modulo the declared overlay on {sorted(overlay)}" + (" + gen_identity.py" if regenerated else "") if overlay else "")
+                  + (f" + file overlays on {sorted(overlay_files)}" if overlay_files else "")); return 0
         print(f"DRIFT — ./{a.entry}/ differs from upstream @ {sha[:12]}:\n" + diff.stdout); return 1
 
     if target.exists():
@@ -131,10 +156,12 @@ def main():
         "vendored": datetime.date.today().isoformat(),
         "blessed_by": a.blessed_by or rec.get("blessed_by", ""),
         **({"overlay": overlay} if overlay else {}),
+        **({"overlay_files": overlay_files} if overlay_files else {}),
     }
     LOCK.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n")
     print(f"vendored ./{a.entry}/ <- {upstream} {path}/ @ {sha[:12]} — version {version}"
-          + (f"\n  identity: overlay on {sorted(overlay)}" + (" applied and the payload's gen_identity.py re-run" if regenerated else " applied") if overlay else "") + "\n"
+          + (f"\n  identity: overlay on {sorted(overlay)}" + (" applied and the payload's gen_identity.py re-run" if regenerated else " applied") if overlay else "")
+          + (f"\n  license: file overlays applied on {sorted(overlay_files)}" if overlay_files else "") + "\n"
           f"  release: {subject} ({date})\n"
           f"  next: review `git diff` (that diff is the release review), then open a PR.")
     return 0
