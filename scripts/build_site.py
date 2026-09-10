@@ -38,7 +38,7 @@ HOST_LABELS = {"claude": "Claude Code", "codex": "OpenAI Codex"}
 
 
 def frontmatter(text):
-    m = re.match(r"---\n(.*?)\n---", text, re.S)
+    m = re.match(r"---\r?\n(.*?)\r?\n---", text, re.S)
     if not m:
         return {}
     fm, out, key, buf = m.group(1), {}, None, []
@@ -74,18 +74,18 @@ def invocations(description, limit=3):
 
 
 def load():
-    catalog = json.loads(CATALOG.read_text())
-    lock = json.loads(LOCK.read_text()) if LOCK.exists() else {}
+    catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    lock = json.loads(LOCK.read_text(encoding="utf-8")) if LOCK.exists() else {}
     entries = []
     for e in catalog["plugins"]:
         name = e["name"]
         src = e.get("source")
         pdir = ROOT / src[2:] if isinstance(src, str) and src.startswith("./") else None
-        ident = json.loads((pdir / "identity.json").read_text()) if pdir and (pdir / "identity.json").exists() else {}
+        ident = json.loads((pdir / "identity.json").read_text(encoding="utf-8")) if pdir and (pdir / "identity.json").exists() else {}
         skills = []
         if pdir and (pdir / "skills").is_dir():
             for sk in sorted((pdir / "skills").glob("*/SKILL.md")):
-                fm = frontmatter(sk.read_text())
+                fm = frontmatter(sk.read_text(encoding="utf-8"))
                 desc = fm.get("description", "")
                 skills.append({"name": fm.get("name") or sk.parent.name, "summary": first_sentence(desc), "ask": invocations(desc)})
         hosts = []
@@ -94,7 +94,10 @@ def load():
             if (pdir / ".codex-plugin" / "plugin.json").exists(): hosts.append("codex")
         # Order the skills the way the entry's own description introduces them; alphabetical for the rest.
         desc = e.get("description", "")
-        skills.sort(key=lambda s: (desc.find(s["name"]) if desc.find(s["name"]) >= 0 else 10**6, s["name"]))
+        def by_mention(s):                      # skills in the order the entry description names them
+            i = desc.find(s["name"])
+            return (i if i >= 0 else 10**6, s["name"])
+        skills.sort(key=by_mention)
         rec = lock.get(name, {})
         entries.append({
             "name": name, "display": e.get("displayName") or name, "description": e.get("description", ""),
@@ -250,11 +253,12 @@ def main(argv):
     catalog, entries = load()
     page = render(catalog, entries)
     if "--check" in argv:
-        current = OUT.read_text() if OUT.exists() else ""
+        current = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
         if current != page:
             print("index.html is STALE — regenerate with: python3 scripts/build_site.py"); return 1
         print("index.html is current with the catalog sources"); return 0
-    OUT.write_text(page)
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:   # the same bytes on every platform
+        f.write(page)
     print(f"wrote {OUT.relative_to(ROOT)} — {len(entries)} plugin(s): " + ", ".join(e["name"] for e in entries))
     return 0
 
