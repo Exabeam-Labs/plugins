@@ -117,6 +117,12 @@ and what protects `main`.
 
 ## License
 
-The catalog is [Apache-2.0](LICENSE). The plugin is built on Apache-2.0 licensed open-source
-software and carries its own license and attribution notices in its directory
-([`soc/LICENSE`](soc/LICENSE), [`soc/NOTICE`](soc/NOTICE)).
+**Apache-2.0, Copyright 2026 Exabeam, Inc.** — both this catalog ([`LICENSE`](LICENSE)) and the
+plugin it serves ([`soc/LICENSE`](soc/LICENSE), [`soc/NOTICE`](soc/NOTICE)). The plugin is
+Exabeam's own open-source project, developed in the open and served here at a pinned commit — not
+third-party code redistributed under Exabeam's name. Contributions to it are accepted under the
+same license with a required DCO sign-off.
+
+The connector's Python dependencies are resolved and fetched by [`uv`](https://docs.astral.sh/uv/)
+on the machine that runs it; they are not redistributed by this repository. The exact pinned set is
+in [`soc/connector/exabeam-mcp-bridge.py.lock`](soc/connector/exabeam-mcp-bridge.py.lock).
