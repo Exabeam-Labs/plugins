@@ -52,7 +52,7 @@ Two one-time steps, both covered by **[the setup guide](soc/docs/installation.md
 1. **Connect Exabeam** — put your New-Scale API key and secret in `~/.exabeam-mcp.env`. The bridge
    mints and refreshes the OAuth token itself, so you never handle an expiring token.
 2. **Optionally merge the permission pack** — a second lock, independent of the shipped gate. Nothing
-   merges by default; `install.sh --merge-permissions` will do it for you.
+   merges by default; `install.sh --merge-permissions`, run from the installed plugin's directory, will do it for you.
 
 On Claude Code the safety gate is a hook that is **active the moment the plugin is enabled** — there
 is nothing you must merge to be safe. On Codex the same tiers ship inside the package as
