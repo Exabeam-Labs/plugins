@@ -96,9 +96,10 @@ find noisy rules
 - **[`uv`](https://docs.astral.sh/uv/)** — runs the connector; it installs its own Python
   dependencies, so there is nothing to `pip install`.
 
-> **On Codex,** the skills' routing and adversarial-input evaluations have been run against the
-> Claude Code path; the equivalent runs on an OpenAI model have not landed yet. The safety gate
-> itself ships and is enforced on both hosts. Prefer Claude Code where you have the choice.
+> **On Codex,** the plugin's adversarial-input gate has passed at the floor tier (GPT-5.6 Terra at
+> medium reasoning effort), and the safety gate is enforced on both hosts. The skills' *routing*
+> evaluations have not yet been run against an OpenAI model. Prefer Claude Code where you have the
+> choice.
 
 ## Provenance
 
