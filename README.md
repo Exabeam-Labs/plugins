@@ -5,9 +5,15 @@ Exabeam's plugin channel for AI coding agents — [Claude Code](https://claude.c
 
 Everything here is governed by the [Exabeam Enterprise Agreement](https://www.exabeam.com/legal/enterprise-agreement/) unless specified otherwise — see [License](#license).
 
-One plugin today: **an agentic SOC assistant for Exabeam New-Scale.** It works your alerts and cases
-through the Exabeam MCP — gathering evidence, reaching a verdict, and writing it up — with the
-consequential actions held behind your explicit approval.
+A marketplace of Exabeam plugins — each a reviewed build pinned to an exact release, each carrying
+its own skills. The front door, with every plugin and its skills, is the generated
+[`index.html`](index.html) (served as the GitHub Pages site once this repository is public).
+
+| Plugin | Install as | What it is | Skills |
+|---|---|---|---|
+| **Exabeam Agentic SOC plugin** | `soc@exabeam` | An agentic SOC assistant for Exabeam New-Scale: works your alerts and cases through the Exabeam MCP — gathering evidence, reaching a verdict, writing it up — with the consequential actions held behind your explicit approval. [Documentation](soc/README.md) | `soc-investigate` · `triage-cases` · `rule-tuning` |
+
+The rest of this page describes that first plugin. More plugins will be added as rows above.
 
 ## The three skills
 

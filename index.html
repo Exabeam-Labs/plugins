@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exabeam Plug-in Forge</title>
+<meta name="description" content="Exabeam&#x27;s plugin marketplace for AI coding agents — Claude Code and OpenAI Codex. Every entry is a pinned, blessed build: it does not move until Exabeam moves it.">
+<style>
+:root{--green:#009D00;--green-l:#4CDB00;--green-d:#106D00;--blue:#006BFF;--blue-l:#27B2FF;--blue-d:#003FCC;
+--ink:#111418;--mut:#5f6774;--line:#e1e5ea;--soft:#f5f7f9;}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:var(--ink);
+font:16px/1.55 "Lausanne","Helvetica Neue",Helvetica,Arial,sans-serif}
+a{color:var(--blue-d)}a:hover{color:var(--blue)}
+code,pre{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+code{font-size:.92em;background:var(--soft);padding:.1em .35em;border-radius:4px}
+pre{background:#0b0f14;color:#e8edf3;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.5;margin:0}
+pre .c{color:#8b98a8}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+header{background:#000;color:#fff}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+header img{height:26px;display:block}
+header nav a{color:#fff;opacity:.85;text-decoration:none;margin-left:22px;font-size:15px}
+header nav a:hover{opacity:1}
+.hero{padding:56px 0 36px;border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-bottom:10px}
+h1{font-size:44px;line-height:1.1;margin:0 0 14px;font-weight:800;letter-spacing:-.02em}
+.lead{font-size:20px;color:#2b3138;max-width:820px;margin:0 0 22px}
+.hosts{display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-block;font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--mut)}
+.pill.g{color:var(--green-d);border-color:#bfe8bf;background:#eefbee}.pill.b{color:var(--blue-d);border-color:#bfd9ff;background:#eaf3ff}
+h2{font-size:26px;margin:44px 0 16px;font-weight:800;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:1fr;gap:20px}
+.card{border:1px solid var(--line);border-radius:12px;padding:26px 28px;background:#fff}
+.card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.card h3{font-size:24px;margin:0 0 4px;font-weight:800}
+.card .short{font-size:17px;color:#2b3138;margin:0 0 12px}
+.card .desc{margin:12px 0 18px}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:8px 0 18px}
+.skill{background:var(--soft);border-radius:10px;padding:14px 16px}
+.skill b{display:block;font-size:15px;margin-bottom:4px}
+.skill .ask{font-size:13.5px;color:var(--mut);font-style:italic;margin-bottom:6px}
+.skill p{margin:0;font-size:14.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.install h4{margin:0 0 8px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.links{margin-top:16px;font-size:15px}
+.links a{margin-right:18px}
+.card.soon{border:2px dashed #c9d0d8;background:var(--soft);text-align:center;padding:30px 28px}
+.card.soon h3{font-size:20px;margin:0 0 6px}.card.soon p{margin:0 auto;max-width:620px;color:#2b3138}
+.terms{background:var(--soft);border-radius:12px;padding:22px 26px;margin-top:8px}
+footer{margin-top:56px;padding:26px 0 40px;border-top:1px solid var(--line);font-size:14px;color:var(--mut)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a href="./" aria-label="Exabeam"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTkuMTYgNTEuMzQiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO3N0cm9rZS13aWR0aDowcHg7fTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTIxLjc0LDQ0LjUzTDQ1LjYzLDExLjU5bDQuMiw1Ljc5LTE5LjY5LDI3LjE1aC04LjRaTTguNCw1MS4zNEw0MS40Miw1Ljc5bC00LjItNS43OUwwLDUxLjM0aDguNFpNNjMuNzUsNDQuNTNsMi44OC0zLjk4LTQuMi01Ljc5LTcuMDgsOS43N2g4LjRaTTQyLjAxLDUxLjM0bDE2LjIyLTIyLjM3LTQuMi01Ljc5LTIwLjQyLDI4LjE3aDguNFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yODEuNzUsMTUuNDJjLTMuNTIsMC01LjgyLjg3LTguNDIsMi4zLTEuMTgtMS40My0zLjA2LTIuMy01Ljk3LTIuM3MtNS4xNSwxLjA3LTcuMywyLjQ1di0yLjA5aC02LjQ4djI4Ljc5aDYuNzR2LTIxLjY5YzIuMDktMS4xMiwzLjYyLTEuNjksNC43LTEuNjksMi44NiwwLDMuNTIsMS4wMiwzLjUyLDQuOTV2MTguNDJoNi43NHYtMTguNDJjMC0xLjI3LS4wNS0yLjU1LS4yMS0zLjY3LDEuODQtLjk3LDMuNzgtMS4yNyw0Ljc1LTEuMjcsMi44NiwwLDMuNjcsMS4wMiwzLjY3LDQuOTV2MTguNDJoNi43NHYtMTguNDJjMC01Ljk3LTEuNTMtMTAuNzItOC40Ny0xMC43MiIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE4NC4zNSwzMS42OGMwLDQuMTgtMS4wNyw3LjMtNS40Niw3LjNoLTQuOXYtMTcuNjljMS40My0uMjEsMy42Ny0uMzYsNC45LS4zNiw0LjM5LDAsNS40NiwzLjExLDUuNDYsNy4zdjMuNDVoMFpNMTc4Ljg4LDE1LjQyYy0xLjIyLDAtMy4wMS4xLTQuOS4zNlY1LjcyaC02Ljc0djM4Ljc3aDExLjY0YzguMjIsMCwxMi4yLTQuODUsMTIuMi0xMi44MXYtMy40NWMwLTcuOTYtMy45OC0xMi44MS0xMi4yLTEyLjgxIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNOTYuNDIsMjcuNzJoLTEwLjgydi0uMjFjMC00LjAzLDIuMy02LjI4LDUuNDYtNi4yOHM1LjM2LDIuMyw1LjM2LDYuMjh2LjIxaDBaTTkxLjA2LDE1LjQyYy03LjgxLDAtMTIuMjUsNS0xMi4yNSwxMi45NnYzLjc4YzAsMTAuMDYsNy4yNSwxMi44MSwxMi4zNSwxMi44MSwzLjc3LDAsNS43OC0uMTcsOC4yMi0uNTdoLjAzYy41My0uMDksMS4wNy0uMTksMS42Ni0uMjkuMDIsMCwuMDMsMCwuMDUtLjAxbDEuMDEtLjE4di0uOWMwLS4wOCwwLS4xNSwwLS4yNHYtMy4zN3MwLS4wNCwwLS4wNnYtLjc5bC0xLjA1LjA5aC0uMDJjLS4xLjAxLS4xOS4wMi0uMjkuMDNsLTEuNi4xNGMtMi4wNi4xNy00LjcyLjM0LTcuNDkuMzQtNC45LDAtNi4xMy0zLjUyLTYuMTMtNi40OHYtLjE1aDE3LjY2di00LjE0YzAtNy42MS00LjI5LTEyLjk2LTEyLjE1LTEyLjk2Ii8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjEzLjQ0LDI3LjcyaC0xMC44MnYtLjIxYzAtNC4wMywyLjMtNi4yOCw1LjQ2LTYuMjhzNS4zNiwyLjMsNS4zNiw2LjI4di4yMWgwWk0yMDguMDgsMTUuNDJjLTcuODEsMC0xMi4yNSw1LTEyLjI1LDEyLjk2djMuNzhjMCwxMC4wNiw3LjI1LDEyLjgxLDEyLjM1LDEyLjgxLDMuNzcsMCw1Ljc4LS4xNyw4LjIyLS41N2guMDNjLjUzLS4wOSwxLjA3LS4xOSwxLjY2LS4yOS4wMiwwLC4wMywwLC4wNS0uMDFsMS4wMS0uMTh2LS45YzAtLjA4LDAtLjE1LDAtLjI0di0zLjM3czAtLjA0LDAtLjA2di0uNzlsLTEuMDUuMDloLS4wMmMtLjEuMDEtLjE5LjAyLS4yOS4wM2wtMS42LjE0Yy0yLjA2LjE3LTQuNzIuMzQtNy40OS4zNC00LjksMC02LjEzLTMuNTItNi4xMy02LjQ4di0uMTVoMTcuNjZ2LTQuMTRjMC03LjYxLTQuMjktMTIuOTYtMTIuMTUtMTIuOTYiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNTMuMzYsMzguMThjLTEuNDguODItMy4zNywxLjQzLTUuMjEsMS40My0yLjU1LDAtMy42Ny0uNjYtMy42Ny0zLjE3di0uMjFjMC0yLjg2LDEuMDItNC4zNCw1LjY3LTQuMzRoMy4yMnY2LjI4aDBaTTE0OC44NywxNS40MmMtMy4xLDAtNS43Ny4zMi03Ljc2LjY3aDBsLS4zMS4wNmMtLjE2LjAzLS4zMS4wNi0uNDUuMDksMCwwLS4wMSwwLS4wMSwwbC0uOTQuMTh2Ljc0cy0uMDEuMDktLjAxLjE0djMuMjdzMCwuMDkuMDEuMTN2Ljg1bDEuNzMtLjE2aDBjMS44LS4xOSw0LjgyLS4zNiw3Ljc2LS4zNnM0LjQ5LjgyLDQuNDksNC4xNHYyLjI1aC0zLjIyYy04Ljg4LDAtMTIuNDUsMy4wMS0xMi40NSw4Ljgzdi4yMWMwLDYuODksNC41OSw4LjUyLDguODMsOC41MiwyLjQ1LDAsNC44NS0uODIsNy4yLTIuMjV2MS44NGg2LjM4di0xOS4zOWMwLTYuNTMtMy45OC05Ljc1LTExLjIzLTkuNzUiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yNDAuMzgsMzguMThjLTEuNDguODItMy4zNywxLjQzLTUuMjEsMS40My0yLjU1LDAtMy42Ny0uNjYtMy42Ny0zLjE3di0uMjFjMC0yLjg2LDEuMDItNC4zNCw1LjY3LTQuMzRoMy4yMnY2LjI4aDBaTTIzNS44OSwxNS40MmMtMy4xLDAtNS43Ny4zMi03Ljc2LjY3aDBsLS4zMS4wNmMtLjE2LjAzLS4zMS4wNi0uNDUuMDksMCwwLS4wMSwwLS4wMSwwbC0uOTQuMTh2Ljc0cy0uMDEuMDktLjAxLjE0djMuMjdzMCwuMDkuMDEuMTN2Ljg1bDEuNzMtLjE2aDBjMS44LS4xOSw0LjgyLS4zNiw3Ljc2LS4zNnM0LjQ5LjgyLDQuNDksNC4xNHYyLjI1aC0zLjIyYy04Ljg4LDAtMTIuNDYsMy4wMS0xMi40Niw4Ljgzdi4yMWMwLDYuODksNC41OSw4LjUyLDguODMsOC41MiwyLjQ1LDAsNC44NS0uODIsNy4yLTIuMjV2MS44NGg2LjM4di0xOS4zOWMwLTYuNTMtMy45OC05Ljc1LTExLjIzLTkuNzUiLz48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iMTI3LjI4IDE1Ljc4IDEyMC4zIDI1LjM3IDExMy4zMyAxNS43OCAxMDYuMzQgMTUuNzggMTE2LjgxIDMwLjE3IDEwNi4zNCA0NC41NyAxMTMuMzMgNDQuNTcgMTIwLjMgMzQuOTcgMTI3LjI4IDQ0LjU3IDEzNC4yNiA0NC41NyAxMjMuOCAzMC4xNyAxMzQuMjYgMTUuNzggMTI3LjI4IDE1Ljc4IDEyNy4yOCAxNS43OCIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTI5NS4xMiwxNy4xNGgtMS4wMnYyLjU2aC0uODZ2LTIuNTZoLTEuMDJ2LS43M2gyLjl2LjczWk0yOTkuMTYsMTYuNDF2My4yOGgtLjgxdi0yLjMxaC0uMDJsLS42MSwyLjMxaC0uNzlsLS42MS0yLjMzaC0uMDJ2Mi4zM2gtLjgxdi0zLjI4aDEuMTdsLjY5LDIuMzkuNjMtMi4zOWgxLjE3WiIvPjwvc3ZnPg==" alt="Exabeam"></a>
+  <nav><a href="#install">Install</a><a href="#plugins">Plugins</a><a href="#terms">Terms</a><a href="https://github.com/Exabeam/plugins">GitHub</a></nav>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <div class="kicker">Exabeam Plug-in Forge</div>
+  <h1>Exabeam plugins for AI agents.</h1>
+  <p class="lead">Add Exabeam's knowledge and capabilities to the AI agent of your choice, on your terms. Bring your own AI — your choice of model, agent harness and data sovereignty — and put Exabeam's products to work inside it.</p>
+  <div class="hosts"><span class="pill g">Pinned, reviewed builds</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
+</div></section>
+
+<main class="wrap">
+<h2 id="install" style="margin-top:36px">Add the Plug-in Forge once</h2>
+<p>Add it once on either host, then install what you need. The plugin key is the same on both hosts: <code>&lt;plugin&gt;@exabeam</code>.</p>
+<div class="two">
+  <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam/plugins</pre></div>
+  <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam/plugins</pre></div>
+</div>
+
+<h2 id="plugins">Plugins</h2>
+<div class="grid">
+<article class="card" id="soc">
+  <div class="top">
+    <div><h3>Exabeam Agentic SOC plugin</h3><p class="short">Triage Exabeam New-Scale alerts and cases end to end — evidence, verdict, and a guarded write path.</p></div>
+    <div class="hosts"><span class="pill">Claude Code</span><span class="pill">OpenAI Codex</span><span class="pill b">Security</span></div>
+  </div>
+  <p class="desc">Exabeam Agentic SOC plugin — an agentic SOC analyst for Exabeam New-Scale, as a plugin for Claude Code and OpenAI Codex. It does the work, not just the chat: hand it an alert or a case and it pulls the events, pivots on the entities, baselines them against what is normal for them, tests the benign explanation and writes the verdict — then acts in the SIEM: opens and annotates the case, updates it, dismisses the alert, closes the case, so you don&#x27;t have to. You stay in control: dismiss and close always ask you first, containment is recommended and never executed, and every call is on an audit trail. Three skills over one guarded Exabeam MCP connection: soc-investigate takes one alert or case from first look to verdict and outcome; triage-cases sweeps the open queue into a ranked “start here” list; rule-tuning finds the detection rules wasting analyst attention and proposes the fix. Built for hostile data: SIEM content is evidence, never instructions — hidden-character smuggling is screened out of what it reads, active content and secrets are neutralized in what it writes back, and the human-in-the-loop gate ships on, enforced by the host, not the model. Red-teamed and behavior-scanned before every release, with the dated results shipped beside the code.</p>
+  <div class="skills"><div class="skill"><b><code>soc-investigate</code></b><div class="ask">“investigate” · “triage this alert/case” · “work this alert”</div><p>Investigate and triage a security alert or case in Exabeam New-Scale, end to end.</p></div><div class="skill"><b><code>triage-cases</code></b><div class="ask">“triage the queue” · “what should I look at” · “what needs attention”</div><p>Prioritize a queue of open Exabeam New-Scale cases — decide what needs a human&#x27;s attention first.</p></div><div class="skill"><b><code>rule-tuning</code></b><div class="ask">“find noisy rules” · “what&#x27;s generating false positives” · “tune detections”</div><p>Find NOISY detection rules in Exabeam New-Scale — noisy, not merely loud — and propose specific, actionable tuning.</p></div></div>
+  <div class="two">
+    <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam/plugins   <span class="c"># once</span>
+claude plugin install soc@exabeam</pre></div>
+    <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam/plugins    <span class="c"># once</span>
+codex plugin add soc@exabeam</pre></div>
+  </div>
+  <div class="links"><a href="https://github.com/Exabeam/plugins/blob/main/soc/README.md">Documentation</a> <a href="https://github.com/Exabeam/plugins/blob/main/soc/docs/installation.md">Setup guide</a> <a href="https://github.com/Exabeam/plugins/blob/main/soc/LICENSE">License</a></div>
+</article>
+<article class="card soon" id="coming-soon">
+  <h3>More plugins coming soon</h3>
+  <p>The Agentic SOC plugin is the first of a family. More Exabeam plugins for third-party agent frameworks will land here as pinned, reviewed builds under the same terms — <a href="https://github.com/Exabeam/plugins">watch the repository</a> to see them arrive.</p>
+</article>
+</div>
+
+<h2 id="terms">Terms and licensing</h2>
+<div class="terms">
+  <p>The plugins distributed here are <b>commercially licensed</b> under the <a href="https://www.exabeam.com/legal/enterprise-agreement/">Exabeam Enterprise Agreement</a> and are subject to the same terms of use as the Exabeam products they work with. This marketplace is governed by the same agreement unless specified otherwise; each plugin carries its own <code>LICENSE</code> and <code>NOTICE</code>.</p>
+  <p style="margin-bottom:0">Some plugins are built on open-source projects whose source is also available under open-source terms through the <a href="https://open-agent-ai-security.github.io/">Open Agent and AI Security community</a>. Those distributions are governed by their own licenses.</p>
+</div>
+</main>
+
+<footer><div class="wrap">© 2026 Exabeam, Inc. · <a href="https://github.com/Exabeam/plugins">Exabeam/plugins on GitHub</a> · Every entry is a pinned, reviewed build with provenance in <a href="https://github.com/Exabeam/plugins/blob/main/vendor.lock.json">vendor.lock.json</a>. Generated from the catalog by <code>scripts/build_site.py</code>.</div></footer>
+</body>
+</html>

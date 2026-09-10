@@ -45,3 +45,11 @@ jobs:
         if: always()
         continue-on-error: true
         run: python3 scripts/validate_catalog.py --verify-upstream
+
+  site:
+    name: Front door is current with the catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: index.html matches what scripts/build_site.py produces from the sources
+        run: python3 scripts/build_site.py --check
