@@ -83,6 +83,27 @@ carry that, both re-applied by the validator before its byte-identity diff:
 Everything else in the tree stays byte-identical to upstream: the gate now proves *identical modulo the
 declared identity and license*. `vendor_plugin.py` applies both on bless and on `--check`.
 
+### Why the split is Exabeam's to make
+
+Exabeam holds the copyright on the whole payload, so the same source can be offered on both terms:
+Apache-2.0 through the open-source project, the Enterprise Agreement through this channel. Neither
+distribution constrains the other, and nothing here withdraws the Apache-2.0 grant upstream.
+
+That rests on the payload being Exabeam's work end to end, and it is. Every file carries
+`Copyright 2026 Exabeam, Inc.`, and every commit touching the vendored directory is Exabeam
+authorship. One of them — `dfb0ff3`, the `rule-tuning` escalation-rate reference — has a personal
+GitHub account in its git *author* field, while its trailers name the employee's Exabeam address as
+co-author and carry a maintainer's DCO sign-off. An authorship sweep that reads only the author
+field will flag it as third-party. It is not, and nothing in the payload is.
+
+Two consequences, both of which have been asked more than once:
+
+- There is **no third-party portion**, so this distribution owes no Apache-2.0 §4 conditions to
+  anyone, and no copy of the Apache-2.0 text needs to ship with it.
+- The `SPDX-License-Identifier: Apache-2.0` headers throughout the payload are upstream's and travel
+  with the source. They record the community distribution's license; they do not override the
+  plugin's own `LICENSE`, which the repository [`LICENSE`](LICENSE) states explicitly.
+
 ## Controls on `main`
 
 Changes land by PR with a required approval; CI validates with *main's* copy of the validator, so a
