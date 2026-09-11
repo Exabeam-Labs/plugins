@@ -1,13 +1,20 @@
 # Copyright 2026 Exabeam, Inc.
 # SPDX-License-Identifier: Apache-2.0
 #
-# Everything that decides what a customer installs requires an owner's review: the manifest, the
-# vendored payloads, the provenance lock, the validator and the workflow that runs it. This is what
-# stops one PR from weakening the gate and repointing (or editing) a payload together. Requires
-# "Require review from Code Owners" on the main branch protection rule.
+# Everything that decides what a customer installs, and under what terms, requires an owner's
+# review: the manifest, the vendored payloads, the provenance lock, the validator and the workflow
+# that runs it, the license files served with each plugin, the repository's own terms, the
+# maintainers' rules, and the generated front door. This is what stops one PR from weakening the
+# gate and repointing (or editing) a payload together. Requires "Require review from Code Owners"
+# on the main branch protection rule.
 
 /.claude-plugin/    @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
 /scripts/           @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
 /.github/           @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
 /vendor.lock.json   @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
 /soc/               @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
+/overlays/          @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
+/LICENSE            @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
+/MAINTAINERS.md     @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
+/index.html         @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
+/assets/            @virtualsteve-exa @mattwillems-exabeam @mike-machnik-exa
