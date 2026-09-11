@@ -7,7 +7,7 @@ build that Exabeam has pinned to an exact release. Today's plugins run in
 [Claude Code](https://claude.com/claude-code) and [OpenAI Codex](https://openai.com/codex/).
 
 The customer-facing front door, with every plugin and its skills, is the
-[Forge site](https://legendary-carnival-62m3je6.pages.github.io/) (generated from this repository).
+[Forge site](https://exabeam.github.io/plugins/) (generated from this repository).
 This page is the repository's own guide: what the Forge vends, how to add it, and — for maintainers,
 reviewers and anyone who needs to know — what is where and how a build gets here.
 
