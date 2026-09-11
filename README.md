@@ -1,35 +1,34 @@
 # Exabeam Plug-in Forge
 
-Exabeam plugins for AI agents. Add Exabeam's knowledge and capabilities to the AI agent of your
-choice, on your terms — bring your own AI, with your choice of model, agent harness and data
-sovereignty. Today's plugins run in [Claude Code](https://claude.com/claude-code) and
-[OpenAI Codex](https://openai.com/codex/).
+The Exabeam Plug-in Forge is Exabeam's marketplace of **commercially licensed plugins for AI
+agents**. Each plugin adds Exabeam's knowledge and capabilities to the agent you already run — your
+choice of model, agent harness and data sovereignty — and every one of them is a stable, reviewed
+build that Exabeam has pinned to an exact release. Today's plugins run in
+[Claude Code](https://claude.com/claude-code) and [OpenAI Codex](https://openai.com/codex/).
 
-Everything here is governed by the [Exabeam Enterprise Agreement](https://www.exabeam.com/legal/enterprise-agreement/) unless specified otherwise — see [License](#license).
+The customer-facing front door, with every plugin and its skills, is the
+[Forge site](https://exabeam.github.io/plugins/) (generated from this repository).
+This page is the repository's own guide: what the Forge vends, how to add it, and — for maintainers,
+reviewers and anyone who needs to know — what is where and how a build gets here.
 
-The Forge vends stable, reviewed Exabeam plugins, each carrying its own skills. The front door,
-with every plugin and its skills, is the generated [`index.html`](index.html), served as this
-repository's GitHub Pages site.
+Everything in this repository is governed by the
+[Exabeam Enterprise Agreement](https://www.exabeam.com/legal/enterprise-agreement/) unless a file or
+directory specifies otherwise — see [License](#license).
 
-| Plugin | Install as | What it is | Skills |
-|---|---|---|---|
-| **Exabeam Agentic SOC plugin** | `soc@exabeam` | An agentic SOC assistant for Exabeam New-Scale: works your alerts and cases through the Exabeam MCP — gathering evidence, reaching a verdict, writing it up — with the consequential actions held behind your explicit approval. [Documentation](soc/README.md) | `soc-investigate` · `triage-cases` · `rule-tuning` |
+## Plugins
 
-The rest of this page describes that first plugin. More plugins will be added as rows above.
+| Plugin | Install as | What it does | Skills | Documentation |
+|---|---|---|---|---|
+| **Exabeam Agentic SOC plugin** | `soc@exabeam` | An agentic SOC analyst for Exabeam New-Scale: hand it an alert or a case and it gathers the evidence, reaches a verdict and acts in the SIEM — with dismiss and close always behind your approval and containment recommended, never executed. | `soc-investigate` · `triage-cases` · `rule-tuning` | [README](soc/README.md) · [Setup guide](soc/docs/installation.md) · [License](soc/LICENSE) |
 
-## The three skills
+More plugins are added as rows here and as cards on the front door. A plugin's documentation ships
+inside the plugin — its `README.md` and `docs/` — and is the same documentation its source
+distribution carries; install with the commands on this page and the plugin key in the table.
 
-| Skill | Whose work it is | What it does |
-|---|---|---|
-| **`soc-investigate`** | the analyst | One alert or case, first look to written verdict: gathers evidence, pivots on entities, weighs competing hypotheses, maps to MITRE ATT&CK, reaches a threat / false-positive verdict, and acts. |
-| **`triage-cases`** | the shift lead | The open queue rather than one case: clusters by attack shape, ranks by corroborated signal (risk score is one input, not the answer), returns a "start here" list plus the noise worth tuning. Read-only across the sweep — never closes in bulk. |
-| **`rule-tuning`** | the detection engineer | Finds rules that are *noisy*, not merely loud (volume × low precision), and proposes the specific change mapped to real Exabeam mechanics — context table, exclusion rule, filter/scope/maturity. Propose-only. |
+## Add the Forge once
 
-Each hands off to the others: a single case to `soc-investigate`, a noise cluster to `rule-tuning`.
-
-## Install
-
-Add the marketplace once, then install the plugin. Same commands and same plugin key on either host.
+Add the marketplace once on either host, then install what you need. The plugin key is the same on
+both hosts: `<plugin>@exabeam`.
 
 **Claude Code**
 ```bash
@@ -43,87 +42,48 @@ codex plugin marketplace add Exabeam/plugins
 codex plugin add soc@exabeam
 ```
 
-> **Use the commands above, not the ones in the plugin's in-package guides.** Those guides carry the
-> install, update and uninstall commands for the plugin's upstream distribution, under a different
-> marketplace and a different plugin key. On this channel the key is `soc@exabeam`. Everything else
-> in those guides — credentials, the gate, troubleshooting — applies unchanged.
+Each plugin's own documentation covers what comes next — credentials, supported models, tooling,
+and what it will and will not do.
 
-> **Already have this plugin from another marketplace?** Uninstall it first. The two carry different
-> plugin keys, so installing this one does not replace it — you would get two enabled plugins, two
-> copies of all three skills, and two Exabeam MCP servers each minting its own token against the
-> same tenant. Nothing breaks, but your tool surface doubles and every permission rule has to be
-> written twice.
+> **Already have the same plugin from another marketplace?** Uninstall it first. A plugin vended
+> here and its community distribution carry different plugin keys, so installing this one does not
+> replace the other — you would end up with two enabled copies of the same skills and two connectors
+> against the same tenant. Nothing breaks, but the tool surface doubles.
 
-## Then set it up
+## What is where
 
-Two one-time steps, both covered by **[the setup guide](soc/docs/installation.md)**:
+This repository will be public by its nature, so the layout is documented here rather than assumed.
 
-1. **Connect Exabeam** — put your New-Scale API key and secret in `~/.exabeam-mcp.env`. The bridge
-   mints and refreshes the OAuth token itself, so you never handle an expiring token.
-2. **Optionally merge the permission pack** — a second lock, independent of the shipped gate. Nothing
-   merges by default; `install.sh --merge-permissions`, run from the installed plugin's directory, will do it for you.
+| Path | What it is |
+|---|---|
+| [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | The catalog manifest both hosts read: the marketplace name (`exabeam`), and one entry per plugin — name, display name, description, source directory, license. |
+| `soc/` (one directory per plugin) | The **vendored payload**: a `git archive` of the plugin's source repository at the pinned commit, byte-identical to that source apart from the declared identity and license overlays. Never edited by hand — see [Fixing something in the payload](MAINTAINERS.md#fixing-something-in-the-payload). |
+| [`vendor.lock.json`](vendor.lock.json) | Provenance per entry: source repository, subdirectory, commit, version, release notes, blessing date, who blessed it, and the overlays applied. The current pins live here, not in prose. |
+| `overlays/<entry>/` | The `LICENSE` and `NOTICE` served with each plugin from this marketplace — the commercial terms, by reference. |
+| [`scripts/vendor_plugin.py`](scripts/vendor_plugin.py) | Blesses or re-vendors an entry: exports the source at a commit, applies the identity overlay, runs the plugin's own generator, applies the license files, writes the lock record. |
+| [`scripts/validate_catalog.py`](scripts/validate_catalog.py) | The CI gate. Validates the manifest and the lock, and with `--verify-upstream` proves each vendored tree is byte-identical to a fresh export of its source at the pinned commit, modulo the declared overlays. |
+| [`scripts/build_site.py`](scripts/build_site.py) | Renders the front door, [`index.html`](index.html), from the manifest, the lock, each payload's identity and its skills' metadata. `--check` fails CI if the page drifts from the catalog. |
+| `index.html`, `assets/` | The generated front door and its logo, served by GitHub Pages from `main`. |
+| [`.github/workflows/validate.yml`](.github/workflows/validate.yml) | Two jobs on every PR and push to `main`: `catalog` (the validator, with upstream verification) and `site` (the front door is current). |
+| [`.github/CODEOWNERS`](.github/CODEOWNERS) | Review from code owners is required on the manifest, the payloads, the lock, the validator and the workflow. |
+| [`MAINTAINERS.md`](MAINTAINERS.md) | How a build is blessed, the rev policy, the gate, the license overlay, what protects `main`, and the verification log. |
+| [`LICENSE`](LICENSE) | The terms for this repository, and where a file or directory specifies otherwise. |
 
-On Claude Code the safety gate is a hook that is **active the moment the plugin is enabled** — there
-is nothing you must merge to be safe. On Codex the same tiers ship inside the package as
-tool-approval policy, so there is no merge step at all.
+## How a build gets here
 
-## Using it
+1. The plugin's source project cuts a release.
+2. A maintainer runs `scripts/vendor_plugin.py`, which exports the source at that commit, re-keys it
+   to this marketplace through the plugin's own identity generator, applies the commercial license
+   files, and records the provenance in `vendor.lock.json`.
+3. That change is a pull request. CI proves the vendored tree is byte-identical to the source at the
+   pinned commit, modulo the declared overlays, and that the front door still matches the catalog.
+4. A code owner reviews and it merges. From then on, two people installing a month apart get the
+   same bytes, and nothing changes under them until the next blessed build lands the same way.
 
-Ask for the job, and the host agent routes to the right skill:
-
-```
-investigate alert <id>
-triage the queue
-find noisy rules
-```
-
-## What it will and won't do
-
-- **Containment is never executed.** Host isolation, account disable, IP blocks and the rest are
-  *recommended* for you to perform in EDR/IAM. The gate denies them outright — and that denial holds
-  even under `--dangerously-skip-permissions`.
-- **Dismiss and close always ask.** Closing an alert or case, and sending mail, require an explicit
-  human yes every time — and are refused outright when no human is present (headless runs included).
-- **Reads and escalation run freely.** Evidence gathering, opening a case and writing case notes need
-  no prompt, so a fresh install is useful immediately without weakening anything.
-- **Detection content is read-only.** `rule-tuning` proposes; the MCP's rule-write tools are denied on
-  both hosts. Detection engineering applies the change.
-- **It treats your telemetry as hostile.** Log data is attacker-influenced by construction, so hidden
-  character smuggling is stripped from what it reads, and active content (formulas, clickable links)
-  plus credentials and structured identifiers are neutralized in anything it writes back.
-- **It keeps a local audit trail.** Every gate decision — including refused attempts — and every time
-  a guardrail fired is recorded under `~/.socxen/`, on by default, bounded, and local: no network
-  egress.
-
-## Requirements
-
-- **A host agent** — the `claude` or `codex` CLI.
-- **A supported model.** On Claude Code, **Sonnet 4.6+ or Opus**; smaller models such as Haiku are
-  **not supported** for this skill, which reasons over attacker-influenced log data. The full tier
-  table is in the [prerequisites](soc/docs/installation.md#prerequisites).
-- **An Exabeam New-Scale API key + secret** (OAuth client-credentials). The MCP inherits the key's
-  access level, so scope it to what you want the agent to reach.
-- **[`uv`](https://docs.astral.sh/uv/)** — runs the connector; it installs its own Python
-  dependencies, so there is nothing to `pip install`.
-
-> **On Codex,** the plugin's adversarial-input gate has passed at the floor tier (GPT-5.6 Terra at
-> medium reasoning effort), and the safety gate is enforced on both hosts. The skills' *routing*
-> evaluations have not yet been run against an OpenAI model. Prefer Claude Code where you have the
-> choice.
-
-## Provenance
-
-Every entry is a **blessed build**: a payload Exabeam has reviewed and pinned to an exact commit.
-Two analysts installing a month apart get identical bytes, and nothing changes under them until
-Exabeam moves it — which happens as a reviewed pull request here, not a ref moving elsewhere. CI
-proves on every change that the vendored tree is byte-identical to its reviewed source at the pinned
-commit.
-
-[`vendor.lock.json`](vendor.lock.json) names the source repository, subdirectory, commit, version,
-release date and who blessed it. Current build: **0.8.6**, pinned at `4cc6a1c`, blessed 2026-09-08.
-
-Maintainers: see **[MAINTAINERS.md](MAINTAINERS.md)** for how builds get blessed, the rev policy,
-and what protects `main`.
+The rules and the payloads never change in the same pull request, and CI validates every change with
+`main`'s copy of the validator, so a change cannot loosen the gate and slip a payload through it
+together. The details, and the record of what was verified when, are in
+[MAINTAINERS.md](MAINTAINERS.md).
 
 ## License
 
