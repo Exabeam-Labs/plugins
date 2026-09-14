@@ -1,1 +1,5 @@
 .DS_Store
+
+# byte-code the vendor step can leave behind when the payload's generator imports its own modules
+__pycache__/
+*.pyc
