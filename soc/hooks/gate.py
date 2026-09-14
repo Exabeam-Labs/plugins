@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
 """socxen's human-in-the-loop gate for Claude Code, shipped INSIDE the plugin as a PreToolUse hook.
 
 Why this exists. Claude Code lets a plugin ship code that takes part in permission decisions, but not

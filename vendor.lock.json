@@ -2,16 +2,16 @@
   "soc": {
     "upstream": "https://github.com/open-agent-ai-security/socxen.git",
     "path": "plugin",
-    "sha": "4cc6a1c1bb648b21444eda8fef4e08ca0ca671ca",
-    "version": "0.8.6",
-    "release": "socxen 0.8.6 — security, performance, robustness: the human-in-the-loop gate ships ON, the bridge is the enforcement point (#166), 2026-09-08",
-    "vendored": "2026-09-08",
+    "sha": "bf7db6676cdd3973bd6cf77eed1ee3ec26d0217f",
+    "version": "0.8.7",
+    "release": "socxen 0.8.7 \u2014 hotfix: the plugin loads from an install again. 0.8.6 declared the bundled hook in its Claude manifest, a file the host already loads by convention, and the loader refused the whole plugin (gate, skills, MCP server) while `plugin install` reported success; the manifest no longer names the hook, which still ships and still registers. Also carried: two prose-position formula shapes in the output neutralizer and the mutation gate over every neutralizer rule; first blessing whose identity overlay relicenses the SPDX headers, README badge and identity.sh from `license`. 2026-09-14",
+    "vendored": "2026-09-14",
     "blessed_by": "Steve Wilson",
     "overlay": {
       "identity.json": {
         "name": "soc",
         "displayName": "Exabeam Agentic SOC plugin",
-        "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
+        "description": "Exabeam Agentic SOC plugin \u2014 agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action \u2014 with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
         "marketplace.repo": "Exabeam/plugins",
         "marketplace.name": "exabeam",
         "license": "LicenseRef-Exabeam-Enterprise-Agreement"
