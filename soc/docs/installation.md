@@ -1,6 +1,6 @@
 <!--
   Copyright 2026 Exabeam, Inc.
-  SPDX-License-Identifier: Apache-2.0
+  SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
 -->
 
 # Installation
@@ -9,7 +9,8 @@ socxen ships as a portable **agent skill suite** (`skills/`) for **Claude Code**
 running against the **Exabeam New-Scale MCP**. Both hosts load the same skills and the same guarded
 connector; only the packaging and where the safety gate lives differ. It investigates and triages alerts/cases end to end and produces
 a structured report. It takes no destructive action: containment is *recommended* for a human, and
-dismiss/close are *gated* — by permission rules **and** an explicit confirmation the skill asks for.
+dismiss/close are *gated* — by the bundled hook on Claude Code or the tool-approval policy on Codex,
+**and** an explicit confirmation the skill asks for.
 
 ## Prerequisites
 
@@ -20,9 +21,11 @@ dismiss/close are *gated* — by permission rules **and** an explicit confirmati
   default (it's the most injection-susceptible and cheapest to run), and a release run additionally sweeps
   Opus. Smaller models (e.g. Haiku) are **not supported** for this skill.
 
-  On **Codex**, the red-team gate has run on **GPT-5.6 Terra** at `model_reasoning_effort = "medium"`
-  (2026-08-27: zero landings in the blocking classes — see `security/redteam/HISTORY.md`). The routing
-  evals have not yet been run against an OpenAI model, and the Sol sweep has not been run.
+  On **Codex**, the red-team gate has run the **full 22-fixture corpus** on **GPT-5.6 Terra** at
+  `model_reasoning_effort = "medium"` against the 0.8.6 tree — 2026-09-06 (0 landed) and 2026-09-07
+  (110/110 resisted, 0 dead drives); see the [red-team history](https://github.com/open-agent-ai-security/socxen/blob/main/security/redteam/HISTORY.md). The routing evals have *not*
+  been run against an OpenAI model — the routing eval harness has no Codex host yet — and the Sol sweep has not
+  been run.
 
   The intended tiers mirror the Claude Code discipline — gate on the weakest supported tier, sweep the
   strongest at release — and map by capability, not by name:
@@ -38,8 +41,9 @@ dismiss/close are *gated* — by permission rules **and** an explicit confirmati
   at that level. Codex accepts `minimal | low | medium | high | xhigh`; there is no `auto`. A run at a
   different effort is a different result, so quote the effort alongside the number.
 
-  Until that run lands, treat the Codex path as *packaged, not proven* — the same conservative reading
-  you would give any un-gated release.
+  Adversarial-input coverage on Codex is therefore current with the shipped tree. What is outstanding
+  there is the **routing** corpus and the Sol sweep — so treat skill *routing* on Codex as unmeasured
+  until those land, rather than the path as a whole as un-gated.
 - **An Exabeam New-Scale API key + secret** (OAuth client-credentials), from the New-Scale platform
   (role-gated; the MCP inherits the key's access level). You wire it up in *Connect the Exabeam MCP*
   below — the skill uses read tools to gather evidence and case/alert tools to act.
@@ -52,15 +56,15 @@ dismiss/close are *gated* — by permission rules **and** an explicit confirmati
 Install from the plugin marketplace. From your terminal:
 
 ```bash
-claude plugin marketplace add open-agent-ai-security/plugins
-claude plugin install socxen@open-agent-ai-security
-claude plugin list      # confirm: socxen@open-agent-ai-security, enabled
+claude plugin marketplace add Exabeam/plugins
+claude plugin install soc@exabeam
+claude plugin list      # confirm: soc@exabeam, enabled
 ```
 
 > socxen is published through the community marketplace
-> ([open-agent-ai-security/plugins](https://github.com/open-agent-ai-security/plugins)), which
+> ([Exabeam/plugins](https://github.com/Exabeam/plugins)), which
 > registers under the name `open-agent-ai-security` — so the install target is
-> `socxen@open-agent-ai-security` (the part after `@` is the marketplace name). The same
+> `soc@exabeam` (the part after `@` is the marketplace name). The same
 > marketplace serves every community plugin (praxen is `praxen@open-agent-ai-security`); one
 > `marketplace add` covers them all.
 
@@ -69,8 +73,8 @@ distributed from a marketplace hosted in this repo. Migrate with:
 
 ```bash
 claude plugin marketplace remove socxen                        # also uninstalls socxen@socxen
-claude plugin marketplace add open-agent-ai-security/plugins   # re-points in place if already present
-claude plugin install socxen@open-agent-ai-security
+claude plugin marketplace add Exabeam/plugins   # re-points in place if already present
+claude plugin install soc@exabeam
 ```
 
 > **Remove the old marketplace first — don't just add the new one.** The two marketplaces have
@@ -103,9 +107,9 @@ Codex reads the **same community marketplace** as the Claude Code path — the c
 `main`-branch pin are shared, so the plugin key is the same shape. From your terminal:
 
 ```bash
-codex plugin marketplace add open-agent-ai-security/plugins
-codex plugin add socxen@open-agent-ai-security
-codex plugin list      # confirm: socxen@open-agent-ai-security, installed, enabled
+codex plugin marketplace add Exabeam/plugins
+codex plugin add soc@exabeam
+codex plugin list      # confirm: soc@exabeam, installed, enabled
 ```
 
 That's the whole install. **There is no installer script and no permissions merge on Codex** — Codex
@@ -179,7 +183,7 @@ The bundled server registers as `exabeam`; the governance rules match its plugin
 > On **Codex** the same tiers ship inside the package as tool-approval policy, and Codex cancels a
 > destructive tool when nobody is there to approve it. Nothing to merge on either host.
 >
-> The hook also grants the reads: its *allow* on the 16 read tools and the two escalation writes
+> The hook also grants the reads: its *allow* on the 19 read tools and the two escalation writes
 > bypasses the prompt, so with nothing merged a safe operation runs silently and a dangerous one asks —
 > the same split Codex applies from the same tier file (verified headless in default permission mode,
 > 2026-09-06). Your own rules still win: a `deny` on one of these tools removes it from the model's tool
@@ -205,7 +209,8 @@ same tiers, enforced by Claude Code's own permission system), and nothing more. 
 reads (usually `~/.claude/settings.json` — see [Which settings file?](#which-settings-file) below):
 
 - **allow** the read + escalation tools,
-- **`ask`** on `update_alert` / `update_case` (dismiss/close — where a wrong verdict does the most harm),
+- **`ask`** on `update_alert` / `update_case` / `send_email` (dismiss/close and outbound mail — where a
+  wrong verdict does the most harm),
 - **`deny`** the 17 containment tools (defense-in-depth; the MCP exposes none today).
 
 Merged, the rules and the bundled hook agree on every tool — they are generated from the same tier
@@ -224,10 +229,11 @@ From a clone, `plugin/install.sh` can perform the merge instead of you hand-edit
 `--checks-only` outranks it: diagnostics promise to change nothing, so the two together skip the merge
 and say so.
 
-It is **opt-in and never silent**. Installing without the flag still only *warns* that the gate is
-off — and `-y` does not stand in for consent here, because installation alone must never rewrite your
-settings. Run interactively without the flag and, if the gate is off, the installer shows you exactly
-which rules it would add and asks a plain `y/N` first.
+It is **opt-in and never silent**. Installing without the flag reports the gate's state from the
+*installed* plugin — ON via the bundled hook, or FAIL if the installed copy predates it — and notes that
+the rules are not merged; `-y` does not stand in for consent here, because installation alone must never
+rewrite your settings. Run interactively without the flag and the installer offers the merge, shows you
+exactly which rules it would add, and asks a plain `y/N` first.
 
 What it guarantees:
 
@@ -237,7 +243,7 @@ What it guarantees:
   snippet specifies, that's your decision (or a mis-merge worth a look), so it writes **nothing** and
   tells you which entries to resolve.
 - **Idempotent** — re-running is safe; already-merged rules are left alone. Worth re-running even when
-  the gate reads ON: a hand-merge of just the two `ask` lines leaves the containment `deny` list missing.
+  the gate reads ON: a hand-merge of just the three `ask` lines leaves the containment `deny` list missing.
 - **Fails honestly** — no `python3`, or a snippet it can't find, means "cannot merge, here's the manual
   path," never a false green. A failed write is restored from the backup.
 
@@ -286,7 +292,8 @@ cannot be quieted from config.
 The same three tiers, expressed as Codex approval modes in `.mcp.codex.json`:
 
 - **`approval_mode: "auto"`** on the read + escalation tools,
-- **`approval_mode: "approve"`** on `update_alert` / `update_case` (dismiss/close),
+- **`approval_mode: "approve"`** on `update_alert` / `update_case` / `send_email` (dismiss/close and
+  outbound mail),
 - **`disabled_tools`** for the containment tools — Codex applies this *after* any allowlist, so they
   cannot be re-enabled at runtime and never reach the model at all.
 
@@ -310,10 +317,10 @@ codex mcp get exabeam    # expect default_tools_approval_mode: approve, and a di
 
 > **If no `exabeam` server resolves**, that is not the same as the gate being off — Codex drops a bundled
 > server entirely if any part of its config is invalid, and `codex plugin add` still reports success.
-> Reinstall with `codex plugin add socxen@open-agent-ai-security` and check again.
+> Reinstall with `codex plugin add soc@exabeam` and check again.
 
 You can tighten socxen's defaults further in `~/.codex/config.toml` under
-`[plugins."socxen@open-agent-ai-security".mcp_servers.exabeam]` — for example moving more tools to
+`[plugins."soc@exabeam".mcp_servers.exabeam]` — for example moving more tools to
 `approve`. Overrides there win over what the plugin ships.
 
 ## Audit logging (on by default)
@@ -332,7 +339,7 @@ find and read the file, and every control knob.
 
 ```bash
 claude plugin marketplace update open-agent-ai-security     # refresh the catalog
-claude plugin update socxen@open-agent-ai-security          # install the latest
+claude plugin update soc@exabeam          # install the latest
 ```
 
 Both steps matter: without the first, `plugin update` only sees your local (possibly stale) catalog
@@ -348,7 +355,7 @@ Or fleet-wide in managed `settings.json`:
 {
   "extraKnownMarketplaces": {
     "open-agent-ai-security": {
-      "source": { "source": "github", "repo": "open-agent-ai-security/plugins" },
+      "source": { "source": "github", "repo": "Exabeam/plugins" },
       "autoUpdate": true
     }
   }
@@ -359,12 +366,16 @@ Or fleet-wide in managed `settings.json`:
 
 ```bash
 codex plugin marketplace upgrade open-agent-ai-security
-codex plugin add socxen@open-agent-ai-security
+codex plugin add soc@exabeam
 ```
 
 ## Any other agent
 
 socxen is just a skill folder in the repo — any capable coding agent can fetch and run it:
+
+**Unsupported for production use — evaluation only.** This path carries none of socxen's host gate
+(the bundled hook or Codex approval policy), none of the bridge's guardrails (input screening, write-side
+neutralization, the create-case guard) and no audit trail. The only lock is the skill's in-prompt ask.
 
 > Clone `https://github.com/open-agent-ai-security/socxen` and follow its `soc-investigate` skill to
 > investigate Exabeam alert &lt;id&gt;, using the Exabeam New-Scale MCP.
@@ -372,7 +383,7 @@ socxen is just a skill folder in the repo — any capable coding agent can fetch
 ## Uninstalling
 
 ```bash
-claude plugin uninstall socxen@open-agent-ai-security
+claude plugin uninstall soc@exabeam
 claude plugin marketplace remove open-agent-ai-security   # optional — see note
 ```
 
@@ -383,7 +394,7 @@ every plugin that was installed from it.
 On **Codex**:
 
 ```bash
-codex plugin remove socxen@open-agent-ai-security
+codex plugin remove soc@exabeam
 codex plugin marketplace remove open-agent-ai-security   # optional — same caveat as above
 ```
 

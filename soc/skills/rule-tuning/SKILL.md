@@ -1,6 +1,6 @@
 ---
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
 name: rule-tuning
 description: >-
   Find NOISY detection rules in Exabeam New-Scale — noisy, not merely loud — and
@@ -35,7 +35,7 @@ recommend; detection engineering applies. Never call it, and never claim you cha
 ## Preflight — is the Exabeam MCP connected?
 
 Everything runs through the **Exabeam New-Scale MCP** (`exabeam_*` tools). Confirm you can see them; if
-unsure, `claude mcp list` (Codex: `codex mcp get exabeam`) and look for `exabeam`. If it is not connected, stop and give the operator the
+unsure, ask the analyst to run `claude mcp list` (Codex: `codex mcp get exabeam`) in a terminal and look for `exabeam`. If it is not connected, stop and give the operator the
 setup steps (see `soc-investigate`'s preflight) — do not invent rule or case data.
 
 ## Why this skill exists
