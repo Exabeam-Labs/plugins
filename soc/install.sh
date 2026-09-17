@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 #
 # socxen installer — adds the marketplace, installs the plugin (three skills) into
 # Claude Code, and runs a connectivity preflight. Idempotent; safe to re-run.

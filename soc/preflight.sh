@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 #
 # socxen preflight — read-only diagnostics, on any host agent.
 #

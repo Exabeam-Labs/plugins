@@ -3,7 +3,7 @@
 # dependencies = ["mcp>=1.0,<2", "httpx>=0.27,<1", "certifi>=2024,<2027", "observra>=1.1,<2", "typing_extensions>=4.7,<5"]
 # ///
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 """Exabeam MCP bridge.
 
 A tiny local (stdio) MCP server that Claude Code launches and talks to, which forwards

@@ -1,6 +1,6 @@
 <!--
   Copyright 2026 Exabeam, Inc.
-  SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+  SPDX-License-Identifier: Apache-2.0
 -->
 
 # Search cookbook — `exabeam_search_events`
