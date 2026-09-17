@@ -1,6 +1,6 @@
 <!--
   Copyright 2026 Exabeam, Inc.
-  SPDX-License-Identifier: Apache-2.0
+  SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
 -->
 
 # socxen
@@ -8,8 +8,8 @@
 
 [![Project level: Incubator](https://img.shields.io/badge/project_level-incubator-d29922)](https://open-agent-ai-security.github.io/project-levels/)
 [![CI](https://github.com/open-agent-ai-security/socxen/actions/workflows/ci.yml/badge.svg)](https://github.com/open-agent-ai-security/socxen/actions/workflows/ci.yml)
-[![version](https://img.shields.io/badge/version-v0.8.6-blue)](.claude-plugin/plugin.json)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](LICENSE)
+[![version](https://img.shields.io/badge/version-v0.8.7-blue)](.claude-plugin/plugin.json)
+[![License: LicenseRef-Exabeam-Enterprise-Agreement](https://img.shields.io/badge/license-LicenseRef_Exabeam_Enterprise_Agreement-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 
 > ⚠️ **Pre-release software — for evaluation purposes only.** socxen is under active development and is
@@ -50,9 +50,9 @@ Each hands off to the others: a single case to `soc-investigate`, a noise cluste
   high-precision ones, so the fix lands on the detection instead of on the analyst.
 - ✍️ **Acts** — opens/updates a case, writes case notes, dismisses true false-positives (gated), and
   **recommends** containment for you to perform in EDR/IAM (the Exabeam MCP has none).
-- 🔒 **Stops where it should** — dismiss/close sits behind a hard, harness-enforced approval rule;
-  containment is never executed. On Claude Code you switch that gate on during setup; on Codex it ships
-  with the plugin.
+- 🔒 **Stops where it should** — dismiss/close sits behind a hard, host-enforced approval gate that
+  **ships on**: a bundled hook on Claude Code (it holds even under `--dangerously-skip-permissions`),
+  tool-approval policy inside the package on Codex. Containment is never executed. No settings to edit.
 - 🛡️ **Treats telemetry as hostile** — log data is attacker-influenced by construction, so socxen strips
   hidden-character smuggling from what it reads, and on what it writes back it de-activates dangerous
   content (formulas, clickable links) **and masks credentials and structured identifiers** (API keys,
@@ -92,11 +92,15 @@ Then ask it to *"investigate alert &lt;id&gt;"* (or paste an alert/case) — or 
 ## Layout
 
 ```
-.claude-plugin/          plugin.json (Claude Code manifest — installs via open-agent-ai-security/plugins)
+.claude-plugin/          plugin.json (Claude Code manifest — installs via Exabeam/plugins)
 .codex-plugin/           plugin.json (Codex manifest — same skills, same catalog)
 .mcp.json                bundled Exabeam MCP for Claude Code — auto-registers on install
-.mcp.codex.json          the same bridge for Codex, carrying the approval gate (generated)
-skills/soc-investigate/  SKILL.md, settings.snippet.json (governance), reference/
+.mcp.codex.json          the same bridge for Codex, carrying the tool-approval policy (generated from the snippet)
+hooks/                   gate.py + hooks.json — the human-in-the-loop gate for Claude Code, on the moment the plugin is enabled
+identity.json            the one source of the plugin's name, marketplace, license and version
+gen_identity.py          regenerates both manifests, the permission snippet and identity.sh from it
+identity.sh              the identity for the shell scripts (generated)
+skills/soc-investigate/  SKILL.md, permissions.json (the tier file), settings.snippet.json (the optional permission snippet, generated), reference/
 skills/triage-cases/     SKILL.md — queue sweep (shift lead)
 skills/rule-tuning/      SKILL.md — noisy-rule tuning (detection engineer)
 connector/               exabeam-mcp-bridge.py (bridge) · canonicalize/neutralize_output (guardrails) · observra_logging (audit log)
@@ -138,4 +142,4 @@ security in an increasingly agentic world.
 
 ## License
 
-Apache-2.0 — see `LICENSE` / `NOTICE`.
+LicenseRef-Exabeam-Enterprise-Agreement — see `LICENSE` / `NOTICE`.

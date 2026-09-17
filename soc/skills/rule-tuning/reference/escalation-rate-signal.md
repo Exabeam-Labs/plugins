@@ -1,6 +1,6 @@
 <!--
   Copyright 2026 Exabeam, Inc.
-  SPDX-License-Identifier: Apache-2.0
+  SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
 -->
 
 # Precision signal — escalation-to-case rate (the searchable first pass)

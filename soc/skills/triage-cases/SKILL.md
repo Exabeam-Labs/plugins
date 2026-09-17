@@ -1,6 +1,6 @@
 ---
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
 name: triage-cases
 description: >-
   Prioritize a queue of open Exabeam New-Scale cases — decide what needs a human's
@@ -34,7 +34,7 @@ sweep (see Governance).
 ## Preflight — is the Exabeam MCP connected?
 
 Everything runs through the **Exabeam New-Scale MCP** (`exabeam_*` tools). socxen bundles this
-connection. Confirm you can see `exabeam_*` tools; if unsure, run `claude mcp list` (Codex: `codex mcp get exabeam`) and look for
+connection. Confirm you can see `exabeam_*` tools; if unsure, ask the analyst to run `claude mcp list` (Codex: `codex mcp get exabeam`) in a terminal and look for
 `exabeam`. If it is not connected, stop and give the operator the setup steps (see
 `soc-investigate`'s preflight) — do not improvise or invent queue data.
 
