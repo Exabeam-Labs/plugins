@@ -100,9 +100,12 @@ Two consequences, both of which have been asked more than once:
 
 - There is **no third-party portion**, so this distribution owes no Apache-2.0 §4 conditions to
   anyone, and no copy of the Apache-2.0 text needs to ship with it.
-- The `SPDX-License-Identifier: Apache-2.0` headers throughout the payload are upstream's and travel
-  with the source. They record the community distribution's license; they do not override the
-  plugin's own `LICENSE`, which the repository [`LICENSE`](LICENSE) states explicitly.
+- The payload's SPDX headers carry the **Enterprise identifier, not Apache-2.0**. The `license` field
+  in the identity overlay rewrites them when the build is vendored, so the headers, `identity.sh`, the
+  README badge and this repository's [`LICENSE`](LICENSE) all state the same terms — there is no
+  contradiction inside the tree for a reader or a scanner to resolve. The community distribution keeps
+  its Apache-2.0 headers upstream: **the same source, two artifacts, each carrying the license it is
+  offered under.** Exabeam's copyright is what lets both be true at once.
 
 ## Controls on `main`
 
