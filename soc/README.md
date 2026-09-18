@@ -1,6 +1,6 @@
 <!--
   Copyright 2026 Exabeam, Inc.
-  SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+  SPDX-License-Identifier: Apache-2.0
 -->
 
 # socxen
@@ -9,7 +9,7 @@
 [![Project level: Incubator](https://img.shields.io/badge/project_level-incubator-d29922)](https://open-agent-ai-security.github.io/project-levels/)
 [![CI](https://github.com/open-agent-ai-security/socxen/actions/workflows/ci.yml/badge.svg)](https://github.com/open-agent-ai-security/socxen/actions/workflows/ci.yml)
 [![version](https://img.shields.io/badge/version-v0.8.7-blue)](.claude-plugin/plugin.json)
-[![License: LicenseRef-Exabeam-Enterprise-Agreement](https://img.shields.io/badge/license-LicenseRef_Exabeam_Enterprise_Agreement-blue.svg)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 
 > ⚠️ **Pre-release software — for evaluation purposes only.** socxen is under active development and is
@@ -142,4 +142,4 @@ security in an increasingly agentic world.
 
 ## License
 
-LicenseRef-Exabeam-Enterprise-Agreement — see `LICENSE` / `NOTICE`.
+Apache-2.0 — see `LICENSE` / `NOTICE`.

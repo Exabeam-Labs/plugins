@@ -57,16 +57,16 @@ This repository will be public by its nature, so the layout is documented here r
 | Path | What it is |
 |---|---|
 | [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | The catalog manifest both hosts read: the marketplace name (`exabeam`), and one entry per plugin — name, display name, description, source directory, license. |
-| `soc/` (one directory per plugin) | The **vendored payload**: a `git archive` of the plugin's source repository at the pinned commit, byte-identical to that source apart from the declared identity and license overlays. Never edited by hand — see [Fixing something in the payload](MAINTAINERS.md#fixing-something-in-the-payload). |
+| `soc/` (one directory per plugin) | The **vendored payload**: a `git archive` of the plugin's source repository at the pinned commit, byte-identical to that source apart from the declared identity overlay and the license files. Never edited by hand — see [Fixing something in the payload](MAINTAINERS.md#fixing-something-in-the-payload). |
 | [`vendor.lock.json`](vendor.lock.json) | Provenance per entry: source repository, subdirectory, commit, version, release notes, blessing date, who blessed it, and the overlays applied. The current pins live here, not in prose. |
-| `overlays/<entry>/` | The `LICENSE` and `NOTICE` served with each plugin from this marketplace — the commercial terms, by reference. |
+| `overlays/<entry>/` | The `LICENSE`, `NOTICE` and `LICENSE-APACHE` served with each plugin from this marketplace — the distribution's terms by reference, beside the license of the open-source software it includes. |
 | [`scripts/vendor_plugin.py`](scripts/vendor_plugin.py) | Blesses or re-vendors an entry: exports the source at a commit, applies the identity overlay, runs the plugin's own generator, applies the license files, writes the lock record. |
 | [`scripts/validate_catalog.py`](scripts/validate_catalog.py) | The CI gate. Validates the manifest and the lock, and with `--verify-upstream` proves each vendored tree is byte-identical to a fresh export of its source at the pinned commit, modulo the declared overlays. |
 | [`scripts/build_site.py`](scripts/build_site.py) | Renders the front door, [`index.html`](index.html), from the manifest, the lock, each payload's identity and its skills' metadata. `--check` fails CI if the page drifts from the catalog. |
 | `index.html`, `assets/` | The generated front door and its logo, served by GitHub Pages from `main`. |
 | [`.github/workflows/validate.yml`](.github/workflows/validate.yml) | Two jobs on every PR and push to `main`: `catalog` (the validator, with upstream verification) and `site` (the front door is current). |
 | [`.github/CODEOWNERS`](.github/CODEOWNERS) | Review from code owners is required on the manifest, the payloads, the lock, the validator and the workflow. |
-| [`MAINTAINERS.md`](MAINTAINERS.md) | How a build is blessed, the rev policy, the gate, the license overlay, what protects `main`, and the verification log. |
+| [`MAINTAINERS.md`](MAINTAINERS.md) | How a build is blessed, the rev policy, the gate, the license files, what protects `main`, and the verification log. |
 | [`LICENSE`](LICENSE) | The terms for this repository, and where a file or directory specifies otherwise. |
 
 ## How a build gets here

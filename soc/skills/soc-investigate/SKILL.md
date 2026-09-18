@@ -1,6 +1,6 @@
 ---
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 name: soc-investigate
 description: >-
   Investigate and triage a security alert or case in Exabeam New-Scale, end to end.

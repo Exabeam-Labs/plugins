@@ -1,6 +1,6 @@
 ---
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 name: rule-tuning
 description: >-
   Find NOISY detection rules in Exabeam New-Scale — noisy, not merely loud — and

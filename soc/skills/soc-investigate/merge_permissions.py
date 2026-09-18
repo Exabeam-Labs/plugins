@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 """Merge socxen's governance permissions snippet into a Claude Code settings.json.
 
 This is the write half of the governance gate. `install.sh` has always *detected*

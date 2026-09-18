@@ -1,12 +1,16 @@
 Exabeam Agentic SOC plugin — License
 
 This plugin, as distributed through the Exabeam plugin marketplace
-(https://github.com/Exabeam/plugins), is licensed under the Exabeam Enterprise
+(https://github.com/Exabeam/plugins), is distributed under the Exabeam Enterprise
 Agreement and is subject to the same terms of use as the Exabeam products it
 works with:
 
     https://www.exabeam.com/legal/enterprise-agreement/
 
 The terms are maintained at that address and are not reproduced here.
+
+This distribution includes socxen, open-source software licensed under the
+Apache License, Version 2.0 (see LICENSE-APACHE), whose source is also available
+from https://github.com/open-agent-ai-security/socxen.
 
 Copyright 2026 Exabeam, Inc. All rights reserved.

@@ -3,7 +3,7 @@
 # requires-python = ">=3.9"
 # ///
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 """Generate every artifact that carries the plugin's identity from ONE source: plugin/identity.json.
 
     python3 plugin/gen_identity.py            # (re)write the artifacts

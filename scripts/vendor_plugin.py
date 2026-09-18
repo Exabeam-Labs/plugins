@@ -60,19 +60,19 @@ def apply_overlay(root, overlay):
         f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
 
 
-FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE.md", "NOTICE.md")
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md")
 
 
 def apply_file_overlays(root, files):
-    """Replace whole files in the export with files kept in this repository — the license overlay.
+    """Replace or add whole files in the export from files kept in this repository — the license files.
 
-    The community distribution of a payload is Apache-2.0; this catalog vends the same code under
-    Exabeam's commercial terms, so the copy served here must carry those terms *inside the tree*
-    (an installed plugin whose LICENSE file contradicts its manifest is worse than either alone).
-    `files` maps a payload-relative name (LICENSE / NOTICE only) to a catalog-relative source file,
-    e.g. {"LICENSE": "overlays/soc/LICENSE"}. Applied after the identity overlay and regeneration; the
-    validator re-applies the same files before its byte-identity diff, so the gate still proves
-    'identical to upstream modulo the declared identity and license'."""
+    The distribution served here is governed by Exabeam's Enterprise Agreement and INCLUDES the
+    payload's open-source software as it is: the SPDX headers, manifests and README stay Apache-2.0,
+    and the tree ships the Apache-2.0 text beside the distribution terms (Exabeam/plugins#28). `files`
+    maps a payload-relative name (LICENSE, NOTICE, LICENSE-APACHE only) to a catalog-relative source
+    file, e.g. {"LICENSE": "overlays/soc/LICENSE"}. Applied after the identity overlay and
+    regeneration; the validator re-applies the same files before its byte-identity diff, so the gate
+    still proves 'identical to upstream modulo the declared identity and these files'."""
     for rel, src in (files or {}).items():
         if rel not in FILE_OVERLAY_ALLOWED:
             sys.exit(f"error: file overlay may replace only {FILE_OVERLAY_ALLOWED}, got {rel!r}")

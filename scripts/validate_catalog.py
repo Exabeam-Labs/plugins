@@ -190,8 +190,9 @@ def check_vendored(label, src, name, lock, problems):
         problems.append(f"{label}: overlay must never patch the Claude manifest (its name governs the namespaces the "
                         f"permission gate matches on), got {sorted(overlay)}")
         return None
-    # The license overlay: whole-file replacements, LICENSE / NOTICE only, sourced from this repository.
-    # The community distribution stays Apache-2.0; the copy served here carries Exabeam's terms in-tree.
+    # The license files: whole-file replacements or additions, LICENSE / NOTICE / LICENSE-APACHE only,
+    # sourced from this repository. The payload's own license stays as upstream ships it; the
+    # distribution terms and the Apache-2.0 text travel beside it (Exabeam/plugins#28).
     files = rec.get("overlay_files") or {}
     if not isinstance(files, dict) or any(not isinstance(v, str) for v in files.values()):
         problems.append(f"{label}: overlay_files must map a payload file name to a catalog-relative source path, got {files!r}")
@@ -243,7 +244,7 @@ def _git(*args, cwd=None):
     return r.stdout
 
 
-FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE.md", "NOTICE.md")
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md")
 
 
 def _apply_file_overlays(root, files):

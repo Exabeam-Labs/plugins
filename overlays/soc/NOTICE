@@ -3,3 +3,7 @@ Copyright 2026 Exabeam, Inc.
 
 Distributed through the Exabeam plugin marketplace under the Exabeam Enterprise
 Agreement (https://www.exabeam.com/legal/enterprise-agreement/).
+
+This distribution includes socxen (https://github.com/open-agent-ai-security/socxen),
+Copyright 2026 Exabeam, Inc., licensed under the Apache License, Version 2.0
+(see LICENSE-APACHE). This product is sponsored by Exabeam (https://www.exabeam.com/).

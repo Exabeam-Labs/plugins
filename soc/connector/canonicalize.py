@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # ///
 # Copyright 2026 Exabeam, Inc.
-# SPDX-License-Identifier: LicenseRef-Exabeam-Enterprise-Agreement
+# SPDX-License-Identifier: Apache-2.0
 """Input telemetry canonicalizer -- pure, deterministic core.
 
 "DO NO HARM" first. Strip only the OBVIOUS, unambiguous smuggling code points (no legitimate use inside a

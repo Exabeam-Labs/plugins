@@ -67,21 +67,25 @@ community plugin (#3 review); the generator path is what upstream built to make 
 payload without a generator (socxen 0.8.5) may carry only the legacy Codex-manifest patch, never one
 on the Claude manifest.
 
-## The license overlay
+## The license files
 
-The community distribution of a payload is Apache-2.0. This catalog vends the same code under
-Exabeam's commercial terms, so the copy served here has to say so *inside the tree* — an installed
-plugin whose `LICENSE` file contradicts its manifest is worse than either alone. Two declared overlays
-carry that, both re-applied by the validator before its byte-identity diff:
+The distribution served here is governed by Exabeam's Enterprise Agreement, and it *includes* the
+payload's open-source software as it is. The payload's own license stays as upstream ships it: the SPDX
+headers, both host manifests, `identity.sh` and the README badge read `Apache-2.0`, and the identity
+overlay does not touch them. Beside that software the tree carries the distribution's terms, declared
+as `overlay_files` in the lock record and re-applied by the validator before its byte-identity diff:
 
-- **`license` in the identity overlay** — one more field patched into `identity.json`; the payload's
-  generator writes it into both host manifests.
-- **`overlay_files`** in the lock record — whole-file replacement of `LICENSE` and/or `NOTICE` (nothing
-  else is accepted) from files kept under `overlays/<entry>/`. The replacement `LICENSE` is a short
-  pointer to the agreement by URL, never a copy of its text.
+- **`LICENSE`** — a short pointer to the Enterprise Agreement by URL, never a copy of its text, naming
+  the included Apache-2.0 software and where its source is also available.
+- **`NOTICE`** — the distribution's notice, carrying the upstream NOTICE content.
+- **`LICENSE-APACHE`** — the Apache License, Version 2.0 text, so a recipient has the license the
+  included software is under.
 
-Everything else in the tree stays byte-identical to upstream: the gate now proves *identical modulo the
-declared identity and license*. `vendor_plugin.py` applies both on bless and on `--check`.
+Nothing else is accepted as a file overlay, and every source lives under `overlays/<entry>/`. The
+catalog entry in `marketplace.json` names the distribution's terms; the plugin's manifest names the
+software's. Everything else in the tree stays byte-identical to upstream: the gate proves *identical
+modulo the declared identity and these three files*. `vendor_plugin.py` applies both on bless and on
+`--check`.
 
 ## Controls on `main`
 
