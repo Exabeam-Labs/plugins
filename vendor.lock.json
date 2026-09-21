@@ -4,7 +4,7 @@
     "path": "plugin",
     "sha": "bf7db6676cdd3973bd6cf77eed1ee3ec26d0217f",
     "version": "0.8.7",
-    "release": "socxen 0.8.7 — hotfix: the plugin loads from an install again. 0.8.6 declared the bundled hook in its Claude manifest, a file the host already loads by convention, and the loader refused the whole plugin (gate, skills, MCP server) while `plugin install` reported success; the manifest no longer names the hook, which still ships and still registers. Also carried: two prose-position formula shapes in the output neutralizer and the mutation gate over every neutralizer rule; first blessing whose identity overlay relicenses the SPDX headers, README badge and identity.sh from `license`. 2026-09-14",
+    "release": "socxen 0.8.7 — hotfix: the bundled hook is no longer declared in the Claude manifest, so the plugin loads from an install; also two prose-position formula shapes in the output neutralizer, the mutation gate over every neutralizer rule, and the identity overlay now relicenses SPDX headers, README badge and identity.sh. 2026-09-14",
     "vendored": "2026-09-16",
     "blessed_by": "Steve Wilson",
     "overlay": {

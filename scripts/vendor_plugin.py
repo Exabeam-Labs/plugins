@@ -43,11 +43,10 @@ def apply_overlay(root, overlay):
     A payload that ships `gen_identity.py` (socxen >= 0.8.6) is re-keyed the way its upstream built
     for: the overlay patches `identity.json` only, and `regenerate()` runs the payload's own generator
     so BOTH manifests, the permission snippet's `mcp__plugin_<name>_<server>__` prefix and `identity.sh`
-    (which install.sh / preflight.sh read) all follow from that one file. Nothing else is hand-edited —
-    a hand-edited re-key is exactly what shipped a payload named `soc` on Codex and `socxen` on Claude
-    Code (Exabeam/plugins#3 review). The validator re-applies the same overlay and regeneration to a
-    fresh upstream export before diffing, so 'byte-identical modulo the declared identity' is what CI
-    proves. A payload without a generator may carry only the legacy Codex-manifest patch."""
+    (which install.sh / preflight.sh read) all follow from that one file. Nothing else is hand-edited.
+    The validator re-applies the same overlay and regeneration to a fresh upstream export before
+    diffing, so 'byte-identical modulo the declared identity' is what CI proves. A payload without a
+    generator may carry only the legacy Codex-manifest patch."""
     for rel, patch in (overlay or {}).items():
         f = root / rel
         d = json.loads(f.read_text())

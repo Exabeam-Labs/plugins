@@ -43,7 +43,7 @@ Two paths, decided in advance:
 - *Feature builds* move at Exabeam's pace — bless a new release when it has been evaluated against
   customer use, not merely when it exists.
 - *Security fixes* take the fast path: a source security release is vendored and merged the same
-  day, with the security note in the PR. "Frozen" must never quietly become "stale".
+  day, with the security note in the PR.
 
 ## The gate
 
@@ -61,9 +61,8 @@ generator, so both manifests, the permission snippet's `mcp__plugin_<name>_<serv
 validator re-applies the same overlay and regeneration to a fresh upstream export before its
 byte-identity diff.
 
-A hand-edited re-key — one manifest patched, the rest left upstream — shipped a
-payload named `soc` on Codex and `socxen` on Claude Code whose own installer would have installed the
-community plugin (#3 review); the generator path is what upstream built to make that impossible. A
+A re-key is declared as an `identity.json` overlay, never hand-edited: the payload's generator
+produces both manifests, the permission snippet and `identity.sh` from that one file. A
 payload without a generator (socxen 0.8.5) may carry only the legacy Codex-manifest patch, never one
 on the Claude manifest.
 
@@ -111,6 +110,6 @@ here as a new blessed build.
 
 | Date | What was verified |
 |---|---|
-| 2026-09-14 | `soc@exabeam` **0.8.7** (upstream `bf7db66`, the 0.8.7 release merge) **installs and LOADS on both hosts**, from this vendored tree before merge (marketplace added from the local checkout; the post-merge install from `github.com/Exabeam/plugins` is recorded on the PR): Claude Code — `claude plugin list --json` shows `soc@exabeam` 0.8.7, `enabled: true` **and an empty `errors[]`** (the check the 09-08 row lacked: 0.8.6 installed, showed enabled, and did not load — socxen #197), the Claude manifest carries no `hooks` key, `identity.sh` reads `soc` / 0.8.7 / `LicenseRef-Exabeam-Enterprise-Agreement`, the bundled hook answers *allow* for a read, *ask* for `update_alert`, *allow* for `create_case`, *deny* for `disable_analytics_rule` under `mcp__plugin_soc_exabeam__`, and `preflight.sh --platform claude` reports the gate ON via the installed plugin; Codex — `codex plugin list` shows `soc@exabeam installed, enabled 0.8.7`, the Codex manifest reads `soc`, `preflight.sh --platform codex` reports the gate ON, 6 ok / 0 warn / 0 fail. First blessing whose identity overlay relicenses the payload: every SPDX header (31), the README badge and License line, and `identity.sh` now read the Enterprise Agreement identifier — 0 Apache-2.0 headers remain under `soc/`. Fresh, empty `CLAUDE_CONFIG_DIR` / `CODEX_HOME` on a maintainer's machine. |
-| 2026-09-02 | Both vendored and sha-pinned sources install on Claude Code and Codex — **as `socxen@open-agent-ai-security`, before the 0.8.6 re-key** |
+| 2026-09-14 | `soc@exabeam` **0.8.7** (upstream `bf7db66`) installs and **loads** on both hosts, from this vendored tree before merge (marketplace added from the local checkout) and from `github.com/Exabeam/plugins` after (#26). Claude Code — `claude plugin list --json` shows 0.8.7, `enabled: true`, empty `errors[]`; the Claude manifest carries no `hooks` key; `identity.sh` reads `soc` / 0.8.7 / `LicenseRef-Exabeam-Enterprise-Agreement`; the bundled hook answers *allow* for a read, *ask* for `update_alert`, *allow* for `create_case`, *deny* for `disable_analytics_rule` under `mcp__plugin_soc_exabeam__`; `preflight.sh --platform claude` reports the gate ON. Codex — `codex plugin list` shows `installed, enabled 0.8.7`, the Codex manifest reads `soc`; `preflight.sh --platform codex` reports the gate ON, 6 ok / 0 warn / 0 fail. Driven end to end by a separate headless session (Opus 5, `soc:soc-investigate` on a staging alert): 16 Exabeam calls under `mcp__plugin_soc_exabeam__`, no write attempted, verdict reported. Every SPDX header (31), the README badge and License line and `identity.sh` carry the Enterprise Agreement identifier. Fresh, empty `CLAUDE_CONFIG_DIR` / `CODEX_HOME` on a maintainer's machine. |
 | 2026-09-08 | `soc@exabeam` 0.8.6 installs from `github.com/Exabeam/plugins` on **both hosts**, after the re-key merged (#3, `f9d357b`): Claude Code — `claude plugin list` shows `soc@exabeam 0.8.6 enabled`, the Claude manifest and `identity.sh` read `soc` / `exabeam`, the bundled hook answers *allow* for a read, *ask* for `update_alert`, *allow* for `create_case` under `mcp__plugin_soc_exabeam__`, and `preflight.sh --platform claude` reports the gate ON with no environment overrides; Codex — `codex plugin list` shows `soc@exabeam installed, enabled 0.8.6`, the Codex manifest reads `soc`, `preflight.sh --platform codex` reports the gate ON. Run in fresh, empty `CLAUDE_CONFIG_DIR` / `CODEX_HOME` directories on a maintainer's machine — clean config, not a clean machine; the dev copy installed in the real config was not in play. **Superseded — this build did not load from an install:** `enabled` was true and the loader rejected the whole plugin (socxen #197); the hook decisions above came from invoking `gate.py` directly, not from a hook the host had registered. See the 2026-09-14 row's `errors[]` check. |
+| 2026-09-02 | Both vendored and sha-pinned sources install on Claude Code and Codex — **as `socxen@open-agent-ai-security`, before the 0.8.6 re-key** |
