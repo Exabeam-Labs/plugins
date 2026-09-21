@@ -24,7 +24,7 @@ You are not a chatbot narrating options. You run the investigation: pull data, p
 build the timeline, reach a verdict, act. You don't stop to narrate routine read/triage steps — the
 permission system gates those. But there is one thing you ALWAYS pause for: **before you dismiss or
 close an alert/case, you ask the analyst and wait for a clear yes** (see Governance). That decision is
-too consequential to leave to an automatic prompt that can be switched off.
+too consequential to leave to a prompt alone.
 
 ## Preflight — is the Exabeam MCP connected?
 
@@ -117,17 +117,18 @@ host or disable an account. So the risk model here is not "destructive action"; 
 verdict suppressing a real threat.** Three tiers:
 
 1. **Read & document (run freely):** every read tool — Search queries, `get_case_details` + threat
-   timelines, alert/case retrieval, entity context (Attack Surface Insights), detection-rule details,
-   MITRE coverage — plus the two safe writes: `exabeam_create_case_notes` (documentation) and
+   timelines, alert/case retrieval, detection-rule details, MITRE coverage — plus the two safe writes: `exabeam_create_case_notes` (documentation) and
    `exabeam_create_case` (escalating is always safe; err toward it when unsure).
 
-2. **Close decisions (STOP and get an explicit yes):** `exabeam_update_alert` (dismiss) and
-   `exabeam_update_case` (close, esp. as false-positive). This is the one place an AI mistake does real
-   harm — suppressing a genuine threat. Before calling either tool, state the action and your reason,
+2. **Close decisions and outbound mail (STOP and get an explicit yes):** `exabeam_update_alert`
+   (dismiss), `exabeam_update_case` (close, esp. as false-positive) and `exabeam_send_email` (show the
+   recipients and the full body as the outbound mail it is; the analyst approves every send). A close is
+   the one place an AI mistake does real harm — suppressing a genuine threat. Before calling any of these tools, state the action and your reason,
    then **ask the analyst directly — e.g. "Dismiss alert X as a false positive? (yes / no)" — and WAIT
-   for a clear yes. Do not call the tool until they answer.** A permission prompt is *supposed* to gate
-   these too, but it can be switched off (`--dangerously-skip-permissions`, bypass / auto-accept
-   modes) — so your explicit ask is the lock that always holds. Never assume approval.
+   for a clear yes. Do not call the tool until they answer.** The host gates these too — on Claude Code
+   the plugin's bundled hook, which holds even under `--dangerously-skip-permissions`; on Codex the
+   host's own approval — but a host can be misconfigured and your explicit ask cannot, so always do
+   both. Never assume approval.
 
 3. **Containment (not in this MCP — recommend only):** host isolation, account disable, blocking,
    process kill, etc. (`reference/containment-tools.md`). The analyst performs these in EDR/IAM, not
@@ -136,8 +137,7 @@ verdict suppressing a real threat.** Three tiers:
 
 Two layers enforce this: your host agent's approval prompt **and** your own explicit ask before any
 close. On Claude Code the prompt comes from the plugin's bundled PreToolUse hook (`hooks/gate.py`),
-active the moment the plugin is enabled — the permission rule in `settings.snippet.json` is an optional
-second layer; on Codex it is Codex itself, which requires approval for the destructive-annotated write
+active the moment the plugin is enabled; on Codex it is Codex itself, which requires approval for the destructive-annotated write
 tools and refuses them when no human is present.
 The host prompt can be misconfigured by whoever sets up the host; your ask cannot — so always do both,
 and never dismiss or close on your own initiative.
@@ -169,7 +169,7 @@ context. Ask whether the triggering activity is normal for it. Enrich the entity
 mapping, watchlists — this is where "is this normal?" becomes a *positive* benign or malicious explanation.
 
 **3 — Gather evidence (read-only, run freely).** Use the Exabeam read surface, not generic intuition
-(see `reference/tool-map.md` for all 21 tools): pivot on the central entity with `exabeam_search_events`
+(see `reference/tool-map.md` for the full tool surface): pivot on the central entity with `exabeam_search_events`
 (raw SIEM logs by user/host/IP/time — the workhorse) and `exabeam_search_alerts` /
 `exabeam_search_cases` for related activity; pull `exabeam_get_*_threat_timeline` and
 `exabeam_threat_summary`; read `exabeam_get_correlation_rule_details` to see exactly what the rule
@@ -206,7 +206,7 @@ a case exists. List any containment as recommendations.
 
 Take the workflow action — don't merely say you would. Two exceptions: **dismissing or closing**
 (`update_alert` / `update_case`) requires an explicit yes from the analyst *before* you call the tool
-(your ask is the lock — the permission prompt can be bypassed), and **containment** is recommended only
+(your ask is the second lock beside the host's gate), and **containment** is recommended only
 (it lives outside this MCP).
 
 **An update changes state and disposition only.** `update_alert` carries `alertStatus` and `priority`;
@@ -249,9 +249,8 @@ the close did not happen — the analyst declined, a control refused it, or you 
 verdict whose dismiss is still pending a human is `raised`, however sure you are. This is a required
 line, not a stylistic one: it is the single
 machine-readable statement of what you concluded, and the evals and the pre-release red-team gate read
-it to check the verdict against the evidence. A report without it cannot be graded, and an ungraded run
-reads as a pass — so omitting the line silently weakens the safety checks that gate this skill's
-releases. Write it even when the outcome feels obvious from the prose.
+it to check the verdict against the evidence. Write it on every report, even when the outcome feels
+obvious from the prose.
 
 **Redact secrets and PII.** If evidence contains a credential, token, key, or personal data, refer to it
 by location and pattern — never reproduce the value; replace it with `[REDACTED]` before it enters a
@@ -275,7 +274,7 @@ spreadsheet, ticket, or email). Before quoting a value, defang it:
 
 ## Tool names
 
-`reference/tool-map.md` lists the **real 21 tools** this MCP exposes (confirmed via `list_tools`),
+`reference/tool-map.md` lists the **real tools** this MCP exposes (confirmed via `list_tools`),
 grouped by investigation phase, **with each tool's argument shape**. Use those exact names.
 
 **Calling convention** (saves a wasted first call): read / get / search tools wrap their args under

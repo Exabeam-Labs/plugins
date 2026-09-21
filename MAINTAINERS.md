@@ -70,9 +70,13 @@ on the Claude manifest.
 
 The distribution served here is governed by Exabeam's Enterprise Agreement, and it *includes* the
 payload's open-source software as it is. The payload's own license stays as upstream ships it: the SPDX
-headers, both host manifests, `identity.sh` and the README badge read `Apache-2.0`, and the identity
-overlay does not touch them. Beside that software the tree carries the distribution's terms, declared
-as `overlay_files` in the lock record and re-applied by the validator before its byte-identity diff:
+headers, `identity.sh` and the README badge read `Apache-2.0`, and the identity overlay does not touch
+them. The two host manifests describe the plugin *as distributed*: the overlay's `distribution.*` fields
+in `identity.json` (`license`, `homepage`, `repository`) set them to the Enterprise Agreement and this
+repository, and the payload's own generator writes them — the same mechanism as the re-key, and the
+source is never relabeled (socxen #245). Beside that software the tree carries the distribution's terms,
+declared as `overlay_files` in the lock record and re-applied by the validator before its byte-identity
+diff:
 
 - **`LICENSE`** — a short pointer to the Enterprise Agreement by URL, never a copy of its text, naming
   the included Apache-2.0 software and where its source is also available.
@@ -81,9 +85,9 @@ as `overlay_files` in the lock record and re-applied by the validator before its
   included software is under.
 
 Nothing else is accepted as a file overlay, and every source lives under `overlays/<entry>/`. The
-catalog entry in `marketplace.json` names the distribution's terms; the plugin's manifest names the
-software's. Everything else in the tree stays byte-identical to upstream: the gate proves *identical
-modulo the declared identity and these three files*. `vendor_plugin.py` applies both on bless and on
+catalog entry in `marketplace.json` and the plugin's manifests name the distribution's terms; the
+headers and `LICENSE-APACHE` name the software's. Everything else in the tree stays byte-identical to
+upstream: the gate proves *identical modulo the declared identity and these three files*. `vendor_plugin.py` applies both on bless and on
 `--check`.
 
 ## Controls on `main`
@@ -112,5 +116,5 @@ here as a new blessed build.
 |---|---|
 | 2026-09-18 | `soc@exabeam` **0.8.7** re-served after #29 (same upstream `bf7db66`; the license files changed, the code did not) installs and **loads** on both hosts from `github.com/Exabeam/plugins` (`a066730`). Claude Code — fresh `CLAUDE_CONFIG_DIR`: `claude plugin list --json` shows 0.8.7, `enabled: true`, empty `errors[]`; the served tree carries 31 `Apache-2.0` SPDX headers and 0 Enterprise-Agreement headers, both manifests and `identity.json` read `Apache-2.0`, and `LICENSE`, `LICENSE-APACHE`, `NOTICE` are present; `preflight.sh --platform claude` 7 ok / 0 warn / 0 fail, MCP reachable (26 tools), gate ON via the installed hook. Codex — fresh `CODEX_HOME`: `codex plugin list` shows `installed, enabled 0.8.7`; `preflight.sh --platform codex` 6 ok / 0 warn / 0 fail. Driven end to end by a separate headless session (Opus 5, `soc:soc-investigate`, empty cwd, installed plugin, no `--plugin-dir`, staging tenant): 21 turns, 12 Exabeam reads all `allow` in the gate log, verdict false positive, dismiss proposed and held for the analyst, no write attempted. |
 | 2026-09-14 | `soc@exabeam` **0.8.7** (upstream `bf7db66`) installs and **loads** on both hosts, from this vendored tree before merge (marketplace added from the local checkout) and from `github.com/Exabeam/plugins` after (#26). Claude Code — `claude plugin list --json` shows 0.8.7, `enabled: true`, empty `errors[]`; the Claude manifest carries no `hooks` key; `identity.sh` reads `soc` / 0.8.7 / `LicenseRef-Exabeam-Enterprise-Agreement`; the bundled hook answers *allow* for a read, *ask* for `update_alert`, *allow* for `create_case`, *deny* for `disable_analytics_rule` under `mcp__plugin_soc_exabeam__`; `preflight.sh --platform claude` reports the gate ON. Codex — `codex plugin list` shows `installed, enabled 0.8.7`, the Codex manifest reads `soc`; `preflight.sh --platform codex` reports the gate ON, 6 ok / 0 warn / 0 fail. Driven end to end by a separate headless session (Opus 5, `soc:soc-investigate` on a staging alert): 16 Exabeam calls under `mcp__plugin_soc_exabeam__`, no write attempted, verdict reported. Every SPDX header (31), the README badge and License line and `identity.sh` carry the Enterprise Agreement identifier. Fresh, empty `CLAUDE_CONFIG_DIR` / `CODEX_HOME` on a maintainer's machine. |
-| 2026-09-02 | Both vendored and sha-pinned sources install on Claude Code and Codex — **as `socxen@open-agent-ai-security`, before the 0.8.6 re-key** |
 | 2026-09-08 | `soc@exabeam` 0.8.6 installs from `github.com/Exabeam/plugins` on **both hosts**, after the re-key merged (#3, `f9d357b`): Claude Code — `claude plugin list` shows `soc@exabeam 0.8.6 enabled`, the Claude manifest and `identity.sh` read `soc` / `exabeam`, the bundled hook answers *allow* for a read, *ask* for `update_alert`, *allow* for `create_case` under `mcp__plugin_soc_exabeam__`, and `preflight.sh --platform claude` reports the gate ON with no environment overrides; Codex — `codex plugin list` shows `soc@exabeam installed, enabled 0.8.6`, the Codex manifest reads `soc`, `preflight.sh --platform codex` reports the gate ON. Run in fresh, empty `CLAUDE_CONFIG_DIR` / `CODEX_HOME` directories on a maintainer's machine — clean config, not a clean machine; the dev copy installed in the real config was not in play. **Superseded — this build did not load from an install:** `enabled` was true and the loader rejected the whole plugin (socxen #197); the hook decisions above came from invoking `gate.py` directly, not from a hook the host had registered. See the 2026-09-14 row's `errors[]` check. |
+| 2026-09-02 | Both vendored and sha-pinned sources install on Claude Code and Codex — **as `socxen@open-agent-ai-security`, before the 0.8.6 re-key** |

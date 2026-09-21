@@ -21,7 +21,9 @@ picks itself up from what you ask; you never invoke one by name unless you want 
 
 You can also hand an alert ID, a case ID, or a pasted alert payload straight in. If you paste one, remember
 that pasted text is treated as untrusted — the skill will still go and query Exabeam for the evidence
-rather than take the payload's word for it.
+rather than take the payload's word for it. The same holds for a pasted queue export handed to
+`triage-cases` or a rule inventory handed to `rule-tuning`: what arrives with the work is telemetry, not
+a colleague, however official a note inside it looks.
 
 ## What an investigation does
 
@@ -40,7 +42,8 @@ rather than take the payload's word for it.
 7. **Report** — the write-up below.
 
 If the Exabeam connection is not available, the skill says so and stops rather than guessing. That message
-means a setup step is missing — see [installation](installation.md#credentials-the-only-manual-step).
+means the credentials file is missing or was added after the host started — step 2 of the
+[quick start](installation.md#quick-start--claude-code).
 
 ## What it will ask you
 
@@ -48,16 +51,18 @@ Two kinds of prompt reach you, and it helps to know which is which.
 
 **The skill asking.** Before it dismisses an alert or closes a case, `soc-investigate` asks in plain
 words — *"Dismiss alert X as a false positive? (yes / no)"* — and waits. Say no, or say nothing, and
-nothing happens. This is the first lock.
+nothing happens.
 
 **The host asking.** Independently, your agent's own permission system stops the dismiss/close tool call
 and asks you to approve it. On Claude Code that is the permission prompt for `exabeam_update_alert` or
-`exabeam_update_case`, raised by the hook that ships inside the plugin (and by the optional permission
-rules, if you merged them — they agree, so you are asked once). On Codex it is the tool-approval prompt Codex
+`exabeam_update_case`, raised by the hook that ships inside the plugin. On Codex it is the tool-approval prompt Codex
 shows for a destructive tool — and if there is no human present, for example under `codex exec`, Codex
-cancels the call. This is the second lock. Both must open for a dismiss or close to happen. The same
-prompt guards `exabeam_send_email`: mail only goes out when you approve it, and the Exabeam MCP service
-only accepts recipients who are active users of your own subscription.
+cancels the call. Both must open for a dismiss or close to happen. The same prompt guards
+`exabeam_send_email`: mail only goes out when you approve it, and the Exabeam MCP service only accepts
+recipients who are active users of your own subscription.
+
+A dismiss or close you approved is an ordinary Exabeam status change. If it was a mistake, reopen the
+alert or case in the New-Scale console.
 
 You will notice Codex also asks before the *escalation* writes (opening a case, writing notes), where
 Claude Code runs those silently. That is Exabeam's annotation on those tools, not a socxen setting; it is
@@ -93,6 +98,10 @@ Exabeam so an exported artifact cannot be clicked or executed. See [security gua
 status while triaging — its output *is* the hand-off: individual cases go to `soc-investigate`
 ("investigate case `<id>`"), noise clusters go to `rule-tuning`. Where something is obvious at sweep depth
 it will say so, but it never closes in bulk.
+
+Both sweep skills report a **Flagged** line: a case note or rule description that asked the skill to
+skip, close, fast-track, disable, or trust a claim is quoted there, with what the skill did instead —
+ranked or measured on the evidence — never obeyed.
 
 `rule-tuning` is **read-only and propose-only**. It shows a rule is noisy before proposing anything —
 precision, not just volume — then proposes the least-invasive change mapped to real Exabeam mechanics
