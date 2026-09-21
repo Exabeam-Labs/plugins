@@ -14,8 +14,9 @@ a plugin, you want [`README.md`](README.md) instead.
   under them until Exabeam decides it should — and when it does, that is a reviewed pull request
   in this repository, not a ref moving elsewhere.
 - **It is reproducible.** The payload is a `git archive` export of the source at the commit named
-  in `vendor.lock.json`, plus one declared identity overlay (the plugin's name and display name on
-  Codex). CI proves both on every change: `scripts/validate_catalog.py --verify-upstream`.
+  in `vendor.lock.json`, plus one declared identity overlay on `identity.json` (name, display name,
+  description, marketplace and distribution fields) and the three license files. CI proves all of it on
+  every change: `scripts/validate_catalog.py --verify-upstream`.
 - **Provenance is on record.** `vendor.lock.json` names the source repository, subdirectory,
   commit, version, release, date, and who blessed it.
 
@@ -105,7 +106,7 @@ required checks, with no admin bypass.
 ## Fixing something in the payload
 
 You can't fix it here. The vendored tree under `soc/` must stay byte-identical to upstream at the
-pinned commit (modulo the declared identity overlay) or `--verify-upstream` fails — that is the gate
+pinned commit (modulo the declared identity overlay and the license files) or `--verify-upstream` fails — that is the gate
 working, not a bug. Payload changes go upstream to
 [open-agent-ai-security/socxen](https://github.com/open-agent-ai-security/socxen) first, then arrive
 here as a new blessed build.
