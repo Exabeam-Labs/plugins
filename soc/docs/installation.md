@@ -43,9 +43,8 @@ one, the call is refused.
   gate are shell scripts and Python, and the credentials file below is protected by Unix file
   permissions, which Git Bash on NTFS does not enforce — so Git Bash can run the scripts but leaves your
   key and secret unprotected. There is no PowerShell path.
-- **Exabeam customers:** the supported build is delivered through the Exabeam Plug-in Forge, with its
-  own install command; your Exabeam representative can point you at it. These instructions cover the
-  community release; see [Support](support.md).
+- **This copy is a distribution.** It is provided under the terms in its `LICENSE` file by the
+  organization that distributes it, which also provides its support; see [Support](support.md).
 - **Your own subscription.** socxen runs inside your Claude Code or Codex plan. An investigation is a long
   agent session and is billed by your provider like any other.
 
@@ -81,7 +80,7 @@ missing. It lives in the installed plugin. Run it with the exact version step 1 
 the cache keeps earlier versions, and a wildcard would run the oldest one):
 
 ```bash
-bash ~/.claude/plugins/cache/open-agent-ai-security/socxen/<version>/preflight.sh
+bash ~/.claude/plugins/cache/exabeam/soc/<version>/preflight.sh
 ```
 
 Expect `✓` on every line, including **`Exabeam MCP reachable`** and **`Human-in-the-loop gate ON`**. A
@@ -140,23 +139,23 @@ through — the gate does not evaporate when the human does.
 
 ```bash
 # Claude Code
-claude plugin marketplace update open-agent-ai-security
+claude plugin marketplace update exabeam
 claude plugin update soc@exabeam
 
 # Codex
-codex plugin marketplace upgrade open-agent-ai-security
+codex plugin marketplace upgrade exabeam
 codex plugin add soc@exabeam
 ```
 
 Both commands matter on Claude Code: the first refreshes the catalog, the second installs from it.
 Restart or `/reload-plugins` to apply. Auto-update on Claude Code is per marketplace and off by default
-for community marketplaces; turn it on under `/plugin` → **Marketplaces** → `open-agent-ai-security`,
+for marketplaces you add yourself; turn it on under `/plugin` → **Marketplaces** → `exabeam`,
 or fleet-wide in a managed `settings.json`:
 
 ```json
 {
   "extraKnownMarketplaces": {
-    "open-agent-ai-security": {
+    "exabeam": {
       "source": { "source": "github", "repo": "Exabeam/plugins" },
       "autoUpdate": true
     }
@@ -212,11 +211,11 @@ rule-writing tool is refused before it reaches your tenant, and any tool not on 
 ```bash
 # Claude Code
 claude plugin uninstall soc@exabeam
-claude plugin marketplace remove open-agent-ai-security   # optional; also removes other plugins from this catalog
+claude plugin marketplace remove exabeam   # optional; also removes other plugins from this catalog
 
 # Codex
 codex plugin remove soc@exabeam
-codex plugin marketplace remove open-agent-ai-security   # optional; same caveat
+codex plugin marketplace remove exabeam   # optional; same caveat
 ```
 
 Removing the plugin removes the gate it shipped. Neither command touches `~/.exabeam-mcp.env`; delete
