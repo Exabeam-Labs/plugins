@@ -2,10 +2,10 @@
   "soc": {
     "upstream": "https://github.com/open-agent-ai-security/socxen.git",
     "path": "plugin",
-    "sha": "bf7db6676cdd3973bd6cf77eed1ee3ec26d0217f",
-    "version": "0.8.7",
-    "release": "socxen 0.8.7 — hotfix: the bundled hook is no longer declared in the Claude manifest, so the plugin loads from an install; also two prose-position formula shapes in the output neutralizer, the mutation gate over every neutralizer rule, and the identity overlay now relicenses SPDX headers, README badge and identity.sh. 2026-09-14",
-    "vendored": "2026-09-16",
+    "sha": "6eeb59287b963ff745e186db1bd0a2e64a1fc453",
+    "version": "0.9.0",
+    "release": "socxen 0.9.0 — the bundled hook is the only gate (the Claude Code permission pack is retired; preflight reads the host's errors[] before reporting the gate), the audit trail is structured end to end (BREAKING for consumers of ~/.socxen/telemetry.jsonl: tool_error no longer carries error_message — it carries the platform's error code and status; the gate records the analyst's approval; telemetry names the plugin it runs as, so this copy logs as soc), the rule-tuning disposition buckets use the platform's vocabulary, and identity.json's distribution block lets this catalog's manifests state the Enterprise Agreement while the source stays Apache-2.0. Also carries 0.8.8, skipped by this catalog: the bridge refuses a non-https MCP URL (http:// to a loopback host only), the read-side screen withholds what it cannot screen instead of passing it through, and the redactor covers underscore-joined and quoted-label secrets. Served docs are this distribution's own (socxen #256: marketplace name, cache path and support text). Release gate on d5d7097: red team 145/145 both legs, 0 landed; Praxen 0 Critical. 2026-09-19",
+    "vendored": "2026-09-21",
     "blessed_by": "Steve Wilson",
     "overlay": {
       "identity.json": {
@@ -13,7 +13,10 @@
         "displayName": "Exabeam Agentic SOC plugin",
         "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
         "marketplace.repo": "Exabeam/plugins",
-        "marketplace.name": "exabeam"
+        "marketplace.name": "exabeam",
+        "distribution.license": "LicenseRef-Exabeam-Enterprise-Agreement",
+        "distribution.homepage": "https://github.com/Exabeam/plugins",
+        "distribution.repository": "https://github.com/Exabeam/plugins"
       }
     },
     "overlay_files": {

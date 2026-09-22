@@ -54,7 +54,28 @@ import sys
 __all__ = ["enabled", "session_start", "session_end", "tools_list", "tool_start", "tool_end", "tool_error"]
 
 SKILL = "soc-investigate"
-AGENT = "socxen"
+
+
+def _agent_name(root=None):
+    """The plugin's own name, from identity.json beside the connector (#210): a re-keyed copy of this
+    plugin (a vendor catalog shipping it as `soc`) then logs under its own name with no overlay change.
+    `socxen` only when the file is missing or unreadable — never an exception."""
+    try:
+        import json as _json
+        here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        candidates = [root] if root else [here, os.environ.get("CLAUDE_PLUGIN_ROOT") or ""]
+        for base in candidates:                       # the file beside this code wins; the env var is a fallback
+            path = os.path.join(base, "identity.json")
+            if base and os.path.isfile(path):
+                with open(path, encoding="utf-8") as fh:
+                    name = _json.load(fh).get("name")
+                return str(name).strip() if isinstance(name, str) and name.strip() else "socxen"
+        return "socxen"
+    except Exception:  # noqa: BLE001 -- the audit trail must never depend on this file
+        return "socxen"
+
+
+AGENT = _agent_name()
 FRAMEWORK = "mcp"
 _DEFAULT_BACKEND = "jsonl"                              # ON by default — assurance is the default posture
 _DEFAULT_PATH = "~/.socxen/telemetry.jsonl"
@@ -204,7 +225,7 @@ def session_start(**config):
     """The session record doubles as the configuration attestation: which telemetry backend, where it
     ships (resolved destination), plus whatever the bridge passes (dry_run, plugin_version, gate_log).
     enabled() runs FIRST: it is what configures the pipeline and fills in backend/destination — reading
-    them before it would attest an empty configuration (found in review, 2026-09-05)."""
+    them before it would attest an empty configuration."""
     if not enabled():
         return
     data = {"telemetry_backend": _state.get("backend") or "",
@@ -221,12 +242,14 @@ def session_end():
 def tools_list(count, screen, unclassified):
     """The tool surface the remote offered this session: how many definitions, what the metadata screen
     stripped or flagged (COUNTS only -- the text never enters the log), how many definitions could not be
-    screened, which names carry a hidden code point, and which names no tier classifies (treated as
+    screened and were withheld for the session (and their names, spelled out), which names carry a hidden
+    code point, and which names no tier classifies (treated as
     writes). State facts about the surface, never a description."""
     screen = screen or {}
     _emit("tools_list", tool_count=int(count),
           metadata_stripped=int(screen.get("stripped", 0)), metadata_flagged=int(screen.get("flagged", 0)),
           metadata_screen_failed=int(screen.get("failed", 0)),
+          withheld_tools=[str(n)[:80] for n in screen.get("withheld", [])][:50],           # definitions withheld for the session (#172)
           odd_names=[str(n)[:80] for n in screen.get("odd_names", [])][:20],
           directive_tools=[str(n)[:80] for n in screen.get("directive_tools", [])][:50],   # definitions with instruction-shaped text (#163)
           surface_sha=str(screen.get("surface_sha", ""))[:64],                              # hash of the whole tool surface, per session
@@ -251,7 +274,7 @@ def tool_end(tool, duration_ms, *, defang_notes=None, hygiene_removed=None, acti
     `hygiene_kept`   — the canonicalizer's flagged-but-kept records (joiners, directional marks): same
                        count + classes shape. The text is untouched; the log is the only place the
                        signal exists, by design (no in-band marker is ever written).
-    `screen_failed`  — True when input screening threw and a block passed through raw (fail-open)."""
+    `screen_failed`  — True when input screening threw and the block was withheld (fail-closed, #172)."""
     data = {"duration_ms": round(duration_ms, 1)}
     if action_fields:
         for key, val in action_fields.items():           # -> data["action.alertStatus"] = "closed", ...
@@ -273,26 +296,37 @@ def tool_end(tool, duration_ms, *, defang_notes=None, hygiene_removed=None, acti
     _emit("tool_end", tool_name=tool, **data)
 
 
-def tool_error(tool, duration_ms, exc, stage=None, *, error_type_name=None, error_message=None,
-               http_status=None, is_retryable=None):
+def tool_error(tool, duration_ms, exc, stage=None, *, error_type_name=None, error_code=None,
+               http_status=None, is_retryable=None, outcome_unknown=None, dropped_fields=None):
     """`stage` names the layer that raised: "neutralize" is the write-side guardrail refusing to forward
-    (fail-closed — a guardrail acting, recorded as such), "remote" is the upstream call, "upstream_tool"
-    the tool ran on the proxy and reported isError. The leaf fields (#153) say what ACTUALLY failed:
+    (fail-closed — a guardrail acting, recorded as such), "metadata_screen" the bridge refusing a call to a
+    definition it withheld (#172, likewise), "remote" is the upstream call, "upstream_tool" the tool ran
+    on the proxy and reported isError. The leaf fields (#153) say what ACTUALLY failed:
     `error_class` alone was always the anyio wrapper ("ExceptionGroup") for a remote failure, and 115
-    records in one incident carried zero bits about the cause."""
+    records in one incident carried zero bits about the cause.
+
+    Structured parts only (#173): the platform's error CODE and HTTP status, never its message — an
+    upstream error quotes the request that failed, and a model-written filter is tenant content the audit
+    trail must not hold. The full text still reaches the operator on stderr and the agent in the tool
+    error. `outcome_unknown` marks a write whose request had gone out when the session died (#157);
+    `dropped_fields` names (by the schema's spelling) the fields the bridge dropped from an update."""
     data = {"duration_ms": round(duration_ms, 1), "error_class": type(exc).__name__}
     if stage:
         data["stage"] = stage
-        if stage == "neutralize":
-            data["guardrail_refused"] = True
+        if stage in ("neutralize", "metadata_screen"):
+            data["guardrail_refused"] = True                     # a guardrail refusing to forward (#172 for the latter)
     if error_type_name:
         data["error_type_name"] = str(error_type_name)[:80]
-    if error_message:
-        data["error_message"] = str(error_message)[:300]
+    if error_code:
+        data["error_code"] = str(error_code)[:64]
     if http_status is not None:
         data["http_status"] = int(http_status)
     if is_retryable is not None:
         data["is_retryable"] = bool(is_retryable)
+    if outcome_unknown:
+        data["outcome_unknown"] = True
+    if dropped_fields:
+        data["dropped_fields"] = ",".join(str(f) for f in dropped_fields)[:200]
     _emit("tool_error", tool_name=tool, **data)
 
 
