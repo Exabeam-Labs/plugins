@@ -233,7 +233,7 @@ codex plugin add {h(e['name'])}@{h(catalog['name'])}</pre></div>
 <h2 id="terms">Terms and licensing</h2>
 <div class="terms">
   <p>The plugins distributed here are <b>distributed under</b> the <a href="{TERMS_URL}">Exabeam Enterprise Agreement</a> and are subject to the same terms of use as the Exabeam products they work with. This marketplace is governed by the same agreement unless specified otherwise; each plugin carries its own <code>LICENSE</code> and <code>NOTICE</code>.</p>
-  <p style="margin-bottom:0">A plugin may include open-source software. That software stays under its own license inside the distribution, its license text ships with the plugin, and the plugin's <code>LICENSE</code> names what it includes and where the source is also available (for the plugins here, through the <a href="{COMMUNITY_URL}">Open Agent and AI Security community</a>). The Enterprise Agreement governs the distribution; it adds nothing to, and takes nothing from, what the open-source license grants on the software.</p>
+  <p style="margin-bottom:0">A plugin may include open-source software. That software stays under its own license inside the distribution, its license text ships with the plugin, and the plugin's <code>LICENSE</code> names what it includes and where the source is also available (for the plugins here, through the <a href="{COMMUNITY_URL}">Open Agent and AI Security community</a>). The Enterprise Agreement governs this software distribution.</p>
 </div>
 </main>
 
