@@ -18,8 +18,9 @@ Specified otherwise:
   - The catalog tooling under scripts/ carries SPDX-License-Identifier headers
     and is licensed as those headers state.
   - An SPDX-License-Identifier header on a file inside a vendored plugin's
-    directory is inherited from that plugin's upstream source and does not
-    specify otherwise: the plugin's own LICENSE and NOTICE govern every file in
-    its directory as distributed here.
+    directory states the license of the open-source software that plugin
+    includes; that software stays under that license inside the distribution,
+    and its license text ships with the plugin. The plugin's own LICENSE states
+    the terms of this distribution and names what it includes.
 
-Copyright 2026 Exabeam, Inc. All rights reserved.
+Copyright 2026 Exabeam, Inc.
