@@ -15,8 +15,9 @@ Specified otherwise:
   - Each vendored plugin carries its own LICENSE and NOTICE files in its
     directory (for example, soc/LICENSE and soc/NOTICE), which govern that
     plugin as distributed here.
-  - The catalog tooling under scripts/ carries SPDX-License-Identifier headers
-    and is licensed as those headers state.
+  - The catalog tooling under scripts/ and the repository's own documentation
+    files carry SPDX-License-Identifier headers and are licensed as those
+    headers state.
   - An SPDX-License-Identifier header on a file inside a vendored plugin's
     directory states the license of the open-source software that plugin
     includes; that software stays under that license inside the distribution,
