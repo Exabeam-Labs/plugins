@@ -7,7 +7,7 @@ build that Exabeam has pinned to an exact release. Today's plugins run in
 [Claude Code](https://claude.com/claude-code) and [OpenAI Codex](https://openai.com/codex/).
 
 The customer-facing front door, with every plugin and its skills, is the
-[Forge site](https://exabeam.github.io/plugins/) (generated from this repository).
+[Forge site](https://exabeam-labs.github.io/plugins/) (generated from this repository).
 This page is the repository's own guide: what the Forge vends, how to add it, and — for maintainers,
 reviewers and anyone who needs to know — what is where and how a build gets here.
 
@@ -34,13 +34,13 @@ both hosts: `<plugin>@exabeam`.
 
 **Claude Code**
 ```bash
-claude plugin marketplace add Exabeam/plugins
+claude plugin marketplace add Exabeam-Labs/plugins
 claude plugin install soc@exabeam
 ```
 
 **OpenAI Codex**
 ```bash
-codex plugin marketplace add Exabeam/plugins
+codex plugin marketplace add Exabeam-Labs/plugins
 codex plugin add soc@exabeam
 ```
 

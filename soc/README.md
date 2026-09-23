@@ -54,7 +54,7 @@ Each hands off to the others: a single case to `soc-investigate`, a noise cluste
 
 ## Get started
 
-1. Install: `claude plugin marketplace add Exabeam/plugins` then
+1. Install: `claude plugin marketplace add Exabeam-Labs/plugins` then
    `claude plugin install soc@exabeam` (Codex: `codex plugin marketplace add …`,
    `codex plugin add …`).
 2. Add your Exabeam API key and secret to `~/.exabeam-mcp.env`.

@@ -136,7 +136,7 @@ def check_vendored(label, src, name, lock, problems):
         # skills and the bundled MCP by the Claude manifest's name (which the permission gate matches on),
         # Codex refuses an install whose entry name differs from its manifest, and identity.sh is what the
         # payload's own installer reads — so entry, both manifests and identity.json must agree, or the
-        # operator ends up with a different plugin than the catalog named (Exabeam/plugins#3 review).
+        # operator ends up with a different plugin than the catalog named (Exabeam-Labs/plugins#3 review).
         try:
             ident_name = json.loads((d / "identity.json").read_text()).get("name")
         except Exception as e:
@@ -192,7 +192,7 @@ def check_vendored(label, src, name, lock, problems):
         return None
     # The license files: whole-file replacements or additions, LICENSE / NOTICE / LICENSE-APACHE only,
     # sourced from this repository. The payload's own license stays as upstream ships it; the
-    # distribution terms and the Apache-2.0 text travel beside it (Exabeam/plugins#28).
+    # distribution terms and the Apache-2.0 text travel beside it (Exabeam-Labs/plugins#28).
     files = rec.get("overlay_files") or {}
     if not isinstance(files, dict) or any(not isinstance(v, str) for v in files.values()):
         problems.append(f"{label}: overlay_files must map a payload file name to a catalog-relative source path, got {files!r}")

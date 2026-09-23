@@ -64,7 +64,7 @@ Details, how it is tested, and what these do not cover: [Security](security-guar
 
 ## Quick reference
 
-- Install: `claude plugin marketplace add Exabeam/plugins` then `claude plugin install soc@exabeam` (Codex: `codex plugin marketplace add Exabeam/plugins` then `codex plugin add soc@exabeam`)
+- Install: `claude plugin marketplace add Exabeam-Labs/plugins` then `claude plugin install soc@exabeam` (Codex: `codex plugin marketplace add Exabeam-Labs/plugins` then `codex plugin add soc@exabeam`)
 - Credentials: `~/.exabeam-mcp.env` — the Exabeam MCP URL, API key and secret; see [Installation](installation.md)
 - Skills: `soc-investigate` · `triage-cases` · `rule-tuning`
 - Audit trail: `~/.socxen/telemetry.jsonl` — see [Audit logging](logging.md)
