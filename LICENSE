@@ -1,8 +1,8 @@
-Exabeam Plugin Marketplace — Terms
+Exabeam Plug-in Forge — Terms
 
-This repository — the Exabeam plugin marketplace — and the plugins distributed
-from it are governed by the Exabeam Enterprise Agreement, unless specified
-otherwise for a particular file or directory:
+This repository contains both proprietary and open-source components.
+
+Proprietary components are governed by the Exabeam Enterprise Agreement:
 
     https://www.exabeam.com/legal/enterprise-agreement/
 
@@ -10,17 +10,26 @@ The terms are maintained at that address and are not reproduced here. Use of a
 plugin distributed here is subject to the same terms of use as the Exabeam
 products it works with.
 
-Specified otherwise:
+Open-source components retain the license declared in their own directory.
 
-  - Each vendored plugin carries its own LICENSE and NOTICE files in its
-    directory (for example, soc/LICENSE and soc/NOTICE), which govern that
-    plugin as distributed here.
+The full mapping:
+
+  - Vendored plugin payloads (one directory per plugin, for example soc/).
+    Each carries its own LICENSE and NOTICE, which state the terms of that
+    plugin as distributed here. An SPDX-License-Identifier header on a file
+    inside a payload states the license of the open-source software that
+    plugin includes; that software stays under that license inside the
+    distribution, and its license text ships with the plugin (for example
+    soc/LICENSE-APACHE).
+
+  - overlays/, and the identity and license files applied by
+    scripts/vendor_plugin.py. Proprietary, and licensed under the Exabeam
+    Enterprise Agreement.
+
   - The catalog tooling under scripts/ carries SPDX-License-Identifier headers
     and is licensed as those headers state.
-  - An SPDX-License-Identifier header on a file inside a vendored plugin's
-    directory states the license of the open-source software that plugin
-    includes; that software stays under that license inside the distribution,
-    and its license text ships with the plugin. The plugin's own LICENSE states
-    the terms of this distribution and names what it includes.
+
+  - Everything else in this repository. Proprietary, and licensed under the
+    Exabeam Enterprise Agreement.
 
 Copyright 2026 Exabeam, Inc.
