@@ -32,7 +32,7 @@ LOCK = ROOT / "vendor.lock.json"
 LOGO = ROOT / "assets" / "exabeam-logo-white.svg"
 TERMS_URL = "https://www.exabeam.com/legal/enterprise-agreement/"
 COMMUNITY_URL = "https://open-agent-ai-security.github.io/"
-REPO_URL = "https://github.com/Exabeam/plugins"
+REPO_URL = "https://github.com/Exabeam-Labs/plugins"
 
 HOST_LABELS = {"claude": "Claude Code", "codex": "OpenAI Codex"}
 
@@ -191,8 +191,8 @@ def render(catalog, entries):
 <h2 id="install" style="margin-top:36px">Add the Plug-in Forge once</h2>
 <p>Add it once on either host, then install what you need. The plugin key is the same on both hosts: <code>&lt;plugin&gt;@{h(catalog['name'])}</code>.</p>
 <div class="two">
-  <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam/plugins</pre></div>
-  <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam/plugins</pre></div>
+  <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam-Labs/plugins</pre></div>
+  <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam-Labs/plugins</pre></div>
 </div>
 
 <h2 id="plugins">Plugins</h2>
@@ -216,9 +216,9 @@ def render(catalog, entries):
   <p class="desc">{h(e['description'])}</p>
   <div class="skills">{skills}</div>
   <div class="two">
-    <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam/plugins   <span class="c"># once</span>
+    <div class="install"><h4>Claude Code</h4><pre>claude plugin marketplace add Exabeam-Labs/plugins   <span class="c"># once</span>
 claude plugin install {h(e['name'])}@{h(catalog['name'])}</pre></div>
-    <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam/plugins    <span class="c"># once</span>
+    <div class="install"><h4>OpenAI Codex</h4><pre>codex plugin marketplace add Exabeam-Labs/plugins    <span class="c"># once</span>
 codex plugin add {h(e['name'])}@{h(catalog['name'])}</pre></div>
   </div>
   <div class="links">{' '.join(links)}</div>
@@ -237,7 +237,7 @@ codex plugin add {h(e['name'])}@{h(catalog['name'])}</pre></div>
 </div>
 </main>
 
-<footer><div class="wrap">© 2026 Exabeam, Inc. · <a href="{REPO_URL}">Exabeam/plugins on GitHub</a> · Every entry is a stable, reviewed build with provenance in <a href="{REPO_URL}/blob/main/vendor.lock.json">vendor.lock.json</a>. Generated from the catalog by <code>scripts/build_site.py</code>.</div></footer>
+<footer><div class="wrap">© 2026 Exabeam, Inc. · <a href="{REPO_URL}">Exabeam-Labs/plugins on GitHub</a> · Every entry is a stable, reviewed build with provenance in <a href="{REPO_URL}/blob/main/vendor.lock.json">vendor.lock.json</a>. Generated from the catalog by <code>scripts/build_site.py</code>.</div></footer>
 </body>
 </html>
 """)

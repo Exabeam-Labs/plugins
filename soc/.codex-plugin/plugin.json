@@ -6,8 +6,8 @@
     "name": "Exabeam",
     "url": "https://www.exabeam.com/"
   },
-  "homepage": "https://github.com/Exabeam/plugins",
-  "repository": "https://github.com/Exabeam/plugins",
+  "homepage": "https://github.com/Exabeam-Labs/plugins",
+  "repository": "https://github.com/Exabeam-Labs/plugins",
   "license": "LicenseRef-Exabeam-Enterprise-Agreement",
   "keywords": [
     "soc",

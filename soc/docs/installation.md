@@ -53,7 +53,7 @@ one, the call is refused.
 **1. Install the plugin.**
 
 ```bash
-claude plugin marketplace add Exabeam/plugins
+claude plugin marketplace add Exabeam-Labs/plugins
 claude plugin install soc@exabeam
 claude plugin list      # expect a block for soc@exabeam ending in: Status: ✔ enabled
 ```
@@ -106,7 +106,7 @@ That is the whole setup. [Using the skills](usage.md) covers what else you can a
 **1. Install the plugin.**
 
 ```bash
-codex plugin marketplace add Exabeam/plugins
+codex plugin marketplace add Exabeam-Labs/plugins
 codex plugin add soc@exabeam
 codex plugin list      # expect: soc@exabeam  installed, enabled  <version>
 ```
@@ -156,7 +156,7 @@ or fleet-wide in a managed `settings.json`:
 {
   "extraKnownMarketplaces": {
     "exabeam": {
-      "source": { "source": "github", "repo": "Exabeam/plugins" },
+      "source": { "source": "github", "repo": "Exabeam-Labs/plugins" },
       "autoUpdate": true
     }
   }

@@ -67,7 +67,7 @@ def apply_file_overlays(root, files):
 
     The distribution served here is governed by Exabeam's Enterprise Agreement and INCLUDES the
     payload's open-source software as it is: the SPDX headers, manifests and README stay Apache-2.0,
-    and the tree ships the Apache-2.0 text beside the distribution terms (Exabeam/plugins#28). `files`
+    and the tree ships the Apache-2.0 text beside the distribution terms (Exabeam-Labs/plugins#28). `files`
     maps a payload-relative name (LICENSE, NOTICE, LICENSE-APACHE only) to a catalog-relative source
     file, e.g. {"LICENSE": "overlays/soc/LICENSE"}. Applied after the identity overlay and
     regeneration; the validator re-applies the same files before its byte-identity diff, so the gate
