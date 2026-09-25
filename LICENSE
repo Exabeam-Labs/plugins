@@ -26,8 +26,9 @@ The full mapping:
     scripts/vendor_plugin.py. Proprietary, and licensed under the Exabeam
     Enterprise Agreement.
 
-  - The catalog tooling under scripts/ carries SPDX-License-Identifier headers
-    and is licensed as those headers state.
+  - The catalog tooling under scripts/ and the repository's own documentation
+    files carry SPDX-License-Identifier headers and are licensed as those
+    headers state.
 
   - Everything else in this repository. Proprietary, and licensed under the
     Exabeam Enterprise Agreement.
