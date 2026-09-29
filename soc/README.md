@@ -9,7 +9,7 @@
 [![Project level: Production](https://img.shields.io/badge/project_level-production-3fb950)](https://open-agent-ai-security.github.io/project-levels/)
 [![CI](https://github.com/open-agent-ai-security/raffkin/actions/workflows/ci.yml/badge.svg)](https://github.com/open-agent-ai-security/raffkin/actions/workflows/ci.yml)
 [![version](https://img.shields.io/badge/version-v1.0.0-blue)](.claude-plugin/plugin.json)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](LICENSE-APACHE)
+[![License: Exabeam Enterprise Agreement](https://img.shields.io/badge/license-Exabeam_Enterprise_Agreement-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 
 > 📘 **The user guide is at [open-agent-ai-security.github.io/raffkin](https://open-agent-ai-security.github.io/raffkin/)** —
@@ -79,13 +79,8 @@ behavior-verified before it ships; the runs, the findings and any waivers are pu
 badge above and the [changelog](https://github.com/open-agent-ai-security/raffkin/blob/main/CHANGELOG.md)
 track the current release; `claude plugin list` (or `codex plugin list`) shows your installed version.
 
-## Project sponsor
-
-The Exabeam Agentic SOC plugin is sponsored by [Exabeam](https://www.exabeam.com/). Exabeam contributed the initial code and
-continues to provide ongoing support and contributions to the project as part of its commitment to
-security in an increasingly agentic world.
-
 ## License
 
-This copy is distributed under the terms in `LICENSE`; the software it includes is open source under the
-Apache License 2.0 — see `LICENSE-APACHE` and `NOTICE`. Support: [Support](docs/support.md).
+This copy is licensed under the Exabeam Enterprise Agreement (see `LICENSE`).
+It includes Raffkin, open-source software licensed under the Apache License 2.0 (see `LICENSE-APACHE` and
+`NOTICE`). Support: [Support](docs/support.md).

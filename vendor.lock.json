@@ -2,9 +2,9 @@
   "soc": {
     "upstream": "https://github.com/open-agent-ai-security/raffkin.git",
     "path": "plugin",
-    "sha": "e2627c1a47c07c02896508d081c65e29b8b4ac10",
+    "sha": "e81e27e6adee357aaefd75fb6d17db46f4b871a2",
     "version": "1.0.0",
-    "release": "Merge pull request #290 from open-agent-ai-security/dev (2026-09-28)",
+    "release": "Merge pull request #293 from open-agent-ai-security/dev (2026-09-28)",
     "vendored": "2026-09-28",
     "blessed_by": "Steve Wilson",
     "overlay": {
