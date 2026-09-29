@@ -101,10 +101,10 @@ def invocations(description, limit=3):
 
 # ---------- front-door copy, shared by every landing-page design (index.html, and any prototype under home2/) ----------
 HERO_LEAD = "Add Exabeam's knowledge and capabilities to the AI agent of your choice, on your terms. Bring your own AI, your choice of model, agent harness and data sovereignty, and put Exabeam's products to work inside it."
-ABOUT_INTRO = "The Exabeam Supported Plugin Marketplace is Exabeam's official catalog of supported plugins for AI CLI environments such as Claude Code and OpenAI Codex. Each plugin extends what Exabeam can do by packaging product knowledge, workflows, and integrations as skills that security practitioners can invoke directly from the agent tools they already use."
+ABOUT_INTRO = "The Exabeam Plug-in Catalog is Exabeam's official collection of supported plugins for AI CLI environments such as Claude Code and OpenAI Codex. Each plugin extends what Exabeam can do by packaging product knowledge, workflows, and integrations as skills that security practitioners can invoke directly from the agent tools they already use."
 PILLARS = [
     ("Capabilities in the hands of practitioners", "Analysts, detection engineers, and SOC leads don't have to wait for new features to reach a console. They can install a plugin in minutes and put Exabeam-aware skills to work on everyday tasks like investigating alerts, triaging cases, tuning detections, and more."),
-    ("Supported by Exabeam", "Every plugin in the marketplace is built, tested, and maintained by Exabeam. It is versioned against Exabeam releases and backed by Exabeam support under your existing agreement, so teams can adopt agent-driven workflows with confidence."),
+    ("Supported by Exabeam", "Every plugin in the catalog is built, tested, and maintained by Exabeam. It is versioned against Exabeam releases and backed by Exabeam support under your existing agreement, so teams can adopt agent-driven workflows with confidence."),
     ("Your model, your harness, your data", "Plugins run in the agent environment you choose, against your own Exabeam tenant, so you keep control over model selection and data sovereignty."),
     ("Human in the loop", "Plugins are designed so consequential actions stay under practitioner control. Approvals are required before state-changing operations, and containment is recommended rather than executed automatically."),
 ]
@@ -1429,12 +1429,12 @@ def render(catalog, entries, listed):
 {subnav([("about", "About"), ("install", "Install"), ("plugins", "Plugins"), ("terms", "Terms")])}
 
 <section class="benefits" id="about"><div class="wrap">
-  <div><h2>The Exabeam Supported <span class="g">Plugin Marketplace</span></h2><p class="intro">{text(ABOUT_INTRO)}</p></div>
+  <div><h2>The Exabeam <span class="g">Plug-in Catalog</span></h2><p class="intro">{text(ABOUT_INTRO)}</p></div>
   <div class="points">{points}</div>
 </div></section>
 
 <section class="band-gray" id="install"><div class="wrap">
-  <div class="center"><h2>Add the entire plugin catalog <span class="grad">at once</span></h2>
+  <div class="center"><h2>Add the entire Plug-in Catalog <span class="grad">at once</span></h2>
   <p>A single command adds Exabeam's entire Plug-in Catalog to your AI agent, so every supported plugin is available to you at once. It works the same way in Claude Code and OpenAI Codex.</p>
 </div>
   <div class="outlined">
@@ -1446,7 +1446,7 @@ def render(catalog, entries, listed):
 </div></section>
 
 <section class="plugins" id="plugins"><div class="wrap">
-  <div class="center"><h2>Plugin Catalog Listing</h2></div>
+  <div class="center"><h2>Plug-in Catalog Listing</h2></div>
   <div class="cards">{cards}
   </div>
 </div></section>

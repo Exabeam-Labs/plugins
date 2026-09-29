@@ -1,14 +1,14 @@
-# Exabeam Plug-in Forge
+# Exabeam Plug-in Catalog
 
-The Exabeam Plug-in Forge is Exabeam's curated distribution point for **plugins for AI
+The Exabeam Plug-in Catalog is Exabeam's curated distribution point for **plugins for AI
 agents**. Each plugin adds Exabeam's knowledge and capabilities to the agent you already run — your
 choice of model, agent harness and data sovereignty — and every one of them is a stable, reviewed
 build that Exabeam has pinned to an exact release. Today's plugins run in
 [Claude Code](https://claude.com/claude-code) and [OpenAI Codex](https://openai.com/codex/).
 
 The customer-facing front door, with every plugin and its skills, is the
-[Forge site](https://exabeam-labs.github.io/plugins/) (generated from this repository).
-This page is the repository's own guide: what the Forge vends, how to add it, and — for maintainers,
+[Plug-in Catalog site](https://exabeam-labs.github.io/plugins/) (generated from this repository).
+This page is the repository's own guide: what the Plug-in Catalog vends, how to add it, and — for maintainers,
 reviewers and anyone who needs to know — what is where and how a build gets here.
 
 This repository contains both proprietary and open-source components. Proprietary components are
@@ -27,7 +27,7 @@ More plugins are added as rows here and as cards on the front door. A plugin's d
 inside the plugin — its `README.md` and `docs/` — and is the same documentation its source
 distribution carries; install with the commands on this page and the plugin key in the table.
 
-## Add the Forge once
+## Add the Plug-in Catalog once
 
 Add the marketplace once on either host, then install what you need. The plugin key is the same on
 both hosts: `<plugin>@exabeam`.
