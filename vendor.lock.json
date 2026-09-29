@@ -2,9 +2,9 @@
   "soc": {
     "upstream": "https://github.com/open-agent-ai-security/raffkin.git",
     "path": "plugin",
-    "sha": "5895ed1cfa644cb4d263de0ef3648139328b84cf",
+    "sha": "4beb487f6b58a856a65c606657ac1892625ca704",
     "version": "1.0.0",
-    "release": "Merge pull request #284 from open-agent-ai-security/dev (2026-09-28)",
+    "release": "Merge pull request #288 from open-agent-ai-security/dev (2026-09-28)",
     "vendored": "2026-09-28",
     "blessed_by": "Steve Wilson",
     "overlay": {
@@ -17,7 +17,8 @@
         "marketplace.name": "exabeam",
         "distribution.license": "LicenseRef-Exabeam-Enterprise-Agreement",
         "distribution.homepage": "https://github.com/Exabeam-Labs/plugins",
-        "distribution.repository": "https://github.com/Exabeam-Labs/plugins"
+        "distribution.repository": "https://github.com/Exabeam-Labs/plugins",
+        "distribution.vendor": "Exabeam"
       }
     },
     "overlay_files": {

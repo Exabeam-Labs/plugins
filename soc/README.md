@@ -51,8 +51,8 @@ Each hands off to the others: a single case to `soc-investigate`, a noise cluste
 ## Get started
 
 1. Install: `claude plugin marketplace add Exabeam-Labs/plugins` then
-   `claude plugin install soc@exabeam` (Codex: `codex plugin marketplace add …`,
-   `codex plugin add …`).
+   `claude plugin install soc@exabeam` (Codex:
+   `codex plugin marketplace add Exabeam-Labs/plugins` then `codex plugin add soc@exabeam`).
 2. Add your Exabeam API key and secret to `~/.exabeam-mcp.env`.
 3. Run `preflight.sh` from the installed plugin to check the connection and the gate.
 4. Say *"investigate alert `<id>`"*.

@@ -38,6 +38,7 @@
   "distribution": {
     "license": "LicenseRef-Exabeam-Enterprise-Agreement",
     "homepage": "https://github.com/Exabeam-Labs/plugins",
-    "repository": "https://github.com/Exabeam-Labs/plugins"
+    "repository": "https://github.com/Exabeam-Labs/plugins",
+    "vendor": "Exabeam"
   }
 }

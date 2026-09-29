@@ -506,7 +506,6 @@ def header(announce=""):
     <ul>{items}</ul>
     <div class="xh-util">
       <button class="xh-icon xh-find" type="button" aria-label="Search">{SEARCH_ICON}</button>
-      <div class="xh-lang"><button type="button" aria-expanded="false">EN {CHEVRON}</button><ul><li>English</li></ul></div>
       <a href="{EXABEAM}/contact/">Contact Us</a>
     </div>
   </nav>
@@ -777,8 +776,7 @@ def detail_parts(catalog, e, root):
     dl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts if v)
     links = []
     if e["setup"]: links.append(f'<a href="{REPO_URL}/blob/main/{h(e["setup"])}">Setup guide →</a>')
-    if e["docs"]: links.append(f'<a href="{REPO_URL}/blob/main/{h(e["docs"])}">README →</a>')
-    links.append(f'<a href="{REPO_URL}/blob/main/{h(e["name"])}/LICENSE">License →</a>')
+    links.append('<a href="docs/license/">License →</a>')
 
     labels = {"overview": "Overview", "capabilities": "Capabilities", "skills": "Skills", "install": "Install",
               "docs": "Documentation", "status": "Status"}
@@ -1298,7 +1296,7 @@ const pairs=links.map(a=>[a,document.getElementById(decodeURIComponent(a.hash.sl
 const mark=()=>{q=false;let cur=null;for(const p of pairs){if(p[1].getBoundingClientRect().top<=120)cur=p}links.forEach(a=>a.classList.toggle('on',!!cur&&a===cur[0]))};
 addEventListener('scroll',()=>{if(!q){q=true;requestAnimationFrame(mark)}},{passive:true});mark();})();"""
 
-MERMAID = """<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+MERMAID = """<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.esm.min.mjs';
 mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{primaryColor:'#f7f7f7',primaryBorderColor:'#009d00',lineColor:'#006bff',fontFamily:'Inter, sans-serif'}});</script>"""
 
 

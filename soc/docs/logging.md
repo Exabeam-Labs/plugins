@@ -72,7 +72,7 @@ The bundled Claude Code hook keeps a second, smaller log beside the telemetry: `
 three backups). One line per decision:
 
 ```json
-{"ts": "2026-09-05T16:01:26+00:00", "tool": "mcp__plugin_raffkin_exabeam__exabeam_update_alert",
+{"ts": "2026-09-05T16:01:26+00:00", "tool": "mcp__plugin_soc_exabeam__exabeam_update_alert",
  "decision": "ask", "reason": "Raffkin gate: exabeam_update_alert dismisses or closes. It needs the analyst's explicit yes — ask, and wait.",
  "target": {"alertId": "4471", "alertStatus": "DISMISSED"}}
 ```
@@ -85,7 +85,7 @@ exists so that a gate that somehow did not hold is visible in the record rather 
 carry the host's `permission_mode` and `tool_use_id` when present, so a post line ties to its ask:
 
 ```json
-{"ts": "2026-09-05T16:01:41+00:00", "tool": "mcp__plugin_raffkin_exabeam__exabeam_update_alert",
+{"ts": "2026-09-05T16:01:41+00:00", "tool": "mcp__plugin_soc_exabeam__exabeam_update_alert",
  "decision": "approved", "reason": "an ask-tier call completed after the gate asked: inferred from completion, an ask completes only on a yes",
  "permission_mode": "default", "tool_use_id": "toolu_01ABC",
  "target": {"alertId": "4471", "alertStatus": "DISMISSED"}}
