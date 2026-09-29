@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """Bless a build: vendor a plugin payload into this catalog at an exact upstream commit.
 
-    python3 scripts/vendor_plugin.py socxen \
-        --upstream https://github.com/open-agent-ai-security/socxen.git --path plugin --sha <40-hex>
+    python3 scripts/vendor_plugin.py soc \
+        --upstream https://github.com/open-agent-ai-security/raffkin.git --path plugin --sha <40-hex>
 
 Clones upstream (blobless, no checkout), proves the commit exists and is an ancestor of the
 default branch, exports `<path>` at that commit with `git archive` (so the vendored tree is the
@@ -12,7 +12,7 @@ committed tree — no working-copy drift, no symlinks resolved), replaces ./<ent
 records provenance in vendor.lock.json. It does NOT commit: review the diff — that diff IS the
 release review — and open a PR.
 
-    python3 scripts/vendor_plugin.py socxen --check
+    python3 scripts/vendor_plugin.py soc --check
 
 re-exports at the locked sha and reports whether ./<entry>/ still matches (no files touched).
 """

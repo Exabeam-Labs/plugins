@@ -1,12 +1,12 @@
 {
   "name": "soc",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
   "author": {
     "name": "Exabeam",
     "url": "https://www.exabeam.com/"
   },
-  "homepage": "https://github.com/Exabeam-Labs/plugins",
+  "homepage": "https://plugins.exabeam.com/plugins/soc/",
   "repository": "https://github.com/Exabeam-Labs/plugins",
   "license": "LicenseRef-Exabeam-Enterprise-Agreement",
   "keywords": [

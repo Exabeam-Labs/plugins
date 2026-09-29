@@ -1,22 +1,26 @@
 {
   "soc": {
-    "upstream": "https://github.com/open-agent-ai-security/socxen.git",
+    "upstream": "https://github.com/open-agent-ai-security/raffkin.git",
     "path": "plugin",
-    "sha": "6eeb59287b963ff745e186db1bd0a2e64a1fc453",
-    "version": "0.9.0",
-    "release": "Merge pull request #258 from open-agent-ai-security/dev (2026-09-21)",
-    "vendored": "2026-09-23",
+    "sha": "e81e27e6adee357aaefd75fb6d17db46f4b871a2",
+    "version": "1.0.0",
+    "release": "Merge pull request #293 from open-agent-ai-security/dev (2026-09-28)",
+    "vendored": "2026-09-28",
     "blessed_by": "Steve Wilson",
     "overlay": {
       "identity.json": {
         "name": "soc",
         "displayName": "Exabeam Agentic SOC plugin",
+        "productName": "the Exabeam Agentic SOC plugin",
         "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
         "marketplace.repo": "Exabeam-Labs/plugins",
         "marketplace.name": "exabeam",
         "distribution.license": "LicenseRef-Exabeam-Enterprise-Agreement",
-        "distribution.homepage": "https://github.com/Exabeam-Labs/plugins",
-        "distribution.repository": "https://github.com/Exabeam-Labs/plugins"
+        "distribution.homepage": "https://plugins.exabeam.com/plugins/soc/",
+        "distribution.repository": "https://github.com/Exabeam-Labs/plugins",
+        "distribution.vendor": "Exabeam",
+        "distribution.terms": "the Exabeam Enterprise Agreement",
+        "distribution.support": "https://www.exabeam.com/support-and-services/"
       }
     },
     "overlay_files": {
