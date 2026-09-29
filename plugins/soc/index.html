@@ -245,10 +245,6 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-col a.all{font-size:13px;font-weight:400;color:#808080;margin-top:6px}
 .xh-util{display:flex;align-items:center;gap:36px}
 .xh-icon{background:none;border:none;padding:4px;cursor:pointer;color:#000;display:flex}
-.xh-lang{position:relative}
-.xh-lang>button{font:inherit;font-weight:700;color:#000;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0}
-.xh-lang ul{display:none;position:absolute;right:-12px;top:100%;margin:10px 0 0;padding:10px 0;list-style:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:140px}
-.xh-lang.open ul{display:block}.xh-lang li{padding:6px 18px;font-weight:700;color:#009d00}
 .xh-util>a{font-weight:700;color:#000}.xh-util>a:hover{color:#009d00}
 .xh-search{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border-top:1px solid #e5e5e5;box-shadow:0 12px 24px rgba(0,0,0,.12)}
 .xh.searching .xh-search{display:block}
@@ -265,7 +261,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-menu>ul{flex-direction:column;gap:0;margin:0}
 .xh-item{border-bottom:1px solid #e5e5e5}.xh-top{width:100%;text-align:left;padding:16px 0}.xh-top::after{display:none}
 .xh-panel{position:static;box-shadow:none;border:none}.xh-panel-in{grid-template-columns:1fr;padding:0 0 18px;gap:18px}.xh-intro{display:none}
-.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}.xh-lang ul{right:auto;left:0}}
+.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}}
 @media(max-width:560px){.xh-in{height:72px;padding:0 16px}.xh-demo{font-size:15px;padding:8px 14px 7px}.xa{font-size:13.5px}}
 /* sub-menu under the hero, as on www.exabeam.com product pages */
 .xs{position:sticky;top:0;z-index:40;background:#fff;border-top:1px solid #cecece;border-bottom:1px solid #cecece}
@@ -345,7 +341,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 claude plugin install soc@exabeam</pre></div><div class="codeblock"><div class="codehead"><span>OpenAI Codex</span><button class="copy" type="button">Copy</button></div><pre>codex plugin marketplace add Exabeam-Labs/plugins    <span class="c"># once</span>
 codex plugin add soc@exabeam</pre></div></div></section><section id="docs"><div class="kicker">Documentation</div><h2>Guides and reference</h2><div class="doclist"><a class="card" href="docs/installation-setup/"><b>Installation &amp; setup</b><span>quick starts for Claude Code and Codex, credentials, troubleshooting, updating (<b>start here</b>)</span></a><a class="card" href="docs/using-the-skills/"><b>Using the skills</b><span>what to say, what happens, what the Exabeam Agentic SOC plugin asks you, how to read the report</span></a><a class="card" href="docs/example-investigation/"><b>Example investigation</b><span>a real run, from alert to verdict</span></a><a class="card" href="docs/security/"><b>Security</b><span>the human gate, the guardrails, the audit trail, how it is tested, what it does not cover</span></a><a class="card" href="docs/audit-logging/"><b>Audit logging</b><span>exactly what is recorded, where the log lives, how to route or disable it</span></a><a class="card" href="docs/support/"><b>Support</b><span>where to ask for help, and the terms this copy is supported under</span></a></div></section></div>
   <aside class="facts">
-    <div class="card"><h4>Details</h4><dl><dt>Version</dt><dd>1.0.0</dd><dt>Category</dt><dd>Security</dd><dt>Hosts</dt><dd>Claude Code, OpenAI Codex</dd><dt>Plugin key</dt><dd><code>soc@exabeam</code></dd><dt>Build</dt><dd><a href="https://github.com/Exabeam-Labs/plugins/blob/main/vendor.lock.json"><code>4beb487</code></a></dd><dt>License</dt><dd>Commercial, under the <a href="https://www.exabeam.com/legal/enterprise-agreement/">Exabeam Enterprise Agreement</a>; includes open-source software licensed under Apache-2.0 (<a href="docs/license/">details</a>)</dd><dt>Vendored</dt><dd>2026-09-28</dd><dt>Blessed by</dt><dd>Steve Wilson</dd></dl></div>
+    <div class="card"><h4>Details</h4><dl><dt>Version</dt><dd>1.0.0</dd><dt>Category</dt><dd>Security</dd><dt>Hosts</dt><dd>Claude Code, OpenAI Codex</dd><dt>Plugin key</dt><dd><code>soc@exabeam</code></dd><dt>Build</dt><dd><a href="https://github.com/Exabeam-Labs/plugins/blob/main/vendor.lock.json"><code>e2627c1</code></a></dd><dt>License</dt><dd>Commercial, under the <a href="https://www.exabeam.com/legal/enterprise-agreement/">Exabeam Enterprise Agreement</a>; includes open-source software licensed under Apache-2.0 (<a href="docs/license/">details</a>)</dd><dt>Vendored</dt><dd>2026-09-28</dd><dt>Blessed by</dt><dd>Steve Wilson</dd></dl></div>
     <div class="card links"><h4>Resources</h4><a href="docs/">Documentation →</a><a href="docs/installation-setup/">Setup guide →</a><a href="docs/license/">License →</a></div>
   </aside>
 </div>
@@ -395,8 +391,8 @@ codex plugin add soc@exabeam</pre></div></div></section><section id="docs"><div 
   const pre=b.closest('.codeblock').querySelector('pre').cloneNode(true);pre.querySelectorAll('.c').forEach(c=>c.remove());
   navigator.clipboard.writeText(pre.innerText.replace(/[ \t]+$/gm,'').trim()).then(()=>{const t=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=t,1500)});
 }));(()=>{const xh=document.querySelector('.xh');if(!xh)return;
-const closeAll=except=>xh.querySelectorAll('.xh-item.open,.xh-lang.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
-xh.querySelectorAll('.xh-item>.xh-top,.xh-lang>button').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
+const closeAll=except=>xh.querySelectorAll('.xh-item.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
+xh.querySelectorAll('.xh-item>.xh-top').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
 xh.querySelector('.xh-burger').addEventListener('click',e=>{const on=xh.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',on)});
 xh.querySelector('.xh-find').addEventListener('click',e=>{closeAll();const on=xh.classList.toggle('searching');if(on)xh.querySelector('.xh-search input').focus();e.stopPropagation()});
 document.addEventListener('click',e=>{if(!xh.contains(e.target)){closeAll();xh.classList.remove('searching')}});

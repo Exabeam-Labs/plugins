@@ -37,8 +37,10 @@
   },
   "distribution": {
     "license": "LicenseRef-Exabeam-Enterprise-Agreement",
-    "homepage": "https://github.com/Exabeam-Labs/plugins",
+    "homepage": "https://plugins.exabeam.com/plugins/soc/",
     "repository": "https://github.com/Exabeam-Labs/plugins",
-    "vendor": "Exabeam"
+    "vendor": "Exabeam",
+    "terms": "the Exabeam Enterprise Agreement",
+    "support": "https://www.exabeam.com/support-and-services/"
   }
 }

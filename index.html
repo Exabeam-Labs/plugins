@@ -8,10 +8,10 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Exabeam Plug-in Catalog">
 <meta property="og:title" content="Exabeam Plug-in Catalog">
-<meta property="og:description" content="The Exabeam Plug-in Catalog, stable, reviewed Exabeam plugins for AI agents. Add Exabeam&#x27;s knowledge and capabilities to the AI agent of your choice, on your terms.">
+<meta property="og:description" content="The Exabeam Plug-in Catalog: stable, reviewed Exabeam plugins for AI agents. Add Exabeam&#x27;s knowledge and capabilities to the AI agent of your choice, on your terms.">
 <meta property="og:url" content="https://plugins.exabeam.com/">
 <meta name="twitter:card" content="summary">
-<meta name="description" content="The Exabeam Plug-in Catalog, stable, reviewed Exabeam plugins for AI agents. Add Exabeam&#x27;s knowledge and capabilities to the AI agent of your choice, on your terms.">
+<meta name="description" content="The Exabeam Plug-in Catalog: stable, reviewed Exabeam plugins for AI agents. Add Exabeam&#x27;s knowledge and capabilities to the AI agent of your choice, on your terms.">
 <link rel="icon" type="image/x-icon" href="https://www.exabeam.com/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -244,10 +244,6 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-col a.all{font-size:13px;font-weight:400;color:#808080;margin-top:6px}
 .xh-util{display:flex;align-items:center;gap:36px}
 .xh-icon{background:none;border:none;padding:4px;cursor:pointer;color:#000;display:flex}
-.xh-lang{position:relative}
-.xh-lang>button{font:inherit;font-weight:700;color:#000;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0}
-.xh-lang ul{display:none;position:absolute;right:-12px;top:100%;margin:10px 0 0;padding:10px 0;list-style:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:140px}
-.xh-lang.open ul{display:block}.xh-lang li{padding:6px 18px;font-weight:700;color:#009d00}
 .xh-util>a{font-weight:700;color:#000}.xh-util>a:hover{color:#009d00}
 .xh-search{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border-top:1px solid #e5e5e5;box-shadow:0 12px 24px rgba(0,0,0,.12)}
 .xh.searching .xh-search{display:block}
@@ -264,7 +260,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-menu>ul{flex-direction:column;gap:0;margin:0}
 .xh-item{border-bottom:1px solid #e5e5e5}.xh-top{width:100%;text-align:left;padding:16px 0}.xh-top::after{display:none}
 .xh-panel{position:static;box-shadow:none;border:none}.xh-panel-in{grid-template-columns:1fr;padding:0 0 18px;gap:18px}.xh-intro{display:none}
-.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}.xh-lang ul{right:auto;left:0}}
+.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}}
 @media(max-width:560px){.xh-in{height:72px;padding:0 16px}.xh-demo{font-size:15px;padding:8px 14px 7px}.xa{font-size:13.5px}}
 /* sub-menu under the hero, as on www.exabeam.com product pages */
 .xs{position:sticky;top:0;z-index:40;background:#fff;border-top:1px solid #cecece;border-bottom:1px solid #cecece}
@@ -336,7 +332,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
     <h1>Exabeam plugins for AI agents</h1>
     <p>Add Exabeam's knowledge and capabilities to the AI agent of your choice, on your terms. Bring your own AI, your choice of model, agent harness and data sovereignty, and put Exabeam's products to work inside it.</p>
     <div class="ctas"><a class="btn btn-green" href="#install">Get Started</a><a class="btn btn-line" href="#plugins">Browse Plugins</a></div>
-    <div class="tags hero-tags"><span class="pill g">Stable, reviewed plug-ins</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
+    <div class="tags hero-tags"><span class="pill g">Stable, reviewed plugins</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
   </div>
 </section>
 <nav class="xs" aria-label="On this page"><div class="xs-in"><a href="#about">About</a><a href="#install">Install</a><a href="#plugins">Plugins</a><a href="#terms">Terms</a></div></nav>
@@ -411,8 +407,8 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 <script>document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const pre=b.parentElement.querySelector('pre');navigator.clipboard.writeText(pre.innerText.trim()).then(()=>{const t=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=t,1500)});
 }));(()=>{const xh=document.querySelector('.xh');if(!xh)return;
-const closeAll=except=>xh.querySelectorAll('.xh-item.open,.xh-lang.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
-xh.querySelectorAll('.xh-item>.xh-top,.xh-lang>button').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
+const closeAll=except=>xh.querySelectorAll('.xh-item.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
+xh.querySelectorAll('.xh-item>.xh-top').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
 xh.querySelector('.xh-burger').addEventListener('click',e=>{const on=xh.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',on)});
 xh.querySelector('.xh-find').addEventListener('click',e=>{closeAll();const on=xh.classList.toggle('searching');if(on)xh.querySelector('.xh-search input').focus();e.stopPropagation()});
 document.addEventListener('click',e=>{if(!xh.contains(e.target)){closeAll();xh.classList.remove('searching')}});

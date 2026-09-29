@@ -245,10 +245,6 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-col a.all{font-size:13px;font-weight:400;color:#808080;margin-top:6px}
 .xh-util{display:flex;align-items:center;gap:36px}
 .xh-icon{background:none;border:none;padding:4px;cursor:pointer;color:#000;display:flex}
-.xh-lang{position:relative}
-.xh-lang>button{font:inherit;font-weight:700;color:#000;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0}
-.xh-lang ul{display:none;position:absolute;right:-12px;top:100%;margin:10px 0 0;padding:10px 0;list-style:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:140px}
-.xh-lang.open ul{display:block}.xh-lang li{padding:6px 18px;font-weight:700;color:#009d00}
 .xh-util>a{font-weight:700;color:#000}.xh-util>a:hover{color:#009d00}
 .xh-search{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border-top:1px solid #e5e5e5;box-shadow:0 12px 24px rgba(0,0,0,.12)}
 .xh.searching .xh-search{display:block}
@@ -265,7 +261,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-menu>ul{flex-direction:column;gap:0;margin:0}
 .xh-item{border-bottom:1px solid #e5e5e5}.xh-top{width:100%;text-align:left;padding:16px 0}.xh-top::after{display:none}
 .xh-panel{position:static;box-shadow:none;border:none}.xh-panel-in{grid-template-columns:1fr;padding:0 0 18px;gap:18px}.xh-intro{display:none}
-.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}.xh-lang ul{right:auto;left:0}}
+.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}}
 @media(max-width:560px){.xh-in{height:72px;padding:0 16px}.xh-demo{font-size:15px;padding:8px 14px 7px}.xa{font-size:13.5px}}
 /* sub-menu under the hero, as on www.exabeam.com product pages */
 .xs{position:sticky;top:0;z-index:40;background:#fff;border-top:1px solid #cecece;border-bottom:1px solid #cecece}
@@ -332,10 +328,10 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 <div class="wrap docs">
   <nav class="docnav" aria-label="Documentation"><div class="dn-title">Exabeam Agentic SOC plugin docs</div><ol><li class="on"><a href="./" aria-current="page">Overview</a><ol class="toc"><li><a href="#where-to-start">Where to start</a></li><li><a href="#the-three-skills">The three skills</a></li><li><a href="#how-the-exabeam-agentic-soc-plugin-works-in-90-seconds">How the Exabeam Agentic SOC plugin works (in 90 seconds)</a></li><li><a href="#the-guardrails-in-brief">The guardrails, in brief</a></li><li><a href="#quick-reference">Quick reference</a></li></ol></li><li class=""><a href="installation-setup/">Installation &amp; setup</a></li><li class=""><a href="using-the-skills/">Using the skills</a></li><li class=""><a href="example-investigation/">Example investigation</a></li><li class=""><a href="security/">Security</a></li><li class=""><a href="audit-logging/">Audit logging</a></li><li class=""><a href="support/">Support</a></li><li class=""><a href="license/">License</a></li></ol>
     <a class="back" href="../">&lt; Back to the plugin</a></nav>
-  <article class="doc"><h1 id="the-exabeam-agentic-soc-plugin-documentation">The Exabeam Agentic SOC plugin Documentation</h1>
+  <article class="doc"><h2 id="the-exabeam-agentic-soc-plugin-documentation">The Exabeam Agentic SOC plugin Documentation</h2>
 <p><b>The Exabeam Agentic SOC plugin</b> is an agentic SOC analyst for <b>Exabeam New-Scale</b>, delivered as a plugin for Claude Code and OpenAI Codex. Hand it an alert or a case and it investigates the way a careful analyst would: gathers the evidence itself, builds the timeline, reaches a threat / false-positive verdict, and acts, with the human-in-the-loop gate on dismiss and close <b>shipped on</b>, containment <b>recommended, never executed</b>, and every call on an audit trail.</p>
 <blockquote><p><i>Every claim traceable to a call it made. Every irreversible action behind a human's yes.</i></p></blockquote>
-<p><i>This copy is licensed under the terms in its <code>LICENSE</code> file; see <a href="support/">Support</a>. It includes Raffkin, open-source software licensed under the Apache License 2.0.</i></p>
+<p><i>This copy is licensed under the Exabeam Enterprise Agreement (see <code>LICENSE</code>); see <a href="support/">Support</a>. It includes Raffkin, open-source software licensed under the Apache License 2.0.</i></p>
 <h2 id="where-to-start">Where to start</h2>
 <div class="table-wrap"><table><thead><tr><th>If you are…</th><th>Read this first</th></tr></thead><tbody><tr><td>Installing the Exabeam Agentic SOC plugin for the first time</td><td><a href="installation-setup/">Installation &amp; setup</a>, a five-minute quick start for Claude Code or Codex: install, credentials, check, first investigation</td></tr><tr><td>About to run your first investigation</td><td><a href="using-the-skills/">Using the skills</a>, what to say, what happens, what the Exabeam Agentic SOC plugin asks you before it acts, and how to read the report</td></tr><tr><td>Wanting to see a real one end to end</td><td><a href="example-investigation/">Example investigation</a>, a coordinated credential-access case, from intake to verdict</td></tr><tr><td>Wondering what keeps this safe, or why a link in a note looks "broken"</td><td><a href="security/">Security</a>, the human gate, the guardrails on what the Exabeam Agentic SOC plugin reads and writes, the audit trail, how it is tested, and what it does not cover</td></tr><tr><td>Asked "what did the agent actually do?"</td><td><a href="audit-logging/">Audit logging</a>, the on-by-default audit trail: what is recorded, what deliberately is not, where it lives</td></tr><tr><td>Looking for help</td><td><a href="support/">Support</a>, where to ask for help, and the terms this copy is supported under</td></tr></tbody></table></div>
 <h2 id="the-three-skills">The three skills</h2>
@@ -382,8 +378,8 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
   const pre=b.closest('.codeblock').querySelector('pre').cloneNode(true);pre.querySelectorAll('.c').forEach(c=>c.remove());
   navigator.clipboard.writeText(pre.innerText.replace(/[ \t]+$/gm,'').trim()).then(()=>{const t=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=t,1500)});
 }));(()=>{const xh=document.querySelector('.xh');if(!xh)return;
-const closeAll=except=>xh.querySelectorAll('.xh-item.open,.xh-lang.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
-xh.querySelectorAll('.xh-item>.xh-top,.xh-lang>button').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
+const closeAll=except=>xh.querySelectorAll('.xh-item.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
+xh.querySelectorAll('.xh-item>.xh-top').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
 xh.querySelector('.xh-burger').addEventListener('click',e=>{const on=xh.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',on)});
 xh.querySelector('.xh-find').addEventListener('click',e=>{closeAll();const on=xh.classList.toggle('searching');if(on)xh.querySelector('.xh-search input').focus();e.stopPropagation()});
 document.addEventListener('click',e=>{if(!xh.contains(e.target)){closeAll();xh.classList.remove('searching')}});

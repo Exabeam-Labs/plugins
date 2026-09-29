@@ -13,7 +13,7 @@ every call on an audit trail.
 
 > *Every claim traceable to a call it made. Every irreversible action behind a human's yes.*
 
-*This copy is licensed under the terms in its `LICENSE` file; see [Support](support.md).
+*This copy is licensed under the Exabeam Enterprise Agreement (see `LICENSE`); see [Support](support.md).
 It includes Raffkin, open-source software licensed under the Apache License 2.0.*
 
 ## Where to start

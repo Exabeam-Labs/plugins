@@ -98,9 +98,10 @@ Changes land by PR with a required approval; CI validates with *main's* copy of 
 PR cannot change the rules and the payload together; `.github/CODEOWNERS` covers the manifest, the
 payloads, the lock, the validator and the workflow, and "Require review from Code Owners" is on.
 
-The repository is public, so every PR takes a code owner's approval and the required checks, with no
-admin bypass. `main` also requires verified signatures: a squash merge through GitHub is signed by
-GitHub; a merge commit or rebase needs signed commits.
+The repository is public. The `main` ruleset requires a pull request with a code owner's approval and
+verified signatures, with no bypass; a squash merge through GitHub is signed by GitHub, a merge commit or
+rebase needs signed commits. Branch protection requires the `catalog` check; the `site` check runs on every
+PR too.
 
 ## Fixing something in the payload
 

@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Exabeam Plug-in Catalog">
 <meta property="og:title" content="Security · Exabeam Agentic SOC plugin docs">
-<meta property="og:description" content="the human gate, the guardrails, the audit trail, how it is tested, what it does not cover">
+<meta property="og:description" content="The human gate, the guardrails, the audit trail, how it is tested, what it does not cover">
 <meta property="og:url" content="https://plugins.exabeam.com/plugins/soc/docs/security/">
 <meta name="twitter:card" content="summary">
 <meta name="description" content="the human gate, the guardrails, the audit trail, how it is tested, what it does not cover">
@@ -245,10 +245,6 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-col a.all{font-size:13px;font-weight:400;color:#808080;margin-top:6px}
 .xh-util{display:flex;align-items:center;gap:36px}
 .xh-icon{background:none;border:none;padding:4px;cursor:pointer;color:#000;display:flex}
-.xh-lang{position:relative}
-.xh-lang>button{font:inherit;font-weight:700;color:#000;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0}
-.xh-lang ul{display:none;position:absolute;right:-12px;top:100%;margin:10px 0 0;padding:10px 0;list-style:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:140px}
-.xh-lang.open ul{display:block}.xh-lang li{padding:6px 18px;font-weight:700;color:#009d00}
 .xh-util>a{font-weight:700;color:#000}.xh-util>a:hover{color:#009d00}
 .xh-search{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border-top:1px solid #e5e5e5;box-shadow:0 12px 24px rgba(0,0,0,.12)}
 .xh.searching .xh-search{display:block}
@@ -265,7 +261,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xh-menu>ul{flex-direction:column;gap:0;margin:0}
 .xh-item{border-bottom:1px solid #e5e5e5}.xh-top{width:100%;text-align:left;padding:16px 0}.xh-top::after{display:none}
 .xh-panel{position:static;box-shadow:none;border:none}.xh-panel-in{grid-template-columns:1fr;padding:0 0 18px;gap:18px}.xh-intro{display:none}
-.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}.xh-lang ul{right:auto;left:0}}
+.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}}
 @media(max-width:560px){.xh-in{height:72px;padding:0 16px}.xh-demo{font-size:15px;padding:8px 14px 7px}.xa{font-size:13.5px}}
 /* sub-menu under the hero, as on www.exabeam.com product pages */
 .xs{position:sticky;top:0;z-index:40;background:#fff;border-top:1px solid #cecece;border-bottom:1px solid #cecece}
@@ -332,7 +328,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 <div class="wrap docs">
   <nav class="docnav" aria-label="Documentation"><div class="dn-title">Exabeam Agentic SOC plugin docs</div><ol><li class=""><a href="../">Overview</a></li><li class=""><a href="../installation-setup/">Installation &amp; setup</a></li><li class=""><a href="../using-the-skills/">Using the skills</a></li><li class=""><a href="../example-investigation/">Example investigation</a></li><li class="on"><a href="../security/" aria-current="page">Security</a><ol class="toc"><li><a href="#a-human-before-anything-is-dismissed-or-closed">A human before anything is dismissed or closed</a></li><li><a href="#what-it-reads-is-screened">What it reads is screened</a></li><li><a href="#what-it-writes-is-neutralized">What it writes is neutralized</a></li><li><a href="#what-it-did-is-on-the-record">What it did is on the record</a></li><li><a href="#where-your-data-goes">Where your data goes</a></li><li><a href="#how-it-is-tested">How it is tested</a></li><li><a href="#what-these-controls-do-not-cover">What these controls do not cover</a></li><li><a href="#advanced-mirroring-the-tiers-in-host-policy">Advanced: mirroring the tiers in host policy</a></li></ol></li><li class=""><a href="../audit-logging/">Audit logging</a></li><li class=""><a href="../support/">Support</a></li><li class=""><a href="../license/">License</a></li></ol>
     <a class="back" href="../../">&lt; Back to the plugin</a></nav>
-  <article class="doc"><h1 id="security">Security</h1>
+  <article class="doc"><h2 id="security">Security</h2>
 <p>Everything the Exabeam Agentic SOC plugin does to be safe to point at a live tenant, on one page: the human gate on consequential actions, the guardrails on what it reads and writes, the audit trail, how it is tested, and what it deliberately does not cover.</p>
 <p>The starting point is that <b>your log data is untrusted input</b>. Anyone who can get an event into your telemetry, a phishing sender, a malware sample, a probing attacker, can plant something in it on purpose, knowing an analyst or an AI agent will read it later: an instruction hidden in invisible characters, a link that should never be clicked, a formula that runs when a report is exported. The Exabeam Agentic SOC plugin assumes that content is there, and every control below exists so that it cannot do harm through the Exabeam Agentic SOC plugin.</p>
 <div class="figure"><p>
@@ -395,8 +391,8 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
   const pre=b.closest('.codeblock').querySelector('pre').cloneNode(true);pre.querySelectorAll('.c').forEach(c=>c.remove());
   navigator.clipboard.writeText(pre.innerText.replace(/[ \t]+$/gm,'').trim()).then(()=>{const t=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=t,1500)});
 }));(()=>{const xh=document.querySelector('.xh');if(!xh)return;
-const closeAll=except=>xh.querySelectorAll('.xh-item.open,.xh-lang.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
-xh.querySelectorAll('.xh-item>.xh-top,.xh-lang>button').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
+const closeAll=except=>xh.querySelectorAll('.xh-item.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
+xh.querySelectorAll('.xh-item>.xh-top').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
 xh.querySelector('.xh-burger').addEventListener('click',e=>{const on=xh.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',on)});
 xh.querySelector('.xh-find').addEventListener('click',e=>{closeAll();const on=xh.classList.toggle('searching');if(on)xh.querySelector('.xh-search input').focus();e.stopPropagation()});
 document.addEventListener('click',e=>{if(!xh.contains(e.target)){closeAll();xh.classList.remove('searching')}});

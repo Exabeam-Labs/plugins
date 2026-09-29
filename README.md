@@ -84,7 +84,7 @@ This repository is public, so the layout is documented here rather than assumed.
 4. A code owner reviews and it merges. From then on, two people installing a month apart get the
    same bytes, and nothing changes under them until the next blessed build lands the same way.
 
-The rules and the payloads never change in the same pull request, and CI validates every change with
+The validator and the payloads never change in the same pull request, and CI validates every change with
 `main`'s copy of the validator, so a change cannot loosen the gate and slip a payload through it
 together. The details, and the record of what was verified when, are in
 [MAINTAINERS.md](MAINTAINERS.md).

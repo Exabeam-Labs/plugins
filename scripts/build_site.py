@@ -423,10 +423,6 @@ HEADER_CSS = """
 .xh-col a.all{font-size:13px;font-weight:400;color:#808080;margin-top:6px}
 .xh-util{display:flex;align-items:center;gap:36px}
 .xh-icon{background:none;border:none;padding:4px;cursor:pointer;color:#000;display:flex}
-.xh-lang{position:relative}
-.xh-lang>button{font:inherit;font-weight:700;color:#000;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0}
-.xh-lang ul{display:none;position:absolute;right:-12px;top:100%;margin:10px 0 0;padding:10px 0;list-style:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:140px}
-.xh-lang.open ul{display:block}.xh-lang li{padding:6px 18px;font-weight:700;color:#009d00}
 .xh-util>a{font-weight:700;color:#000}.xh-util>a:hover{color:#009d00}
 .xh-search{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border-top:1px solid #e5e5e5;box-shadow:0 12px 24px rgba(0,0,0,.12)}
 .xh.searching .xh-search{display:block}
@@ -443,7 +439,7 @@ HEADER_CSS = """
 .xh-menu>ul{flex-direction:column;gap:0;margin:0}
 .xh-item{border-bottom:1px solid #e5e5e5}.xh-top{width:100%;text-align:left;padding:16px 0}.xh-top::after{display:none}
 .xh-panel{position:static;box-shadow:none;border:none}.xh-panel-in{grid-template-columns:1fr;padding:0 0 18px;gap:18px}.xh-intro{display:none}
-.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}.xh-lang ul{right:auto;left:0}}
+.xh-util{flex-wrap:wrap;gap:20px;padding-top:18px}}
 @media(max-width:560px){.xh-in{height:72px;padding:0 16px}.xh-demo{font-size:15px;padding:8px 14px 7px}.xa{font-size:13.5px}}
 /* sub-menu under the hero, as on www.exabeam.com product pages */
 .xs{position:sticky;top:0;z-index:40;background:#fff;border-top:1px solid #cecece;border-bottom:1px solid #cecece}
@@ -455,8 +451,8 @@ HEADER_CSS = """
 """
 
 HEADER_JS = """(()=>{const xh=document.querySelector('.xh');if(!xh)return;
-const closeAll=except=>xh.querySelectorAll('.xh-item.open,.xh-lang.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
-xh.querySelectorAll('.xh-item>.xh-top,.xh-lang>button').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
+const closeAll=except=>xh.querySelectorAll('.xh-item.open').forEach(i=>{if(i!==except){i.classList.remove('open');const b=i.querySelector('button');b&&b.setAttribute('aria-expanded','false')}});
+xh.querySelectorAll('.xh-item>.xh-top').forEach(b=>b.addEventListener('click',e=>{const li=b.parentElement;const on=!li.classList.contains('open');closeAll(li);xh.classList.remove('searching');li.classList.toggle('open',on);b.setAttribute('aria-expanded',on);e.stopPropagation()}));
 xh.querySelector('.xh-burger').addEventListener('click',e=>{const on=xh.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',on)});
 xh.querySelector('.xh-find').addEventListener('click',e=>{closeAll();const on=xh.classList.toggle('searching');if(on)xh.querySelector('.xh-search input').focus();e.stopPropagation()});
 document.addEventListener('click',e=>{if(!xh.contains(e.target)){closeAll();xh.classList.remove('searching')}});
@@ -1338,6 +1334,7 @@ def docs_pages(catalog, e):
             heads = [(2, "terms", "Terms")] + ([(2, "notice", "Notice")] if notice.exists() else [])
         else:
             body, heads = md_to_html((ROOT / name / pg["src"]).read_text(encoding="utf-8"), resolve, project, e["display"])
+            body = re.sub(r"<h1(\b[^>]*)>(.*?)</h1>", r"<h2\1>\2</h2>", body, flags=re.S)   # the hero holds the page's h1
         nav = ""
         for p in pages:
             on = p["slug"] == cur
@@ -1422,7 +1419,7 @@ def render(catalog, entries, listed):
     <h1>Exabeam plugins for AI agents</h1>
     <p>{text(HERO_LEAD)}</p>
     <div class="ctas"><a class="btn btn-green" href="#install">Get Started</a><a class="btn btn-line" href="#plugins">Browse Plugins</a></div>
-    <div class="tags hero-tags"><span class="pill g">Stable, reviewed plug-ins</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
+    <div class="tags hero-tags"><span class="pill g">Stable, reviewed plugins</span><span class="pill">Governed by the Exabeam Enterprise Agreement</span></div>
   </div>
 </section>
 {subnav([("about", "About"), ("install", "Install"), ("plugins", "Plugins"), ("terms", "Terms")])}
@@ -1484,6 +1481,7 @@ def social(html_text, path):
     title = re.search(r"<title>(.*?)</title>", html_text, re.S).group(1)
     m = re.search(r'<meta name="description" content="([^"]*)">', html_text)
     desc = m.group(1) if m else ""
+    desc = desc[:1].upper() + desc[1:]
     tags = (f'<link rel="canonical" href="{url}">\n<meta property="og:type" content="website">\n'
             f'<meta property="og:site_name" content="Exabeam Plug-in Catalog">\n<meta property="og:title" content="{title}">\n'
             f'<meta property="og:description" content="{desc}">\n<meta property="og:url" content="{url}">\n'
@@ -1503,6 +1501,20 @@ def license_fact(e):
     return h(lic)
 
 
+def jekyll_config():
+    """GitHub Pages runs Jekyll on this repository. Left alone it would publish every Markdown file as a page on
+    the catalog's domain, the vendored payloads' own README, docs and skills among them (upstream-branded, with
+    the upstream project's license badge). The served site is the generated HTML only, so every Markdown file
+    and the tooling directories are excluded; the payloads' non-Markdown assets (the diagrams the pages load)
+    stay served. Generated from the tree, so `--check` fails when a new Markdown file would leak."""
+    md = sorted(p.relative_to(ROOT).as_posix() for p in ROOT.rglob("*.md")
+                if ".git" not in p.parts and "plugins" not in p.relative_to(ROOT).parts[:1])
+    dirs = ["scripts", "overlays", "site"]
+    lines = ["# GENERATED by scripts/build_site.py: the catalog site is its generated HTML; nothing else is rendered.",
+             "exclude:"] + [f'  - "{x}"' for x in dirs + md]
+    return "\n".join(lines) + "\n"
+
+
 def outputs():
     """{path: html} for every page this build owns. A catalog plugin's page that someone hand-authored (no MARK) is
     left alone: it is not generated, and its own card JSON is what the listing uses."""
@@ -1518,6 +1530,7 @@ def outputs():
     listed = discover(pages)
     pages[OUT] = no_em_dashes(render(catalog, entries, listed))
     pages = {p: (t if "_template" in p.parts else social(t, p)) for p, t in pages.items()}
+    pages[ROOT / "_config.yml"] = jekyll_config()
     return entries, listed, pages
 
 
