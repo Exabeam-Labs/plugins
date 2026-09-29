@@ -1456,7 +1456,7 @@ def render(catalog, entries, listed):
 <section class="benefits terms" id="terms"><div class="wrap">
   <div><h2>Terms and <span class="g">licensing</span></h2></div>
   <div>
-    <p>The plugins distributed here are <b>distributed under</b> the <a href="{TERMS_URL}">Exabeam Enterprise Agreement</a> and are subject to the same terms of use as the Exabeam products they work with. This marketplace is governed by the same agreement unless specified otherwise; each plugin carries its own <code>LICENSE</code> and <code>NOTICE</code>.</p>
+    <p>The plugins distributed here are <b>distributed under</b> the <a href="{TERMS_URL}">Exabeam Enterprise Agreement</a> and are subject to the same terms of use as the Exabeam products they work with. This Plug-in Catalog is governed by the same agreement unless specified otherwise; each plugin carries its own <code>LICENSE</code> and <code>NOTICE</code>.</p>
     <p>A plugin may include open-source software. That software stays under its own license inside the distribution, its license text ships with the plugin, and the plugin's <code>LICENSE</code> names what it includes and where the source is also available (for the plugins here, through the <a href="{COMMUNITY_URL}">Open Agent and AI Security community</a>). The Enterprise Agreement governs this software distribution.</p>
   </div>
 </div></section>
