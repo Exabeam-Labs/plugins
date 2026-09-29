@@ -771,6 +771,7 @@ def detail_parts(catalog, e, root):
     if e["sha"]:
         sha = f'<code>{h(e["sha"][:7])}</code>'
         facts.append(("Build", f'<a href="{REPO_URL}/blob/main/vendor.lock.json">{sha}</a>'))
+    facts.append(("License", license_fact(e)))
     if e["blessed"]: facts.append(("Vendored", h(e["blessed"])))
     if e["blessed_by"]: facts.append(("Blessed by", h(e["blessed_by"])))
     dl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts if v)
@@ -1490,6 +1491,18 @@ def social(html_text, path):
             f'<meta property="og:description" content="{desc}">\n<meta property="og:url" content="{url}">\n'
             f'<meta name="twitter:card" content="summary">\n')
     return html_text.replace("</title>\n", "</title>\n" + tags, 1)
+
+
+def license_fact(e):
+    """The plugin's terms as a customer should read them: commercial first, then the open-source software it
+    includes. A plugin under the Enterprise Agreement that ships LICENSE-APACHE includes Apache-2.0 software."""
+    lic = e.get("license", "")
+    if lic == "LicenseRef-Exabeam-Enterprise-Agreement":
+        text = f'Commercial, under the <a href="{TERMS_URL}">Exabeam Enterprise Agreement</a>'
+        if (ROOT / e["name"] / "LICENSE-APACHE").is_file():
+            text += '; includes open-source software licensed under Apache-2.0 (<a href="docs/license/">details</a>)'
+        return text
+    return h(lic)
 
 
 def outputs():
