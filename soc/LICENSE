@@ -1,7 +1,7 @@
 Exabeam Agentic SOC plugin — License
 
-This plugin, as distributed through the Exabeam plugin marketplace
-(https://github.com/Exabeam/plugins), is distributed under the Exabeam Enterprise
+This plugin, as distributed through the Exabeam Plug-in Catalog
+(https://plugins.exabeam.com/), is distributed under the Exabeam Enterprise
 Agreement and is subject to the same terms of use as the Exabeam products it
 works with:
 
@@ -9,9 +9,9 @@ works with:
 
 The terms are maintained at that address and are not reproduced here.
 
-This distribution includes socxen, open-source software licensed under the
+This distribution includes Raffkin, open-source software licensed under the
 Apache License, Version 2.0 (see LICENSE-APACHE), whose source is also available
-from https://github.com/open-agent-ai-security/socxen. The Exabeam Enterprise
+from https://github.com/open-agent-ai-security/raffkin. The Exabeam Enterprise
 Agreement governs the distribution; it adds nothing to, and takes nothing from,
 what the Apache License grants on that software.
 
