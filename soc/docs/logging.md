@@ -8,7 +8,7 @@
 **What it is:** a structured, durable, machine-parseable record of what the agent did on every
 investigation — which Exabeam tools it called, how long they took, whether they succeeded, **the gated
 action it took** (which alert/case, to what disposition), and **when the [security
-guardrails](security-guardrails.md) fired**. A good agent keeps an audit trail; Raffkin keeps one **by
+guardrails](security-guardrails.md) fired**. A good agent keeps an audit trail; the Exabeam Agentic SOC plugin keeps one **by
 default**, so a production tenant can reconstruct a session or drive anomaly detection instead of relying
 on the free-form investigation report alone.
 

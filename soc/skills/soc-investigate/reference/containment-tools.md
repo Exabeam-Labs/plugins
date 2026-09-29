@@ -48,7 +48,7 @@ Additions to this list are fine; removals need a maintainer's review.
 
 ## Also denied: detection-content writes
 
-Not containment, but the same posture — actions Raffkin **must never perform**, only propose. The live
+Not containment, but the same posture — actions the Exabeam Agentic SOC plugin **must never perform**, only propose. The live
 Exabeam MCP grew `exabeam_create_analytics_rule` (2026-09: builds and creates a detection rule
 server-side from one of six canned names) and the proxy defines `exabeam_update_analytics_rule`. The
 `rule-tuning` skill's contract is *proposals for detection engineering to act on*, and `SKILL.md`

@@ -2,15 +2,16 @@
   "soc": {
     "upstream": "https://github.com/open-agent-ai-security/raffkin.git",
     "path": "plugin",
-    "sha": "6d422ee99d8a895d847cdfe04327ee5dd4c7d7e8",
+    "sha": "5895ed1cfa644cb4d263de0ef3648139328b84cf",
     "version": "1.0.0",
-    "release": "Merge pull request #280 from open-agent-ai-security/dev (2026-09-28)",
+    "release": "Merge pull request #284 from open-agent-ai-security/dev (2026-09-28)",
     "vendored": "2026-09-28",
     "blessed_by": "Steve Wilson",
     "overlay": {
       "identity.json": {
         "name": "soc",
         "displayName": "Exabeam Agentic SOC plugin",
+        "productName": "the Exabeam Agentic SOC plugin",
         "description": "Exabeam Agentic SOC plugin — agentic SOC skill suite for Exabeam New-Scale. Investigates and triages alerts and cases through the Exabeam MCP: evidence gathering, entity pivots, threat/false-positive verdict, and action — with containment recommended for human approval and dismiss/close gated by the host agent's tool-approval rules.",
         "marketplace.repo": "Exabeam-Labs/plugins",
         "marketplace.name": "exabeam",

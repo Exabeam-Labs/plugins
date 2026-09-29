@@ -3,7 +3,7 @@
   SPDX-License-Identifier: Apache-2.0
 -->
 
-# Raffkin
+# The Exabeam Agentic SOC plugin
 **An agentic SOC skill suite for Exabeam New-Scale — a plugin for Claude Code and OpenAI Codex.**
 
 [![Project level: Production](https://img.shields.io/badge/project_level-production-3fb950)](https://open-agent-ai-security.github.io/project-levels/)
@@ -16,7 +16,7 @@
 > installation, your first investigation, security, logging and support. This file is the same guide's
 > front door for readers arriving from the plugin itself.
 
-Raffkin gives your AI coding agent the job of a SOC analyst on an Exabeam New-Scale tenant. Three
+The Exabeam Agentic SOC plugin gives your AI coding agent the job of a SOC analyst on an Exabeam New-Scale tenant. Three
 skills work the tenant through the Exabeam MCP — one case, the whole queue, or the rules behind it —
 each named for the person whose job it does. No server, no database, no approval queue: the analyst at
 the terminal is the human in the loop, and dismissing or closing anything is held behind **two locks
@@ -65,7 +65,7 @@ The full five-minute quick start, with what to expect at each step, is in
 | Page | What's in it |
 |---|---|
 | **[Installation & setup](docs/installation.md)** | quick starts for Claude Code and Codex, credentials, troubleshooting, updating (**start here**) |
-| **[Using the skills](docs/usage.md)** | what to say, what happens, what Raffkin asks you, how to read the report |
+| **[Using the skills](docs/usage.md)** | what to say, what happens, what the Exabeam Agentic SOC plugin asks you, how to read the report |
 | **[Example investigation](skills/soc-investigate/reference/examples/coordinated-credential-access.md)** | a real run, from alert to verdict |
 | **[Security](docs/security-guardrails.md)** | the human gate, the guardrails, the audit trail, how it is tested, what it does not cover |
 | **[Audit logging](docs/logging.md)** | exactly what is recorded, where the log lives, how to route or disable it |
@@ -81,7 +81,7 @@ track the current release; `claude plugin list` (or `codex plugin list`) shows y
 
 ## Project sponsor
 
-Raffkin is sponsored by [Exabeam](https://www.exabeam.com/). Exabeam contributed the initial code and
+The Exabeam Agentic SOC plugin is sponsored by [Exabeam](https://www.exabeam.com/). Exabeam contributed the initial code and
 continues to provide ongoing support and contributions to the project as part of its commitment to
 security in an increasingly agentic world.
 
