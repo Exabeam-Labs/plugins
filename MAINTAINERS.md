@@ -26,6 +26,7 @@ A vendoring PR, where the diff *is* the release review:
 
 ```bash
 python3 scripts/vendor_plugin.py soc --sha <40-hex commit on the source's default branch> --blessed-by "<name>"
+python3 scripts/build_site.py      # regenerate the site from the new payload (CI's `site` job checks it)
 git diff            # the payload change, file by file
 ```
 
@@ -97,11 +98,9 @@ Changes land by PR with a required approval; CI validates with *main's* copy of 
 PR cannot change the rules and the payload together; `.github/CODEOWNERS` covers the manifest, the
 payloads, the lock, the validator and the workflow, and "Require review from Code Owners" is on.
 
-While the repository is private and no customer has installed from it, the maintainer may merge
-with admin privilege to move quickly — every such merge is still a PR with green checks, and the
-rules-then-payload ordering above still applies. That allowance ends at the public flip or the first
-customer install, whichever comes first; from then on every PR takes a human approval and the
-required checks, with no admin bypass.
+The repository is public, so every PR takes a code owner's approval and the required checks, with no
+admin bypass. `main` also requires verified signatures: a squash merge through GitHub is signed by
+GitHub; a merge commit or rebase needs signed commits.
 
 ## Fixing something in the payload
 

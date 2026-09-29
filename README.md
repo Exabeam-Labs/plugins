@@ -21,7 +21,7 @@ mapping.
 
 | Plugin | Install as | What it does | Skills | Documentation |
 |---|---|---|---|---|
-| **Exabeam Agentic SOC plugin** | `soc@exabeam` | An agentic SOC analyst for Exabeam New-Scale: hand it an alert or a case and it gathers the evidence, reaches a verdict and acts in the SIEM — with dismiss and close always behind your approval and containment recommended, never executed. | `soc-investigate` · `triage-cases` · `rule-tuning` | [README](soc/README.md) · [Setup guide](soc/docs/installation.md) · [Apache-2.0](soc/LICENSE) |
+| **Exabeam Agentic SOC plugin** | `soc@exabeam` | An agentic SOC analyst for Exabeam New-Scale: hand it an alert or a case and it gathers the evidence, reaches a verdict and acts in the SIEM — with dismiss and close always behind your approval and containment recommended, never executed. | `soc-investigate` · `triage-cases` · `rule-tuning` | [README](soc/README.md) · [Setup guide](soc/docs/installation.md) · [License](soc/LICENSE) (Exabeam Enterprise Agreement; includes Apache-2.0 software, [`LICENSE-APACHE`](soc/LICENSE-APACHE)) |
 
 More plugins are added as rows here and as cards on the front door. A plugin's documentation ships
 inside the plugin — its `README.md` and `docs/` — and is the same documentation its source
@@ -54,7 +54,7 @@ and what it will and will not do.
 
 ## What is where
 
-This repository will be public by its nature, so the layout is documented here rather than assumed.
+This repository is public, so the layout is documented here rather than assumed.
 
 | Path | What it is |
 |---|---|
@@ -64,8 +64,10 @@ This repository will be public by its nature, so the layout is documented here r
 | `overlays/<entry>/` | The `LICENSE` and `NOTICE` served with each plugin from the Plug-in Catalog — the commercial terms, by reference. |
 | [`scripts/vendor_plugin.py`](scripts/vendor_plugin.py) | Blesses or re-vendors an entry: exports the source at a commit, applies the identity overlay, runs the plugin's own generator, applies the license files, writes the lock record. |
 | [`scripts/validate_catalog.py`](scripts/validate_catalog.py) | The CI gate. Validates the manifest and the lock, and with `--verify-upstream` proves each vendored tree is byte-identical to a fresh export of its source at the pinned commit, modulo the declared overlays. |
-| [`scripts/build_site.py`](scripts/build_site.py) | Renders the front door, [`index.html`](index.html), from the manifest, the lock, each payload's identity and its skills' metadata. `--check` fails CI if the page drifts from the catalog. |
-| `index.html`, `assets/` | The generated front door and its logo, served by GitHub Pages from `main`. |
+| [`scripts/build_site.py`](scripts/build_site.py) | Renders the Plug-in Catalog site from the manifest, the lock, each payload's identity, docs and skills' metadata, and `site/`: the front door, [`index.html`](index.html), and each plugin's detail and docs pages under `plugins/`. `--check` fails CI if any page drifts from the catalog. |
+| `index.html`, `plugins/<entry>/` | The generated site, served by GitHub Pages from `main` at [plugins.exabeam.com](https://plugins.exabeam.com/) (`CNAME`). `plugins/_template/` is a starting point for a hand-authored plugin page. |
+| `site/<entry>.json` | Site-only facts a payload does not carry: the card's release `status` (`pre-release` or `released`) and `media` (images shown on the plugin page). Optional. |
+| `assets/` | Source images the generator reads (the Exabeam logo is inlined into the pages). |
 | [`.github/workflows/validate.yml`](.github/workflows/validate.yml) | Two jobs on every PR and push to `main`: `catalog` (the validator, with upstream verification) and `site` (the front door is current). |
 | [`.github/CODEOWNERS`](.github/CODEOWNERS) | Review from code owners is required on the manifest, the payloads, the lock, the validator and the workflow. |
 | [`MAINTAINERS.md`](MAINTAINERS.md) | How a build is blessed, the rev policy, the gate, the license overlay, what protects `main`, and the verification log. |

@@ -1205,7 +1205,7 @@ def detail_page(catalog, e):
   </aside>
 </div>
 </main>
-<dialog class="lightbox" id="lightbox"><form method="dialog"><button>Close ✕</button></form><img src="" alt=""></dialog>
+<dialog class="lightbox" id="lightbox"><form method="dialog"><button>Close ✕</button></form><img alt=""></dialog>
 {footer('../../')}
 {card_json(data)}
 <script>{COPY_JS}{HEADER_JS}{LIGHTBOX_JS if e['media'] else ''}</script>
@@ -1474,6 +1474,24 @@ def hand_authored(path):
     return path.exists() and not path.read_text(encoding="utf-8").startswith(MARK)
 
 
+SITE_URL = "https://plugins.exabeam.com/"      # the catalog's address (CNAME)
+
+
+def social(html_text, path):
+    """Canonical URL plus Open Graph and Twitter metadata, from the page's own <title> and description, so a
+    shared link previews as the catalog and search engines index plugins.exabeam.com, not a mirror."""
+    rel = path.relative_to(ROOT).as_posix()
+    url = SITE_URL + (rel[:-len("index.html")] if rel.endswith("index.html") else rel)
+    title = re.search(r"<title>(.*?)</title>", html_text, re.S).group(1)
+    m = re.search(r'<meta name="description" content="([^"]*)">', html_text)
+    desc = m.group(1) if m else ""
+    tags = (f'<link rel="canonical" href="{url}">\n<meta property="og:type" content="website">\n'
+            f'<meta property="og:site_name" content="Exabeam Plug-in Catalog">\n<meta property="og:title" content="{title}">\n'
+            f'<meta property="og:description" content="{desc}">\n<meta property="og:url" content="{url}">\n'
+            f'<meta name="twitter:card" content="summary">\n')
+    return html_text.replace("</title>\n", "</title>\n" + tags, 1)
+
+
 def outputs():
     """{path: html} for every page this build owns. A catalog plugin's page that someone hand-authored (no MARK) is
     left alone: it is not generated, and its own card JSON is what the listing uses."""
@@ -1488,6 +1506,7 @@ def outputs():
     pages = {p: no_em_dashes(t) for p, t in pages.items() if not hand_authored(p)}
     listed = discover(pages)
     pages[OUT] = no_em_dashes(render(catalog, entries, listed))
+    pages = {p: (t if "_template" in p.parts else social(t, p)) for p, t in pages.items()}
     return entries, listed, pages
 
 
