@@ -108,7 +108,7 @@ required checks, with no admin bypass.
 You can't fix it here. The vendored tree under `soc/` must stay byte-identical to upstream at the
 pinned commit (modulo the declared identity overlay and the license files) or `--verify-upstream` fails — that is the gate
 working, not a bug. Payload changes go upstream to
-[open-agent-ai-security/socxen](https://github.com/open-agent-ai-security/socxen) first, then arrive
+[open-agent-ai-security/raffkin](https://github.com/open-agent-ai-security/raffkin) first, then arrive
 here as a new blessed build.
 
 ## Verification log

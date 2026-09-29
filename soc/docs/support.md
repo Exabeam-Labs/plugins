@@ -6,9 +6,9 @@
 # Support
 
 This copy is distributed under the terms in its `LICENSE` file, by the organization named there, which
-also provides its support. The software it includes is socxen, open source under the Apache License 2.0
+also provides its support. The software it includes is Raffkin, open source under the Apache License 2.0
 (see `LICENSE-APACHE`); its source is at
-[github.com/open-agent-ai-security/socxen](https://github.com/open-agent-ai-security/socxen).
+[github.com/open-agent-ai-security/raffkin](https://github.com/open-agent-ai-security/raffkin).
 
 ## Getting help
 
@@ -17,6 +17,6 @@ also provides its support. The software it includes is socxen, open source under
 - **Questions and bug reports:** through the support path of the organization that distributes this
   copy. Include the host (Claude Code or Codex), the plugin version, and the `preflight.sh` output. A
   defect in the open-source software itself may also be reported at
-  [github.com/open-agent-ai-security/socxen/issues](https://github.com/open-agent-ai-security/socxen/issues).
+  [github.com/open-agent-ai-security/raffkin/issues](https://github.com/open-agent-ai-security/raffkin/issues).
 - **Security vulnerabilities:** please do not open a public issue — follow
-  [SECURITY.md](https://github.com/open-agent-ai-security/socxen/blob/main/SECURITY.md).
+  [SECURITY.md](https://github.com/open-agent-ai-security/raffkin/blob/main/SECURITY.md).
