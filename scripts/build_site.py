@@ -262,8 +262,8 @@ def load():
         entries.append({
             "name": name, "display": e.get("displayName") or name, "description": e.get("description", ""),
             "category": e.get("category", ""), "license": e.get("license", ""), "short": ident.get("shortDescription", ""),
-            "version": rec.get("version") or ident.get("version", ""), "sha": rec.get("sha") or "",
-            "blessed": rec.get("vendored", ""), "blessed_by": rec.get("blessed_by", ""), "release": rec.get("release", ""),
+            "version": rec.get("version") or ident.get("version", ""),
+            "release": rec.get("release", ""),
             "added": site_cfg.get("added") or rec.get("vendored", ""),
             "upstream": upstream, "hosts": hosts, "skills": skills, "media": media, "site_status": site_cfg.get("status", ""),
             "card_description": site_cfg.get("card_description", ""),
@@ -763,12 +763,7 @@ def detail_parts(catalog, e, root):
     facts = [("Version", h(e["version"])), ("Category", h(category(e))),
              ("Hosts", ", ".join(h(HOST_LABELS.get(x, x)) for x in e["hosts"])),
              ("Plugin key", f'<code>{h(e["name"])}@{mp}</code>')]
-    if e["sha"]:
-        sha = f'<code>{h(e["sha"][:7])}</code>'
-        facts.append(("Build", f'<a href="{REPO_URL}/blob/main/vendor.lock.json">{sha}</a>'))
     facts.append(("License", license_fact(e)))
-    if e["blessed"]: facts.append(("Vendored", h(e["blessed"])))
-    if e["blessed_by"]: facts.append(("Blessed by", h(e["blessed_by"])))
     dl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts if v)
     links = []
     if e["setup"]: links.append(f'<a href="{REPO_URL}/blob/main/{h(e["setup"])}">Setup guide →</a>')
