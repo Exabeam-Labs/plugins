@@ -1471,6 +1471,7 @@ def hand_authored(path):
 
 
 SITE_URL = "https://plugins.exabeam.com/"      # the catalog's address (CNAME)
+OG_IMAGE = SITE_URL + "assets/og-image.png"    # 1200x630 link preview, rendered from scripts/og-image.html
 
 
 def social(html_text, path):
@@ -1485,7 +1486,10 @@ def social(html_text, path):
     tags = (f'<link rel="canonical" href="{url}">\n<meta property="og:type" content="website">\n'
             f'<meta property="og:site_name" content="Exabeam Plug-in Catalog">\n<meta property="og:title" content="{title}">\n'
             f'<meta property="og:description" content="{desc}">\n<meta property="og:url" content="{url}">\n'
-            f'<meta name="twitter:card" content="summary">\n')
+            f'<meta property="og:image" content="{OG_IMAGE}">\n<meta property="og:image:width" content="1200">\n'
+            f'<meta property="og:image:height" content="630">\n'
+            f'<meta property="og:image:alt" content="Exabeam plugins for AI agents, plugins.exabeam.com">\n'
+            f'<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:image" content="{OG_IMAGE}">\n')
     return html_text.replace("</title>\n", "</title>\n" + tags, 1)
 
 
