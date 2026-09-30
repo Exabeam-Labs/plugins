@@ -54,6 +54,10 @@ LOGO = ROOT / "assets" / "exabeam-logo.svg"
 TERMS_URL = "https://www.exabeam.com/legal/enterprise-agreement/"
 COMMUNITY_URL = "https://open-agent-ai-security.github.io/"
 REPO_URL = "https://github.com/Exabeam-Labs/plugins"
+# www.exabeam.com's CookieYes account: the banner, and consent shared across exabeam.com once the account's
+# Subdomain Consent Sharing is on. Loaded from cdn-cookieyes.com, not exabeam.com's NitroCDN copy, so account
+# setting changes reach this site without a rebuild. "" drops the banner and the footer Cookie Settings link.
+COOKIEYES_ID = "7c4d3a9181fb1fa5e066bc36"
 
 HOST_LABELS = {"claude": "Claude Code", "codex": "OpenAI Codex"}
 h = html.escape
@@ -569,6 +573,7 @@ FOOTER_CSS = """
 .xf-links a{color:#bdbdbd;font-weight:500;font-size:16.5px;margin-bottom:13px}.xf-links a:hover{color:#fff}
 .xf-legal{background:#000;color:#fff;padding:24px 0 48px;font-size:16.5px;font-weight:500}
 .xf-legal .xw{display:flex;justify-content:center;gap:50px;flex-wrap:wrap}.xf-legal a{color:#fff}.xf-legal a:hover{color:#4cdb00}
+.xf-legal button{background:none;border:0;padding:0;font:inherit;color:#fff;cursor:pointer}.xf-legal button:hover{color:#4cdb00}
 @media(max-width:920px){.xf-top .xw{grid-template-columns:1fr 1fr;row-gap:44px}.xf-row{grid-template-columns:1fr}.xf-links{grid-column:auto;grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.xf-top .xw,.xf-links{grid-template-columns:1fr}.xf-legal .xw{flex-direction:column;align-items:center;gap:14px}}
 """
@@ -580,6 +585,8 @@ def footer(root, anchors=("about", "install", "plugins", "terms")):
     _, logo_footer = logos()
     url = lambda u: u if u.startswith("http") else EXABEAM + u
     link = lambda t, u: f'<a href="{h(url(u))}">{h(t)}</a>'
+    # CookieYes reopens its banner from any element with this class, as www.exabeam.com's footer does
+    cookie_settings = '<button type="button" class="cky-banner-element">Cookie Settings</button>' if COOKIEYES_ID else ""
     cols = "".join(f'<div class="xf-col {c}"><h4>{h(title)}</h4>{"".join(link(t, u) for t, u in links)}</div>'
                    for title, c, links in FOOTER_COLUMNS)
     catalog = [(a.title(), f"{root}#{a}") for a in anchors] + [
@@ -600,7 +607,7 @@ def footer(root, anchors=("about", "install", "plugins", "terms")):
     <div class="xf-row"><h4 class="cat">Plug-in Catalog</h4><div class="xf-links">{"".join(f'<a href="{h(u)}">{h(t)}</a>' for t, u in catalog)}</div></div>
     <div class="xf-row"><h4>Security Explainers</h4><div class="xf-links">{"".join(link(t, u) for t, u in FOOTER_EXPLAINERS)}</div></div>
   </div></div>
-  <div class="xf-legal"><div class="xw"><span>© 2026 Exabeam</span>{"".join(link(t, u) for t, u in FOOTER_LEGAL)}</div></div>
+  <div class="xf-legal"><div class="xw"><span>© 2026 Exabeam</span>{"".join(link(t, u) for t, u in FOOTER_LEGAL)}{cookie_settings}</div></div>
 </footer>"""
 
 
@@ -1126,7 +1133,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 HEAD = """<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+{consent}<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
@@ -1141,7 +1148,9 @@ HEAD = """<!DOCTYPE html>
 
 
 def head(title, desc):
-    return HEAD.format(title=h(title), desc=h(desc), css=SITE_CSS + CARD_CSS + DOCS_CSS + HEADER_CSS + FOOTER_CSS)
+    consent = (f'<script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/{COOKIEYES_ID}/script.js"></script>\n'
+               if COOKIEYES_ID else "")   # first in <head>, ahead of any script it may need to block
+    return HEAD.format(consent=consent, title=h(title), desc=h(desc), css=SITE_CSS + CARD_CSS + DOCS_CSS + HEADER_CSS + FOOTER_CSS)
 
 
 def terminal(lines):
