@@ -58,6 +58,8 @@ REPO_URL = "https://github.com/Exabeam-Labs/plugins"
 # Subdomain Consent Sharing is on. Loaded from cdn-cookieyes.com, not exabeam.com's NitroCDN copy, so account
 # setting changes reach this site without a rebuild. "" drops the banner and the footer Cookie Settings link.
 COOKIEYES_ID = "7c4d3a9181fb1fa5e066bc36"
+# www.exabeam.com's Google Tag Manager container. "" drops both the <head> loader and the <body> noscript iframe.
+GTM_ID = "GTM-TGMHXV"
 
 HOST_LABELS = {"claude": "Claude Code", "codex": "OpenAI Codex"}
 h = html.escape
@@ -1144,13 +1146,22 @@ HEAD = """<!DOCTYPE html>
 <style>{css}</style>
 </head>
 <body>
-"""
+{gtm_noscript}"""
 
 
 def head(title, desc):
     consent = (f'<script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/{COOKIEYES_ID}/script.js"></script>\n'
                if COOKIEYES_ID else "")   # first in <head>, ahead of any script it may need to block
-    return HEAD.format(consent=consent, title=h(title), desc=h(desc), css=SITE_CSS + CARD_CSS + DOCS_CSS + HEADER_CSS + FOOTER_CSS)
+    if GTM_ID:   # right after CookieYes, so the banner is in place before any tag GTM fires
+        consent += ("<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n"
+                    "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n"
+                    "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n"
+                    "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n"
+                    f"}})(window,document,'script','dataLayer','{GTM_ID}');</script>\n<!-- End Google Tag Manager -->\n")
+    gtm_noscript = (f'<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"\n'
+                    'height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>\n<!-- End Google Tag Manager (noscript) -->\n'
+                    if GTM_ID else "")
+    return HEAD.format(consent=consent, gtm_noscript=gtm_noscript, title=h(title), desc=h(desc), css=SITE_CSS + CARD_CSS + DOCS_CSS + HEADER_CSS + FOOTER_CSS)
 
 
 def terminal(lines):
