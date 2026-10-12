@@ -59,7 +59,8 @@ def apply_overlay(root, overlay):
         f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
 
 
-FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md")
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md",
+                         ".claude-plugin/icon.png")
 
 
 def apply_file_overlays(root, files):

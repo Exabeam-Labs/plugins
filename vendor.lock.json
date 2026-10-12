@@ -26,7 +26,8 @@
     "overlay_files": {
       "LICENSE": "overlays/soc/LICENSE",
       "NOTICE": "overlays/soc/NOTICE",
-      "LICENSE-APACHE": "overlays/soc/LICENSE-APACHE"
+      "LICENSE-APACHE": "overlays/soc/LICENSE-APACHE",
+      ".claude-plugin/icon.png": "overlays/soc/icon.png"
     }
   }
 }

@@ -244,7 +244,8 @@ def _git(*args, cwd=None):
     return r.stdout
 
 
-FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md")
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md",
+                         ".claude-plugin/icon.png")
 
 
 def _apply_file_overlays(root, files):
