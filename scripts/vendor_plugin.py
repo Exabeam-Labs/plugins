@@ -25,6 +25,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from validate_catalog import FILE_OVERLAY_ALLOWED      # ONE allowlist: the gate's copy is the only copy
+
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = ROOT / "vendor.lock.json"
 
@@ -59,19 +61,21 @@ def apply_overlay(root, overlay):
         f.write_text(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
 
 
-FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md")
-
-
 def apply_file_overlays(root, files):
-    """Replace or add whole files in the export from files kept in this repository — the license files.
+    """Replace or add whole files in the export from files kept in this repository: the licence files
+    and the listing icon.
 
     The distribution served here is governed by Exabeam's Enterprise Agreement and INCLUDES the
     payload's open-source software as it is: the SPDX headers, manifests and README stay Apache-2.0,
-    and the tree ships the Apache-2.0 text beside the distribution terms (Exabeam-Labs/plugins#28). `files`
-    maps a payload-relative name (LICENSE, NOTICE, LICENSE-APACHE only) to a catalog-relative source
-    file, e.g. {"LICENSE": "overlays/soc/LICENSE"}. Applied after the identity overlay and
-    regeneration; the validator re-applies the same files before its byte-identity diff, so the gate
-    still proves 'identical to upstream modulo the declared identity and these files'."""
+    and the tree ships the Apache-2.0 text beside the distribution terms (Exabeam-Labs/plugins#28). The
+    icon is a distribution asset upstream ships none of, and it is the mark both hosts' directory
+    listings show (Exabeam-Labs/plugins#47). `files` maps a payload-relative name from
+    FILE_OVERLAY_ALLOWED to a catalog-relative source file, e.g. {"LICENSE": "overlays/soc/LICENSE"}.
+
+    Applied BEFORE the identity overlay and the payload's regeneration, because raffkin#302 makes
+    gen_identity.py check that the mark named by `logo` is a real file in the payload. The validator
+    applies the same files in the same order before its byte-identity diff, so the gate still proves
+    'identical to upstream modulo the declared identity patch and these files'."""
     for rel, src in (files or {}).items():
         if rel not in FILE_OVERLAY_ALLOWED:
             sys.exit(f"error: file overlay may replace only {FILE_OVERLAY_ALLOWED}, got {rel!r}")
@@ -80,7 +84,16 @@ def apply_file_overlays(root, files):
         if not s.is_file() or s.is_symlink() or not s.resolve().is_relative_to(home):
             sys.exit(f"error: file overlay source {src!r} must be a regular file under overlays/{root.name}/ "
                      f"in this repository (no symlinks, nothing outside it) — the validator enforces the same")
-        (root / rel).write_bytes(s.read_bytes())
+        # An allowlisted key may sit under a directory the export has not got. Refuse a destination or a
+        # parent that is a symlink: the write would follow it out of the stage.
+        dest = root / rel
+        cur = root
+        for part in Path(rel).parts:
+            cur = cur / part
+            if cur.is_symlink():
+                sys.exit(f"error: file overlay destination {rel!r} is, or sits under, a symlink")
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(s.read_bytes())
 
 
 def regenerate(root):
@@ -132,10 +145,10 @@ def main():
     stage = Path(tempfile.mkdtemp(prefix="vendor-stage-")) / a.entry
     subject, date = export(upstream, sha, path, stage)
     overlay = rec.get("overlay") or {}
+    overlay_files = rec.get("overlay_files") or {}
+    apply_file_overlays(stage, overlay_files)   # first: the identity overlay may name one of these files
     apply_overlay(stage, overlay)
     regenerated = regenerate(stage)
-    overlay_files = rec.get("overlay_files") or {}
-    apply_file_overlays(stage, overlay_files)
     version = json.loads((stage / ".claude-plugin" / "plugin.json").read_text())["version"]
 
     if a.check:
