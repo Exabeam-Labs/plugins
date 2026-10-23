@@ -76,21 +76,32 @@ headers, `identity.sh` and the README badge read `Apache-2.0`, and the identity 
 them. The two host manifests describe the plugin *as distributed*: the overlay's `distribution.*` fields
 in `identity.json` (`license`, `homepage`, `repository`) set them to the Enterprise Agreement and this
 repository, and the payload's own generator writes them — the same mechanism as the re-key, and the
-source is never relabeled (socxen #245). Beside that software the tree carries the distribution's terms,
-declared as `overlay_files` in the lock record and re-applied by the validator before its byte-identity
-diff:
+source is never relabeled (socxen #245). Beside that software the tree carries the distribution's own
+files, declared as `overlay_files` in the lock record and re-applied by the validator before its
+byte-identity diff:
 
 - **`LICENSE`** — a short pointer to the Enterprise Agreement by URL, never a copy of its text, naming
   the included Apache-2.0 software and where its source is also available.
 - **`NOTICE`** — the distribution's notice, carrying the upstream NOTICE content.
 - **`LICENSE-APACHE`** — the Apache License, Version 2.0 text, so a recipient has the license the
   included software is under.
+- **`assets/icon.png`** — the Exabeam mark, which is what the directory listings show on both hosts.
+  Upstream ships no mark of ours, and one asset serves both: the payload's top-level `logo` names it,
+  and the generator emits the Claude manifest's `icon` and the Antigravity manifest's `logo` from it
+  (raffkin#302, #47, #50).
 
 Nothing else is accepted as a file overlay, and every source lives under `overlays/<entry>/`. The
 catalog entry in `marketplace.json` and the plugin's manifests name the distribution's terms; the
 headers and `LICENSE-APACHE` name the software's. Everything else in the tree stays byte-identical to
-upstream: the gate proves *identical modulo the declared identity and these three files*. `vendor_plugin.py` applies both on bless and on
-`--check`.
+upstream: the gate proves *identical modulo the declared identity and the declared file overlays*.
+`vendor_plugin.py` applies both on bless and on `--check`.
+
+The file overlays are applied **twice**, in both scripts: before the payload's generator runs, because
+the identity overlay may name one of them (`logo`), and again after it, because the generator rewrites
+SPDX lines across the payload. Applied only before, a generator that rewrote an overlaid file would sail
+through the byte-identity diff — both sides run the same steps, so the diff would compare a rewrite
+against the same rewrite. Re-applying keeps the diff proving what it says: each file we serve equals its
+source under `overlays/<entry>/`.
 
 ## Controls on `main`
 
