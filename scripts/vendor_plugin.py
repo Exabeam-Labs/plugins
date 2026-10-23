@@ -146,9 +146,19 @@ def main():
     subject, date = export(upstream, sha, path, stage)
     overlay = rec.get("overlay") or {}
     overlay_files = rec.get("overlay_files") or {}
-    apply_file_overlays(stage, overlay_files)   # first: the identity overlay may name one of these files
+    # TWICE, on purpose. Before, because the identity overlay may NAME one of these files (`logo`) and
+    # the payload's generator checks that the mark is really in the payload. After, because the generator
+    # rewrites SPDX lines across the whole payload (`rewrite_license()` upstream), and with the overlays
+    # applied only before, a generator that rewrote an overlaid file would pass the byte-identity diff
+    # unnoticed -- both scripts run the same steps, so the diff would compare a rewrite against the same
+    # rewrite. Re-applying restores the invariant the diff used to prove: each served overlay file equals
+    # its source in overlays/<entry>/, byte for byte. It cannot happen on today's soc (no SPDX line in
+    # any overlay source, and soc patches `distribution.license`, not the top-level `license`), which is
+    # exactly why it needs a check rather than a reader's attention (#48 review).
+    apply_file_overlays(stage, overlay_files)
     apply_overlay(stage, overlay)
     regenerated = regenerate(stage)
+    apply_file_overlays(stage, overlay_files)
     version = json.loads((stage / ".claude-plugin" / "plugin.json").read_text())["version"]
 
     if a.check:
@@ -175,7 +185,8 @@ def main():
     LOCK.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n")
     print(f"vendored ./{a.entry}/ <- {upstream} {path}/ @ {sha[:12]} — version {version}"
           + (f"\n  identity: overlay on {sorted(overlay)}" + (" applied and the payload's gen_identity.py re-run" if regenerated else " applied") if overlay else "")
-          + (f"\n  license: file overlays applied on {sorted(overlay_files)}" if overlay_files else "") + "\n"
+          + (f"\n  file overlays: applied on {sorted(overlay_files)}, before and after the generator"
+             if overlay_files else "") + "\n"
           f"  release: {subject} ({date})\n"
           f"  next: review `git diff` (that diff is the release review), then open a PR.")
     return 0
