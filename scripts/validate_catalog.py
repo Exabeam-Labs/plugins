@@ -136,9 +136,12 @@ def check_vendored(label, src, name, lock, problems):
         if not f.exists():
             continue
         try:
-            host[rel] = json.loads(f.read_text())
+            parsed = json.loads(f.read_text())
         except Exception as e:
             problems.append(f"{label}: vendored {rel} does not parse: {e}"); return None
+        if not isinstance(parsed, dict):      # `null` and `[]` parse fine and then have no .get (#48 review)
+            problems.append(f"{label}: vendored {rel} must be a JSON object, got {type(parsed).__name__}"); return None
+        host[rel] = parsed
     codex_name = (host.get(".codex-plugin/plugin.json") or {}).get("name")
     generator = (d / "gen_identity.py").is_file()
     if generator:
@@ -161,10 +164,18 @@ def check_vendored(label, src, name, lock, problems):
         if r.returncode != 0:
             problems.append(f"{label}: the payload's own gen_identity.py --check fails: {(r.stdout or r.stderr).strip()[:200]}")
             return None
-    elif name and (codex_name or pj.get("name")) != name:
-        problems.append(f"{label}: entry name {name!r} != payload's Codex manifest name {codex_name or pj.get('name')!r} — "
-                        f"Codex refuses the install on a mismatch; declare the rename as a vendor.lock overlay")
-        return None
+    elif name:
+        # No generator, so there is nothing to re-key through: each host manifest it DOES ship still has
+        # to name the entry, Antigravity's included. The docstring promised every host manifest and this
+        # branch only ever checked Codex (#48 review).
+        wrong = {rel: m.get("name") for rel, m in host.items() if m.get("name") != name}
+        if not host and pj.get("name") != name:
+            wrong[".claude-plugin/plugin.json"] = pj.get("name")
+        if wrong:
+            problems.append(f"{label}: entry name {name!r} != " + ", ".join(f"{k} name {v!r}" for k, v in wrong.items())
+                            + " — Codex refuses the install on a mismatch and Antigravity requires its manifest to "
+                              "name the directory it installs from; declare the rename as a vendor.lock overlay")
+            return None
     for rel, m in host.items():
         hv = m.get("version")
         if hv != version:
@@ -326,6 +337,10 @@ def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None,
             r = subprocess.run([sys.executable, "gen_identity.py"], cwd=export, capture_output=True, text=True)
             if r.returncode != 0:
                 problems.append(f"{label}: gen_identity.py failed on the upstream export after the overlay: {(r.stderr or r.stdout).strip()[:200]}"); return
+        # Again after the generator: it rewrites SPDX lines across the payload, and vendor_plugin.py does
+        # the same, so without this the diff would compare a rewritten overlay file against an identically
+        # rewritten one and prove nothing about the file we actually serve (#48 review).
+        _apply_file_overlays(export, overlay_files)
         diff = subprocess.run(["diff", "-r", "--brief", str(export), str(vendored_dir)], capture_output=True, text=True)
         if diff.returncode != 0:
             lines = [ln for ln in diff.stdout.splitlines() if ln.strip()][:6]
