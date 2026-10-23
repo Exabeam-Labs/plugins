@@ -59,7 +59,11 @@ REPO_URL = "https://github.com/Exabeam-Labs/plugins"
 # setting changes reach this site without a rebuild. "" drops the banner and the footer Cookie Settings link.
 COOKIEYES_ID = "7c4d3a9181fb1fa5e066bc36"
 
-HOST_LABELS = {"claude": "Claude Code", "codex": "OpenAI Codex"}
+# The GitHub repository this catalog is served from. Claude Code and Codex take it as a marketplace;
+# Antigravity has no marketplace at all and installs a directory inside it by URL.
+CATALOG_REPO = "Exabeam-Labs/plugins"
+
+HOST_LABELS = {"claude": "Claude Code", "codex": "OpenAI Codex", "antigravity": "Google Antigravity"}
 h = html.escape
 
 
@@ -249,6 +253,7 @@ def load():
         if pdir:
             if (pdir / ".claude-plugin" / "plugin.json").exists(): hosts.append("claude")
             if (pdir / ".codex-plugin" / "plugin.json").exists(): hosts.append("codex")
+            if (pdir / ".antigravity-plugin" / "plugin.json").exists(): hosts.append("antigravity")
         # Order the skills the way the entry's own description introduces them; alphabetical for the rest.
         desc = e.get("description", "")
         def by_mention(s):                      # skills in the order the entry description names them
@@ -270,6 +275,8 @@ def load():
             "release": rec.get("release", ""),
             "added": site_cfg.get("added") or rec.get("vendored", ""),
             "upstream": upstream, "hosts": hosts, "skills": skills, "media": media, "site_status": site_cfg.get("status", ""),
+            "antigravity_install": ((ident.get("distribution") or {}).get("antigravityInstall")
+                                    or (f"https://github.com/{CATALOG_REPO}/tree/main/{name}" if "antigravity" in hosts else "")),
             "card_description": site_cfg.get("card_description", ""),
             "readme": readme_content(pdir, name, {s["name"] for s in skills}, upstream.rsplit("/", 1)[-1] if upstream else ""),
             "docs": f"{name}/README.md" if pdir and (pdir / "README.md").exists() else "",
@@ -629,10 +636,18 @@ def codeblock(label, body):
 
 def install_blocks(e, mp):
     h = html.escape
-    claude = f'claude plugin marketplace add Exabeam-Labs/plugins   <span class="c"># once</span>\nclaude plugin install {h(e["name"])}@{mp}'
-    codex = f'codex plugin marketplace add Exabeam-Labs/plugins    <span class="c"># once</span>\ncodex plugin add {h(e["name"])}@{mp}'
+    claude = f'claude plugin marketplace add {CATALOG_REPO}   <span class="c"># once</span>\nclaude plugin install {h(e["name"])}@{mp}'
+    codex = f'codex plugin marketplace add {CATALOG_REPO}    <span class="c"># once</span>\ncodex plugin add {h(e["name"])}@{mp}'
     blocks = {"claude": codeblock("Claude Code", claude), "codex": codeblock("OpenAI Codex", codex)}
+    # One line, and no marketplace step: this host installs a directory, not a catalog entry.
+    if e.get("antigravity_install"):
+        blocks["antigravity"] = codeblock("Google Antigravity", f'agy plugin install {h(e["antigravity_install"])}')
     return "".join(blocks[x] for x in (e["hosts"] or ["claude", "codex"]) if x in blocks)
+
+
+def install_grid_class(e):
+    """Two hosts sit side by side; three need their own column each, or the odd one strands a gap."""
+    return "grid3" if len([x for x in (e["hosts"] or []) if x in ("claude", "codex", "antigravity")]) > 2 else "grid2"
 
 
 def host_pills(e):
@@ -758,7 +773,7 @@ def detail_parts(catalog, e, root):
     steps = "".join(f"<li>{x}</li>" for x in doc.get("steps", []))
     sections.append(f'<section id="install"><div class="kicker">Install</div><h2>Get started</h2>'
                     + (f'<ol class="steps">{steps}</ol>' if steps else "")
-                    + f'<div class="grid2">{install_blocks(e, mp)}</div></section>')
+                    + f'<div class="{install_grid_class(e)}">{install_blocks(e, mp)}</div></section>')
 
     if doc.get("docs"):
         links = "".join(f'<a class="card" href="{h(d["href"])}"><b>{h(d["title"])}</b><span>{d["what"]}</span></a>' for d in doc["docs"])
@@ -1003,6 +1018,7 @@ h2 .grad{background:linear-gradient(90deg,#009d00,#006bff 60%,#982cff);-webkit-b
 .band-gray{background:var(--gray);padding:96px 0}
 .center{text-align:center;max-width:900px;margin:0 auto 56px}.center p{margin:0;font-size:17px}.center p+p{margin-top:14px}.center.after-cards{margin:36px auto 0}
 .outlined{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.outlined.three{grid-template-columns:1fr 1fr 1fr}
 .outlined>*,.benefits .wrap>*{min-width:0}
 .ocard{border:2px solid var(--green);border-radius:16px;background:#fff;padding:32px 30px}
 .ocard.b{border-color:var(--blue)}
@@ -1020,7 +1036,7 @@ h2 .grad{background:linear-gradient(90deg,#009d00,#006bff 60%,#982cff);-webkit-b
 .terms code{font-size:.88em;background:#f1f1f1;padding:1px 6px;border-radius:4px}
 @media(max-width:1280px){.term{display:none}}
 @media(max-width:1100px){.visual{width:50%;opacity:.5}.term{display:none}}
-@media(max-width:900px){.benefits .wrap,.outlined{grid-template-columns:1fr}
+@media(max-width:900px){.benefits .wrap,.outlined,.outlined.three{grid-template-columns:1fr}
 .hero h1{font-size:42px}h2{font-size:32px}.cta strong{font-size:28px}.visual{display:none}}
 @media(max-width:640px){:root{--xs-pad:16px}.wrap,.wide{padding:0 16px}
 .btn{font-size:16px;padding:9px 16px 8px}.hero .wrap{padding-top:44px;padding-bottom:60px}.hero h1{font-size:36px}
@@ -1102,6 +1118,7 @@ color:#000;background:var(--gray);border-color:var(--line);border-radius:6px}
 font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
 .steps code,.overview code,.highlights code,.skillrow p code,.status code{font-size:.86em;background:#f1f1f1;padding:1px 6px;border-radius:4px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid2>*{min-width:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}.grid3>*{min-width:0}
 .codeblock{background:var(--code);border-radius:10px;overflow:hidden}
 .codehead{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #333;font-size:13px;font-weight:700;color:#bdbdbd}
 .codeblock .copy{float:none;margin:0;color:#4cdb00}.codeblock .copy:hover{color:#fff}
@@ -1126,7 +1143,7 @@ dialog.lightbox form{text-align:right;margin-bottom:8px}
 dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7px 16px;font:700 13px/1 inherit;font-family:inherit;cursor:pointer}
 .draft{background:#fff7d6;border:1px solid #f0d27a;padding:14px 18px;border-radius:8px;margin:0 0 28px;font-size:15px}
 @media(max-width:1000px){.layout{grid-template-columns:1fr}aside.facts{position:static}}
-@media(max-width:900px){.highlights,.grid2,.doclist{grid-template-columns:1fr}.skillrow{grid-template-columns:1fr;gap:10px}.layout h2{font-size:28px}}
+@media(max-width:900px){.highlights,.grid2,.grid3,.doclist{grid-template-columns:1fr}.skillrow{grid-template-columns:1fr;gap:10px}.layout h2{font-size:28px}}
 @media(max-width:640px){.cards{grid-template-columns:1fr}.pcard{padding:24px}.skillrow{padding:22px}}
 """
 
@@ -1217,12 +1234,12 @@ def template_page():
     """A starter for a hand-authored plugin page: copy plugins/_template/ to plugins/<name>/, fill in the card JSON
     (remove "draft") and the sections. The listing picks it up on the next build."""
     data = {"draft": True, "name": "new", "display": "New plugin name", "category": "Security",
-            "short": "One sentence on what the plugin does.", "hosts": ["Claude Code", "OpenAI Codex"],
+            "short": "One sentence on what the plugin does.", "hosts": ["Claude Code", "OpenAI Codex", "Google Antigravity"],
             "skills": 0, "skill_names": ["first-skill"], "version": "0.1.0", "status": "pre-release", "order": 100,
             "added": "YYYY-MM-DD"}
     sections = """
   <section id="overview"><div class="kicker">Overview</div><h2>What it is</h2><div class="overview"><p>Describe the plugin.</p></div></section>
-  <section id="install"><div class="kicker">Install</div><h2>Get started</h2><div class="grid2">""" + codeblock("Claude Code", "claude plugin marketplace add Exabeam-Labs/plugins\nclaude plugin install new@exabeam") + codeblock("OpenAI Codex", "codex plugin marketplace add Exabeam-Labs/plugins\ncodex plugin add new@exabeam") + """</div></section>"""
+  <section id="install"><div class="kicker">Install</div><h2>Get started</h2><div class="grid3">""" + codeblock("Claude Code", f"claude plugin marketplace add {CATALOG_REPO}\nclaude plugin install new@exabeam") + codeblock("OpenAI Codex", f"codex plugin marketplace add {CATALOG_REPO}\ncodex plugin add new@exabeam") + codeblock("Google Antigravity", f"agy plugin install https://github.com/{CATALOG_REPO}/tree/main/new") + """</div></section>"""
     return (MARK + "\n" + head("New plugin · Exabeam Plug-in Catalog", "Template for a hand-authored plugin page") + f"""{header()}
 <main>
 <section class="hero dh">
@@ -1408,6 +1425,14 @@ def render(catalog, entries, listed):
     first = entries[0] if entries else None
     points = "".join(f"<h3>{text(t)}</h3><p>{text(b)}</p>" for t, b in PILLARS)
     cards = "".join(card_html(c, href) for c, href in listed)
+    # Antigravity has no marketplace: `agy` installs a directory by URL, so there is no catalog-wide
+    # command to show, only a per-plugin one. The card appears when a served payload carries that host's
+    # manifest, so this band cannot offer an install the catalog does not actually serve.
+    agy = next((e for e in entries if e.get("antigravity_install")), None)
+    agy_card = (f'\n    <div class="ocard c"><button class="copy" type="button">Copy</button><h3>Google Antigravity</h3>'
+                f'<pre>agy plugin install {h(agy["antigravity_install"])}</pre></div>') if agy else ""
+    agy_note = (f' Google Antigravity works differently: it has no marketplace, so each plugin is installed '
+                f'directly by its address in this repository, one plugin at a time.') if agy else ""
     cards += f"""
     <article class="card pcard soon" id="coming-soon">
       <h3>More plugins coming soon</h3>
@@ -1435,14 +1460,14 @@ def render(catalog, entries, listed):
 
 <section class="band-gray" id="install"><div class="wrap">
   <div class="center"><h2>Add the entire Plug-in Catalog <span class="grad">at once</span></h2>
-  <p>A single command adds Exabeam's entire Plug-in Catalog to your AI agent, so every supported plugin is available to you at once. It works the same way in Claude Code and OpenAI Codex.</p>
+  <p>A single command adds Exabeam's entire Plug-in Catalog to your AI agent, so every supported plugin is available to you at once. It works the same way in Claude Code and OpenAI Codex.{agy_note}</p>
 </div>
-  <div class="outlined">
-    <div class="ocard"><button class="copy" type="button">Copy</button><h3>Claude Code</h3><pre>claude plugin marketplace add Exabeam-Labs/plugins</pre></div>
-    <div class="ocard b"><button class="copy" type="button">Copy</button><h3>OpenAI Codex</h3><pre>codex plugin marketplace add Exabeam-Labs/plugins</pre></div>
+  <div class="outlined{' three' if agy_card else ''}">
+    <div class="ocard"><button class="copy" type="button">Copy</button><h3>Claude Code</h3><pre>claude plugin marketplace add {CATALOG_REPO}</pre></div>
+    <div class="ocard b"><button class="copy" type="button">Copy</button><h3>OpenAI Codex</h3><pre>codex plugin marketplace add {CATALOG_REPO}</pre></div>{agy_card}
   </div>
   <div class="center after-cards">
-  <p>Each plugin has one install key in the format <code>&lt;plugin&gt;@{mp}</code>, and it's the same in both Claude Code and Codex. For example, the SOC plugin installs as <code>soc@{mp}</code> in either tool.</p></div>
+  <p>In Claude Code and Codex each plugin has one install key in the format <code>&lt;plugin&gt;@{mp}</code>, and it is the same in both. For example, the SOC plugin installs as <code>soc@{mp}</code> in either tool.</p></div>
 </div></section>
 
 <section class="plugins" id="plugins"><div class="wrap">
