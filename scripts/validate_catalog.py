@@ -19,14 +19,16 @@ this catalog is the blessed-build channel, so nothing here may move on its own.
         Anthropic catalog does), but `sha` is what installs.
   - Upstream repositories must be https://github.com/<org>/<repo>.git for an allow-listed org,
     parsed and matched in full (never prefix-matched).
-  - An entry's name MUST equal the payload's `.codex-plugin/plugin.json` `name`: OpenAI Codex
-    refuses the install otherwise ("plugin.json name `socxen` does not match marketplace plugin
-    name `soc-analyst`" — verified 2026-09-02). Claude Code tolerates a mismatch and namespaces
-    by `.claude-plugin/plugin.json`'s name, which is what the permission gate matches on — so
-    that manifest is never renamed. The bridge between the two is a declared OVERLAY in
-    vendor.lock.json: a per-file field patch (today: the Codex manifest's name and display name)
-    that the vendor script applies after export and `--verify-upstream` re-applies to a fresh
-    upstream export before the byte-identity diff. Anything not declared there is drift.
+  - An entry's name MUST equal the name in EVERY host manifest the payload ships. OpenAI Codex
+    refuses the install on a mismatch ("plugin.json name `socxen` does not match marketplace plugin
+    name `soc-analyst`" — verified 2026-09-02); Google Antigravity requires its manifest's name to
+    equal the directory it installs from, which here is the entry's. Claude Code tolerates a
+    mismatch and namespaces by `.claude-plugin/plugin.json`'s name, which is what the permission
+    gate matches on — so that manifest is never renamed. The bridge between them is a declared
+    OVERLAY in vendor.lock.json: a per-file field patch that the vendor script applies after export
+    and `--verify-upstream` re-applies to a fresh upstream export before the byte-identity diff.
+    Anything not declared there is drift. A host manifest nobody checks is a second name waiting to
+    disagree with the one the gate matches on, so each is held to the entry's name and version.
   - No entry-level version metadata; the payload's plugin.json is the version authority, and
     vendor.lock.json must agree with it.
 
@@ -44,6 +46,11 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(os.environ.get("CATALOG_ROOT") or Path(__file__).resolve().parents[1]).resolve()
+
+# The per-host manifests a payload may ship beside `.claude-plugin/plugin.json`, which is the version
+# authority. Each one is a name and a version the operator can end up installing, so each is checked
+# against the entry; one that is absent is not a name that disagrees.
+HOST_MANIFESTS = (".codex-plugin/plugin.json", ".antigravity-plugin/plugin.json")
 MANIFEST = ROOT / ".claude-plugin" / "marketplace.json"
 LOCK = ROOT / "vendor.lock.json"
 
@@ -123,13 +130,16 @@ def check_vendored(label, src, name, lock, problems):
     version = pj.get("version") if isinstance(pj, dict) else None
     if not (isinstance(version, str) and version.strip()):
         problems.append(f"{label}: vendored plugin.json must declare a non-empty version"); return None
-    codex = d / ".codex-plugin" / "plugin.json"
-    codex_name = None
-    if codex.exists():
+    host = {}
+    for rel in HOST_MANIFESTS:
+        f = d / rel
+        if not f.exists():
+            continue
         try:
-            codex_name = json.loads(codex.read_text()).get("name")
-        except Exception:
-            pass
+            host[rel] = json.loads(f.read_text())
+        except Exception as e:
+            problems.append(f"{label}: vendored {rel} does not parse: {e}"); return None
+    codex_name = (host.get(".codex-plugin/plugin.json") or {}).get("name")
     generator = (d / "gen_identity.py").is_file()
     if generator:
         # A self-regenerating payload (socxen >= 0.8.6): ONE name everywhere. Claude Code namespaces the
@@ -142,8 +152,7 @@ def check_vendored(label, src, name, lock, problems):
         except Exception as e:
             problems.append(f"{label}: the payload ships gen_identity.py but identity.json is unreadable ({e})"); return None
         names = {"catalog entry": name, ".claude-plugin/plugin.json": pj.get("name"), "identity.json": ident_name}
-        if codex.exists():                       # a host manifest that is absent is not a name that disagrees
-            names[".codex-plugin/plugin.json"] = codex_name
+        names.update({rel: m.get("name") for rel, m in host.items()})
         if len({v for v in names.values()}) != 1:
             problems.append(f"{label}: the plugin must have ONE name — " + ", ".join(f"{k}={v!r}" for k, v in names.items())
                             + " — re-key through identity.json + gen_identity.py, never by hand")
@@ -156,14 +165,10 @@ def check_vendored(label, src, name, lock, problems):
         problems.append(f"{label}: entry name {name!r} != payload's Codex manifest name {codex_name or pj.get('name')!r} — "
                         f"Codex refuses the install on a mismatch; declare the rename as a vendor.lock overlay")
         return None
-    codex = d / ".codex-plugin" / "plugin.json"
-    if codex.exists():
-        try:
-            cv = json.loads(codex.read_text()).get("version")
-            if cv != version:
-                problems.append(f"{label}: .codex-plugin/plugin.json version {cv!r} != .claude-plugin version {version!r}")
-        except Exception as e:
-            problems.append(f"{label}: vendored .codex-plugin/plugin.json does not parse: {e}")
+    for rel, m in host.items():
+        hv = m.get("version")
+        if hv != version:
+            problems.append(f"{label}: {rel} version {hv!r} != .claude-plugin version {version!r}")
     rec = lock.get(name) if isinstance(lock, dict) else None
     if not isinstance(rec, dict):
         problems.append(f"{label}: no vendor.lock.json record for {name!r} — a vendored payload must state where it came from")
@@ -190,9 +195,11 @@ def check_vendored(label, src, name, lock, problems):
         problems.append(f"{label}: overlay must never patch the Claude manifest (its name governs the namespaces the "
                         f"permission gate matches on), got {sorted(overlay)}")
         return None
-    # The license files: whole-file replacements or additions, LICENSE / NOTICE / LICENSE-APACHE only,
-    # sourced from this repository. The payload's own license stays as upstream ships it; the
-    # distribution terms and the Apache-2.0 text travel beside it (Exabeam-Labs/plugins#28).
+    # The declared file overlays: whole-file replacements or additions, from the fixed allowlist below
+    # and sourced from this repository. Two kinds today -- the licence files and the listing icon. The
+    # payload's own licence stays as upstream ships it; the distribution terms and the Apache-2.0 text
+    # travel beside it (Exabeam-Labs/plugins#28). The icon is a distribution asset upstream ships none
+    # of, and it is what the directory listings on both hosts show (Exabeam-Labs/plugins#47).
     files = rec.get("overlay_files") or {}
     if not isinstance(files, dict) or any(not isinstance(v, str) for v in files.values()):
         problems.append(f"{label}: overlay_files must map a payload file name to a catalog-relative source path, got {files!r}")
@@ -244,12 +251,29 @@ def _git(*args, cwd=None):
     return r.stdout
 
 
-FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md")
+# Exact payload-relative keys, never prefixes: `..`, a case variant and the manifest beside a file all
+# fail to match. `assets/icon.png` is ONE asset for BOTH hosts -- upstream feeds the Claude manifest's
+# `icon` and the Antigravity manifest's `logo` from the same top-level `logo` key, so this allowlist does
+# not have to be widened again per host (raffkin#302, Exabeam-Labs/plugins#47 review).
+FILE_OVERLAY_ALLOWED = ("LICENSE", "NOTICE", "LICENSE-APACHE", "LICENSE.md", "NOTICE.md",
+                        "assets/icon.png")
 
 
 def _apply_file_overlays(root, files):
+    """Mirror of vendor_plugin.apply_file_overlays, and it must stay a mirror: this writes the same bytes
+    in the same order so the byte-identity diff below compares like with like."""
     for rel, src in (files or {}).items():
-        (root / rel).write_bytes((ROOT / src).read_bytes())
+        dest = root / rel
+        # An allowlisted key may now sit under a directory (`assets/icon.png`), which the export may or
+        # may not already have. Refuse a destination or a parent that is a symlink: the write would
+        # follow it out of the stage, which was impossible while every key was a top-level file.
+        cur = root
+        for part in Path(rel).parts:
+            cur = cur / part
+            if cur.is_symlink():
+                raise RuntimeError(f"file overlay destination {rel!r} is, or sits under, a symlink")
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes((ROOT / src).read_bytes())
 
 
 def _apply_overlay(root, overlay):
@@ -291,12 +315,17 @@ def verify_upstream(label, url, sha, vendored_dir, path, problems, overlay=None,
         if tar.returncode != 0:
             problems.append(f"{label}: cannot export {path!r} at {sha[:12]}: {tar.stderr.decode(errors='replace')[:200]}"); return
         subprocess.run(["tar", "-x", "-C", str(export)], input=tar.stdout, check=True)
+        # FILE overlays first, then the identity patch, then the payload's own generator. The order is
+        # load-bearing: raffkin#302 makes gen_identity.py check that the mark named by `logo` is a real
+        # file in the payload, so an identity overlay pointing at an overlaid icon fails if the icon is
+        # not on disk yet ("names './assets/icon.png', which is not a file in the payload"). Nothing
+        # gen_identity.py writes is in FILE_OVERLAY_ALLOWED, so moving them earlier changes no output.
+        _apply_file_overlays(export, overlay_files)   # the declared licence files and listing icon
         _apply_overlay(export, overlay)   # the declared identity patch; everything else must match exactly
         if (export / "gen_identity.py").is_file():          # ...after the payload's own generator has run on it
             r = subprocess.run([sys.executable, "gen_identity.py"], cwd=export, capture_output=True, text=True)
             if r.returncode != 0:
                 problems.append(f"{label}: gen_identity.py failed on the upstream export after the overlay: {(r.stderr or r.stdout).strip()[:200]}"); return
-        _apply_file_overlays(export, overlay_files)   # the declared license files, last
         diff = subprocess.run(["diff", "-r", "--brief", str(export), str(vendored_dir)], capture_output=True, text=True)
         if diff.returncode != 0:
             lines = [ln for ln in diff.stdout.splitlines() if ln.strip()][:6]
@@ -383,7 +412,7 @@ def main(argv) -> int:
             print(f"  - {p}")
         return 1
     print(f"catalog manifest OK — {len(plugins)} plugin(s), every source vendored-with-provenance or sha-pinned"
-          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo the declared identity overlay + the payload's own regeneration + the declared license files)"
+          + (", upstream verified (commit exists, is an ancestor of the default branch, vendored tree byte-identical modulo the declared file overlays + the declared identity overlay + the payload's own regeneration)"
              if verify else " (structural only; add --verify-upstream to check against upstream)"))
     return 0
 
