@@ -353,11 +353,12 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 
 <section class="band-gray" id="install"><div class="wrap">
   <div class="center"><h2>Add the entire Plug-in Catalog <span class="grad">at once</span></h2>
-  <p>A single command adds Exabeam's entire Plug-in Catalog to your AI agent, so every supported plugin is available to you at once. It works the same way in Claude Code and OpenAI Codex.</p>
+  <p>A single command adds Exabeam's entire Plug-in Catalog to your AI agent, so every supported plugin is available to you at once. It works the same way in Claude Code and OpenAI Codex. Google Antigravity works differently: it has no marketplace, so each plugin is installed directly by its address in this repository, one plugin at a time.</p>
 </div>
-  <div class="outlined">
+  <div class="outlined three">
     <div class="ocard"><button class="copy" type="button">Copy</button><h3>Claude Code</h3><pre>claude plugin marketplace add Exabeam-Labs/plugins</pre></div>
     <div class="ocard b"><button class="copy" type="button">Copy</button><h3>OpenAI Codex</h3><pre>codex plugin marketplace add Exabeam-Labs/plugins</pre></div>
+    <div class="ocard c"><button class="copy" type="button">Copy</button><h3>Google Antigravity</h3><pre>agy plugin install https://github.com/Exabeam-Labs/plugins/tree/main/soc</pre></div>
   </div>
   <div class="center after-cards">
   <p>In Claude Code and Codex each plugin has one install key in the format <code>&lt;plugin&gt;@exabeam</code>, and it is the same in both. For example, the SOC plugin installs as <code>soc@exabeam</code> in either tool.</p></div>
@@ -370,8 +371,8 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
       <div class="head"><div class="icon" aria-hidden="true">soc</div><div class="tags"><span class="pill b">Security</span><span class="pill st-released">Released</span></div></div>
       <h3><a href="plugins/soc/">Exabeam Agentic SOC plugin</a></h3>
       <p>Exabeam Agentic SOC plugin, an agentic SOC analyst for Exabeam New-Scale, as a plugin for Claude Code and OpenAI Codex. It does the work, not just the chat: hand it an alert or a case and it pulls the events, pivots on the entities, baselines them against what is normal for them, tests the benign explanation and writes the verdict, then acts in the SIEM: opens and annotates the case, updates…</p>
-      <div class="tags"><span class="pill">Claude Code</span><span class="pill">OpenAI Codex</span></div>
-      <div class="meta"><span><b>3</b> skills</span><span>Version <b>1.0.0</b></span></div>
+      <div class="tags"><span class="pill">Claude Code</span><span class="pill">OpenAI Codex</span><span class="pill">Google Antigravity</span></div>
+      <div class="meta"><span><b>3</b> skills</span><span>Version <b>1.1.0</b></span></div>
       <div class="tags skills" aria-label="Skills"><span class="pill sk">soc-investigate</span><span class="pill sk">triage-cases</span><span class="pill sk">rule-tuning</span></div>
       <span class="more">View details →</span>
     </article>
