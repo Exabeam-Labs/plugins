@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/7c4d3a9181fb1fa5e066bc36/script.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Audit logging · Exabeam Agentic SOC plugin docs</title>
@@ -11,7 +12,12 @@
 <meta property="og:title" content="Audit logging · Exabeam Agentic SOC plugin docs">
 <meta property="og:description" content="Exactly what is recorded, where the log lives, how to route or disable it">
 <meta property="og:url" content="https://plugins.exabeam.com/plugins/soc/docs/audit-logging/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://plugins.exabeam.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Exabeam plugins for AI agents, plugins.exabeam.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://plugins.exabeam.com/assets/og-image.png">
 <meta name="description" content="exactly what is recorded, where the log lives, how to route or disable it">
 <link rel="icon" type="image/x-icon" href="https://www.exabeam.com/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,6 +68,7 @@ h2 .grad{background:linear-gradient(90deg,#009d00,#006bff 60%,#982cff);-webkit-b
 .band-gray{background:var(--gray);padding:96px 0}
 .center{text-align:center;max-width:900px;margin:0 auto 56px}.center p{margin:0;font-size:17px}.center p+p{margin-top:14px}.center.after-cards{margin:36px auto 0}
 .outlined{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.outlined.three{grid-template-columns:1fr 1fr 1fr}
 .outlined>*,.benefits .wrap>*{min-width:0}
 .ocard{border:2px solid var(--green);border-radius:16px;background:#fff;padding:32px 30px}
 .ocard.b{border-color:var(--blue)}
@@ -79,7 +86,7 @@ h2 .grad{background:linear-gradient(90deg,#009d00,#006bff 60%,#982cff);-webkit-b
 .terms code{font-size:.88em;background:#f1f1f1;padding:1px 6px;border-radius:4px}
 @media(max-width:1280px){.term{display:none}}
 @media(max-width:1100px){.visual{width:50%;opacity:.5}.term{display:none}}
-@media(max-width:900px){.benefits .wrap,.outlined{grid-template-columns:1fr}
+@media(max-width:900px){.benefits .wrap,.outlined,.outlined.three{grid-template-columns:1fr}
 .hero h1{font-size:42px}h2{font-size:32px}.cta strong{font-size:28px}.visual{display:none}}
 @media(max-width:640px){:root{--xs-pad:16px}.wrap,.wide{padding:0 16px}
 .btn{font-size:16px;padding:9px 16px 8px}.hero .wrap{padding-top:44px;padding-bottom:60px}.hero h1{font-size:36px}
@@ -143,6 +150,7 @@ color:#000;background:var(--gray);border-color:var(--line);border-radius:6px}
 font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
 .steps code,.overview code,.highlights code,.skillrow p code,.status code{font-size:.86em;background:#f1f1f1;padding:1px 6px;border-radius:4px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid2>*{min-width:0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}.grid3>*{min-width:0}
 .codeblock{background:var(--code);border-radius:10px;overflow:hidden}
 .codehead{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #333;font-size:13px;font-weight:700;color:#bdbdbd}
 .codeblock .copy{float:none;margin:0;color:#4cdb00}.codeblock .copy:hover{color:#fff}
@@ -167,7 +175,7 @@ dialog.lightbox form{text-align:right;margin-bottom:8px}
 dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7px 16px;font:700 13px/1 inherit;font-family:inherit;cursor:pointer}
 .draft{background:#fff7d6;border:1px solid #f0d27a;padding:14px 18px;border-radius:8px;margin:0 0 28px;font-size:15px}
 @media(max-width:1000px){.layout{grid-template-columns:1fr}aside.facts{position:static}}
-@media(max-width:900px){.highlights,.grid2,.doclist{grid-template-columns:1fr}.skillrow{grid-template-columns:1fr;gap:10px}.layout h2{font-size:28px}}
+@media(max-width:900px){.highlights,.grid2,.grid3,.doclist{grid-template-columns:1fr}.skillrow{grid-template-columns:1fr;gap:10px}.layout h2{font-size:28px}}
 @media(max-width:640px){.cards{grid-template-columns:1fr}.pcard{padding:24px}.skillrow{padding:22px}}
 
 .dochero .wrap{padding-top:56px;padding-bottom:56px}.dochero h1{font-size:46px;max-width:none;margin-bottom:16px}
@@ -299,6 +307,7 @@ dialog.lightbox button{background:#fff;border:none;border-radius:40px;padding:7p
 .xf-links a{color:#bdbdbd;font-weight:500;font-size:16.5px;margin-bottom:13px}.xf-links a:hover{color:#fff}
 .xf-legal{background:#000;color:#fff;padding:24px 0 48px;font-size:16.5px;font-weight:500}
 .xf-legal .xw{display:flex;justify-content:center;gap:50px;flex-wrap:wrap}.xf-legal a{color:#fff}.xf-legal a:hover{color:#4cdb00}
+.xf-legal button{background:none;border:0;padding:0;font:inherit;color:#fff;cursor:pointer}.xf-legal button:hover{color:#4cdb00}
 @media(max-width:920px){.xf-top .xw{grid-template-columns:1fr 1fr;row-gap:44px}.xf-row{grid-template-columns:1fr}.xf-links{grid-column:auto;grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.xf-top .xw,.xf-links{grid-template-columns:1fr}.xf-legal .xw{flex-direction:column;align-items:center;gap:14px}}
 </style>
@@ -413,7 +422,7 @@ jq -c &#x27;select(.data.defang_formula or .data.defang_link or .data.hygiene_st
     <div class="xf-row"><h4 class="cat">Plug-in Catalog</h4><div class="xf-links"><a href="../../../../#about">About</a><a href="../../../../#install">Install</a><a href="../../../../#plugins">Plugins</a><a href="../../../../#terms">Terms</a><a href="https://github.com/Exabeam-Labs/plugins/blob/main/vendor.lock.json">vendor.lock.json</a><a href="https://github.com/Exabeam-Labs/plugins/blob/main/MAINTAINERS.md">Maintainers</a><a href="https://github.com/Exabeam-Labs/plugins">GitHub repository</a><a href="https://www.exabeam.com/legal/enterprise-agreement/">Enterprise Agreement</a></div></div>
     <div class="xf-row"><h4>Security Explainers</h4><div class="xf-links"><a href="https://www.exabeam.com/explainers/siem/what-is-siem/">SIEM</a><a href="https://www.exabeam.com/explainers/siem-tools/siem-buyers-guide/">SIEM Tools</a><a href="https://www.exabeam.com/explainers/ueba/what-ueba-stands-for-and-a-5-minute-ueba-primer/">UEBA</a><a href="https://www.exabeam.com/explainers/information-security/information-security-goals-types-and-applications/">Information Security</a><a href="https://www.exabeam.com/explainers/ai-cyber-security/ai-cyber-security-securing-ai-systems-against-cyber-threats/">AI Cyber Security</a><a href="https://www.exabeam.com/explainers/log-management/log-management-process-tools-and-tips-for-success/">Log Management</a><a href="https://www.exabeam.com/explainers/soar/how-soar-works-pros-cons-and-choosing-the-right-platform/">SOAR</a><a href="https://www.exabeam.com/explainers/insider-threats/insider-threats/">Insider Threats</a><a href="https://www.exabeam.com/explainers/mitre-attck/what-is-mitre-attck-an-explainer/">MITRE ATT&amp;CK</a><a href="https://www.exabeam.com/explainers/compliance-management/compliance-management-process-regulations-and-tools/">Compliance Management</a><a href="https://www.exabeam.com/explainers/pci-compliance/pci-compliance-a-quick-guide/">PCI Compliance</a><a href="https://www.exabeam.com/explainers/gdpr-compliance/gdpr-compliance-a-practical-guide/">GDPR Compliance</a><a href="https://www.exabeam.com/explainers/hipaa-compliance/what-is-the-hipaa-compliance-standard-and-how-to-adhere-to-it/">HIPAA Compliance</a><a href="https://www.exabeam.com/explainers/sox-compliance/sox-compliance-requirements-and-checklist/">SOX Compliance</a><a href="https://www.exabeam.com/explainers/network-detection-and-response/network-detection-and-response-capabilities-alternatives/">Network Detection and Response</a><a href="https://www.exabeam.com/explainers/what-are-ttps/what-are-ttps-and-how-understanding-them-can-help-prevent-the-next-incident/">What Are TTPs</a><a href="https://www.exabeam.com/explainers/new-scale-siem/10-must-have-features-to-be-a-modern-siem/">New-Scale SIEM</a><a href="https://www.exabeam.com/explainers/siem-security/a-siem-security-primer/">SIEM Security</a><a href="https://www.exabeam.com/explainers/event-logging/event-log/">Event Logging</a><a href="https://www.exabeam.com/explainers/cloud-security/cloud-security-principles-solutions-and-architectures/">Cloud Security</a><a href="https://www.exabeam.com/explainers/xdr/what-is-xdr-transforming-threat-detection-and-response/">XDR</a></div></div>
   </div></div>
-  <div class="xf-legal"><div class="xw"><span>© 2026 Exabeam</span><a href="https://www.exabeam.com/legal/terms-and-conditions/">Terms and Conditions</a><a href="https://www.exabeam.com/legal/privacy-policy/">Privacy Policy</a><a href="https://www.exabeam.com/legal/ethical-trading-policy/">Ethical Trading Policy</a></div></div>
+  <div class="xf-legal"><div class="xw"><span>© 2026 Exabeam</span><a href="https://www.exabeam.com/legal/terms-and-conditions/">Terms and Conditions</a><a href="https://www.exabeam.com/legal/privacy-policy/">Privacy Policy</a><a href="https://www.exabeam.com/legal/ethical-trading-policy/">Ethical Trading Policy</a><button type="button" class="cky-banner-element">Cookie Settings</button></div></div>
 </footer>
 <script>document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   const pre=b.closest('.codeblock').querySelector('pre').cloneNode(true);pre.querySelectorAll('.c').forEach(c=>c.remove());
