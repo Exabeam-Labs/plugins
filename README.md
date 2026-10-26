@@ -21,7 +21,7 @@ mapping.
 
 | Plugin | Install as | What it does | Skills | Documentation |
 |---|---|---|---|---|
-| **Exabeam Agentic SOC plugin** | `soc@exabeam` | An agentic SOC analyst for Exabeam New-Scale: hand it an alert or a case and it gathers the evidence, reaches a verdict and acts in the SIEM — with dismiss and close always behind your approval and containment recommended, never executed. | `soc-investigate` · `triage-cases` · `rule-tuning` | [README](soc/README.md) · [Setup guide](soc/docs/installation.md) · [License](soc/LICENSE) (Exabeam Enterprise Agreement; includes Apache-2.0 software, [`LICENSE-APACHE`](soc/LICENSE-APACHE)) |
+| **Exabeam Agentic SOC** | `soc@exabeam` | An agentic SOC analyst for Exabeam New-Scale: hand it an alert or a case and it gathers the evidence, reaches a verdict and acts in the SIEM — with containment recommended and never executed on any host, and dismiss and close behind your approval (on Google Antigravity, in attended sessions only). | `soc-investigate` · `triage-cases` · `rule-tuning` | [README](soc/README.md) · [Setup guide](soc/docs/installation.md) · [License](soc/LICENSE) (Exabeam Enterprise Agreement; includes Apache-2.0 software, [`LICENSE-APACHE`](soc/LICENSE-APACHE)) |
 
 More plugins are added as rows here and as cards on the front door. A plugin's documentation ships
 inside the plugin — its `README.md` and `docs/` — and is the same documentation its source
